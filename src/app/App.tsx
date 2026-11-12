@@ -21,6 +21,7 @@ const CreationDetail = lazy(() => import("../pages/CreationDetail"));
 const Marketplace = lazy(() => import("../pages/Marketplace"));
 const HowItWorks = lazy(() => import("../pages/HowItWorks"));
 const Brand = lazy(() => import("../pages/Brand"));
+const Prefer = lazy(() => import("../pages/Prefer"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -98,6 +99,7 @@ function Shell() {
             <Route path="/marketplace" element={<Marketplace />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/brand" element={<Brand />} />
+            <Route path="/prefer" element={<Prefer />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>

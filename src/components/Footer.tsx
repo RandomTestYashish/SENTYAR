@@ -22,6 +22,7 @@ export function Footer() {
                 <li><Link to="/kits/creator-kit-v1/unbox">Interactive kit</Link></li>
                 <li><Link to="/lab">Perfume Lab</Link></li>
                 <li><Link to="/nature-lab">Nature Lab</Link></li>
+                <li><Link to="/prefer">Prefer — taste quiz</Link></li>
               </ul>
             </div>
             <div>

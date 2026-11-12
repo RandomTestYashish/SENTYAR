@@ -204,6 +204,15 @@ function useStore() {
     }
   }, [draft.blend]);
 
+  /** Replace the lab draft with a suggested blend (e.g. from the Prefer quiz). */
+  const loadBlend = useCallback((blend: Blend, name: string) => {
+    if (!isBlendValid(blend)) return;
+    setUndoStack((s) => [...s.slice(-29), draft.blend]);
+    setLastChanges([]);
+    setDraft({ ...EMPTY_DRAFT, blend, name: name.slice(0, 40) });
+    announce(`Suggested blend loaded into the lab: ${blend.map((e) => `${accordById(e.accordId).name} ${e.share}%`).join(", ")}.`);
+  }, [draft.blend, announce]);
+
   const startNewDraft = useCallback(() => {
     setUndoStack((s) => [...s.slice(-29), draft.blend]);
     setDraft({ ...EMPTY_DRAFT });
@@ -291,7 +300,7 @@ function useStore() {
     // actions
     announce, toast, dismissToast,
     addToBlend, removeFromBlend, changeShare, undo, resetBlend, clearBlend, balance, setMode, setDraftName, setBottle,
-    saveCreation, loadIntoLab, startNewDraft, duplicateCreation, deleteCreation, restoreVersion, renameCreation,
+    saveCreation, loadIntoLab, loadBlend, startNewDraft, duplicateCreation, deleteCreation, restoreVersion, renameCreation,
     addNote, deleteNote, toggleExplore,
     addToCart, setQty, removeFromCart, clearCart, setCartOpen,
     setFlag, setTourStep,

@@ -37,7 +37,10 @@ export default function Home() {
               <Link to="/kits/creator-kit-v1" className="btn">Explore the Kit <ArrowRight size={16} aria-hidden /></Link>
               <Link to="/lab" className="btn btn--secondary">Enter the Lab</Link>
             </div>
-            <button className="link link--arrow small" onClick={startTour}><Compass size={16} aria-hidden /> New here? Take a guided tour</button>
+            <div className="row" style={{ gap: 24 }}>
+              <button className="link link--arrow small" onClick={startTour}><Compass size={16} aria-hidden /> New here? Take a guided tour</button>
+              <Link to="/prefer" className="link link--arrow small">Not sure where to start? Prefer — 10 quick picks <ArrowRight size={14} aria-hidden /></Link>
+            </div>
           </div>
           <figure className="hero__media">
             <Img src="./assets/img/hero-stilllife.jpg" alt="A sculpted SENTYAR glass bottle with amber liquid and a faceted black cap, set on stone among cedarwood, a halved orange, cinnamon sticks, a rose petal and a white blossom" eager ratio="546 / 490" />
