@@ -111,6 +111,8 @@ export interface Product {
   /** For accord products: which accord and how much it contains (demo). */
   accordId?: AccordId;
   contentMl?: number;
+  /** drawn tool illustration id (see KitItems.ToolArt) */
+  art?: string;
 }
 
 export interface CartItem {

@@ -5,6 +5,7 @@ import { useApp } from "../app/store";
 import { Emblem, Wordmark } from "../components/Logo";
 import { Img, Notice } from "../components/ui";
 import { Vial } from "../components/ProductThumb";
+import { ToolArt } from "../components/KitItems";
 import { ACCORDS, BOTANICALS, CATEGORY_LABEL, ROLE_LABEL, accordById, botanicalById } from "../data/ingredients";
 import { KIT } from "../data/catalogue";
 import { flyTo } from "../lib/fly";
@@ -107,7 +108,8 @@ export default function Unboxing() {
                     {KIT.tools.map((t) => (
                       <li key={t.id}>
                         <button className={`kit-item kit-item--tool ${sel?.id === t.id ? "is-selected" : ""}`} aria-pressed={sel?.id === t.id} onClick={() => setSel({ kind: "tool", id: t.id })}>
-                          {t.name}
+                          <span className="kit-item__art"><ToolArt id={t.id} /></span>
+                          <span className="kit-item__name">{t.name}</span>
                         </button>
                       </li>
                     ))}
@@ -181,6 +183,7 @@ function AccordPanel({ id, inBlend, onAdd, onRemove, headRef }: { id: AccordId; 
     <div className="panel">
       <span className="badge badge--accord">Fragrance accord</span>
       <h2 id="panel-title" className="h3" ref={headRef} tabIndex={-1}>{a.name} accord</h2>
+      <div className="panel__art"><Vial color={a.swatch} label={a.name} /></div>
       <p className="small muted">{CATEGORY_LABEL.accord}</p>
       <dl className="facts">
         <div><dt>Family</dt><dd>{a.family}</dd></div>
@@ -239,6 +242,7 @@ function ToolPanel({ id, onTour, headRef }: { id: string; onTour: () => void; he
     <div className="panel">
       <span className="badge">Tool &amp; learning</span>
       <h2 id="panel-title" className="h3" ref={headRef} tabIndex={-1}>{t.name}</h2>
+      <div className="panel__art"><ToolArt id={id} label={t.name} /></div>
       <p className="body-2">{t.note}</p>
       {id === "alcohol" && <Notice tone="warn">Shown as a demo kit component only. This prototype gives no instructions for handling, heating or mixing alcohol.</Notice>}
       {id === "guide" && <Notice>Key points: botanicals are for smelling and learning; never apply raw materials or homemade extracts to skin; formulations need qualified professional validation. <Link className="link" to="/how-it-works#safety">Read the safety boundaries</Link></Notice>}

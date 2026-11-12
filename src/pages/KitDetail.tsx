@@ -3,6 +3,7 @@ import { ArrowRight, Compass, ShoppingBag } from "lucide-react";
 import { useApp } from "../app/store";
 import { Img, Notice } from "../components/ui";
 import { Vial } from "../components/ProductThumb";
+import { ToolArt } from "../components/KitItems";
 import { ACCORDS, BOTANICALS } from "../data/ingredients";
 import { KIT, formatInr } from "../data/catalogue";
 import { TOUR } from "../features/tour/Tour";
@@ -31,7 +32,43 @@ export default function KitDetail() {
         </div>
       </section>
 
-      <section className="section section--white" aria-labelledby="inc">
+      <section className="section section--white" aria-labelledby="box">
+        <div className="container">
+          <div className="section-head section-head--split">
+            <div>
+              <p className="eyebrow">In the box</p>
+              <h2 id="box" className="h2">Everything laid out</h2>
+            </div>
+            <Link to="/kits/creator-kit-v1/unbox" className="link link--arrow">Open it interactively <ArrowRight size={16} aria-hidden /></Link>
+          </div>
+          <div className="flatlay">
+            <ul role="list" className="flatlay__row flatlay__row--tools">
+              {(["pipettes", "blotters", "sprays", "beaker", "funnel"] as const).map((id) => {
+                const t = KIT.tools.find((x) => x.id === id)!;
+                return <li key={id}><figure><ToolArt id={id} label={t.name} /><figcaption>{t.name}</figcaption></figure></li>;
+              })}
+            </ul>
+            <ul role="list" className="flatlay__row flatlay__row--oils">
+              <li><figure><ToolArt id="alcohol" label="Perfumery alcohol sample, 30 ml, display only" /><figcaption>Perfumery alcohol, 30 ml<br /><span className="muted">display only</span></figcaption></figure></li>
+              {ACCORDS.map((a) => (
+                <li key={a.id}><Link to={`/ingredients/${a.id}`} className="flatlay__link"><figure><Vial color={a.swatch} label={a.name} /><figcaption>{a.name} accord, 5 ml</figcaption></figure></Link></li>
+              ))}
+            </ul>
+            <ul role="list" className="flatlay__row flatlay__row--rest">
+              {BOTANICALS.map((b) => (
+                <li key={b.id}><Link to={`/ingredients/${b.id}`} className="flatlay__link"><figure><span className="flatlay__dish"><img src={b.image} alt={b.imageAlt} /></span><figcaption>{b.name}</figcaption></figure></Link></li>
+              ))}
+              {(["vials", "cards", "journal", "guide", "qr"] as const).map((id) => {
+                const t = KIT.tools.find((x) => x.id === id)!;
+                return <li key={id}><figure><ToolArt id={id} label={t.name} /><figcaption>{t.name}</figcaption></figure></li>;
+              })}
+            </ul>
+          </div>
+          <p className="small muted" style={{ marginTop: 16 }}>Illustrations of the illustrative kit contents. Quantities are provisional; the alcohol sample is shown as a component only, with no handling instructions.</p>
+        </div>
+      </section>
+
+      <section className="section" aria-labelledby="inc">
         <div className="container">
           <h2 id="inc" className="h2">What is included</h2>
           <p className="lead" style={{ marginTop: 8 }}>Illustrative contents. Quantities and final contents remain provisional until supplier and perfumer validation.</p>
@@ -58,14 +95,14 @@ export default function KitDetail() {
               <h3 className="h4">C · Tools and learning material</h3>
               <p className="small muted">Supporting items</p>
               <ul role="list" className="included__tools">
-                {KIT.tools.map((t) => <li key={t.id}><strong>{t.name}</strong><span className="small muted">{t.note}</span></li>)}
+                {KIT.tools.map((t) => <li key={t.id}><span className="included__toolart"><ToolArt id={t.id} /></span><span><strong>{t.name}</strong><br /><span className="small muted">{t.note}</span></span></li>)}
               </ul>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="section" aria-labelledby="learn">
+      <section className="section section--white" aria-labelledby="learn">
         <div className="container two-col">
           <div>
             <h2 id="learn" className="h2">What you will learn</h2>
