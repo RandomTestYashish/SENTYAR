@@ -20,6 +20,10 @@ interface LabDraft {
   editingId: string | null;
   parentId: string | null;
   bottle: BottleConceptId;
+  /** perfumer's alcohol base (the 8 ml) has been poured into the beaker */
+  baseAdded: boolean;
+  /** botanicals dropped in as a visual infusion; never part of the formula */
+  infusions: BotanicalId[];
 }
 
 const BOTANICAL_IDS: BotanicalId[] = ["orange-peel", "cedarwood", "rose-petals", "cinnamon"];
@@ -35,6 +39,8 @@ function readDraft(raw: unknown): LabDraft | null {
     editingId: typeof r.editingId === "string" ? r.editingId : null,
     parentId: typeof r.parentId === "string" ? r.parentId : null,
     bottle: r.bottle === "facet" || r.bottle === "atelier" ? r.bottle : "pebble",
+    baseAdded: r.baseAdded === true,
+    infusions: Array.isArray(r.infusions) ? (r.infusions.filter((x) => BOTANICAL_IDS.includes(x as BotanicalId)) as BotanicalId[]).slice(0, 4) : [],
   };
 }
 const readIdList = (raw: unknown): BotanicalId[] | null =>
@@ -42,7 +48,7 @@ const readIdList = (raw: unknown): BotanicalId[] | null =>
 const readFlags = (raw: unknown): Record<string, boolean> | null =>
   typeof raw === "object" && raw !== null ? (raw as Record<string, boolean>) : null;
 
-const EMPTY_DRAFT: LabDraft = { blend: [], mode: "proportional", name: "", editingId: null, parentId: null, bottle: "pebble" };
+const EMPTY_DRAFT: LabDraft = { blend: [], mode: "proportional", name: "", editingId: null, parentId: null, bottle: "pebble", baseAdded: false, infusions: [] };
 
 function useStore() {
   const initial = useRef(() => {
@@ -141,12 +147,14 @@ function useStore() {
   const resetBlend = useCallback(() => {
     const prev = draft.blend;
     commitBlend(DEFAULT_BLEND, [], prev);
-    announce("Blend reset to the default demo composition: Woody 50%, Citrus 30%, Musk 20%.");
+    setDraft((d) => ({ ...d, baseAdded: true }));
+    announce("Blend reset to the default demo composition: Woody 50%, Citrus 30%, Musk 20%, with the 8 ml base.");
   }, [draft.blend, commitBlend, announce]);
 
   const clearBlend = useCallback(() => {
     const prev = draft.blend;
     commitBlend([], [], prev);
+    setDraft((d) => ({ ...d, baseAdded: false, infusions: [] }));
     announce("Blend cleared.");
   }, [draft.blend, commitBlend, announce]);
 
@@ -160,6 +168,13 @@ function useStore() {
   const setMode = useCallback((mode: AdjustMode) => setDraft((d) => ({ ...d, mode })), []);
   const setDraftName = useCallback((name: string) => setDraft((d) => ({ ...d, name: name.slice(0, 40) })), []);
   const setBottle = useCallback((bottle: BottleConceptId) => setDraft((d) => ({ ...d, bottle })), []);
+  const setBase = useCallback((on: boolean) => {
+    setDraft((d) => ({ ...d, baseAdded: on }));
+    announce(on ? "Perfumer's alcohol base poured: 8.00 ml." : "Base removed from the beaker.");
+  }, [announce]);
+  const toggleInfusion = useCallback((id: BotanicalId) => {
+    setDraft((d) => ({ ...d, infusions: d.infusions.includes(id) ? d.infusions.filter((x) => x !== id) : [...d.infusions, id] }));
+  }, []);
 
   // ---------- creations ----------
   const saveCreation = useCallback((opts: { asNew?: boolean } = {}): Creation | null => {
@@ -198,9 +213,9 @@ function useStore() {
     setUndoStack((s) => [...s.slice(-29), draft.blend]);
     setLastChanges([]);
     if (as === "edit") {
-      setDraft({ blend: c.blend, mode: "proportional", name: c.name, editingId: c.id, parentId: c.parentId ?? null, bottle: c.appearance.bottle });
+      setDraft({ blend: c.blend, mode: "proportional", name: c.name, editingId: c.id, parentId: c.parentId ?? null, bottle: c.appearance.bottle, baseAdded: true, infusions: [] });
     } else {
-      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle });
+      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle, baseAdded: true, infusions: [] });
     }
   }, [draft.blend]);
 
@@ -299,7 +314,7 @@ function useStore() {
     storageOk: storageAvailable(), recovered: initial.recovered, saveFailed,
     // actions
     announce, toast, dismissToast,
-    addToBlend, removeFromBlend, changeShare, undo, resetBlend, clearBlend, balance, setMode, setDraftName, setBottle,
+    addToBlend, removeFromBlend, changeShare, undo, resetBlend, clearBlend, balance, setMode, setDraftName, setBottle, setBase, toggleInfusion,
     saveCreation, loadIntoLab, loadBlend, startNewDraft, duplicateCreation, deleteCreation, restoreVersion, renameCreation,
     addNote, deleteNote, toggleExplore,
     addToCart, setQty, removeFromCart, clearCart, setCartOpen,

@@ -205,3 +205,62 @@
   .vessel-wrap { width: min(100%, 340px); }
 }
 @media (max-width: 520px) { .kit-tile__art { height: 80px !important; } }
+
+/* ---------- Lab v3: steps, base, botanicals, motion ---------- */
+.lab-steps { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
+.lab-step {
+  position: relative; display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; padding: 0 8px;
+  border: 0; background: transparent; color: var(--text-3); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+}
+.lab-step::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--gold); transform: scaleX(0); transition: transform var(--t-base) var(--ease-out); }
+.lab-step.is-on { color: var(--text); }
+.lab-step.is-on::after { transform: none; }
+.lab-step__n { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--border-strong); font-size: 0.6875rem; letter-spacing: 0; }
+.lab-step.is-on .lab-step__n { border-color: var(--c-champagne); color: var(--accent-text); }
+.lab-step.is-done .lab-step__n { background: var(--gold); border-color: transparent; color: var(--c-ink); }
+.lab-step__label em { font-style: normal; font-weight: 400; letter-spacing: 0.08em; color: var(--text-3); text-transform: none; }
+@media (max-width: 520px) { .lab-step__label em { display: none; } .lab-step { gap: 6px; } }
+.lab__panel > section { animation: hxCap 500ms var(--ease-out) both; }
+.lab__panel .lab-sec-head { margin-top: 18px; }
+.lab__tray .lab__formula { margin-top: 18px; }
+.lab-next { margin-top: 18px; justify-self: start; }
+
+/* base step */
+.base-card { display: grid; grid-template-columns: 140px 1fr; gap: 20px; align-items: center; padding: 18px; border: 1px solid var(--border); background: #fff; transition: border-color var(--t-base), background var(--t-base); }
+.base-card.is-in { border-color: #e6d4b0; background: #fffaf0; }
+.base-card__img { width: 140px; height: 140px; object-fit: contain; transform-origin: 70% 30%; }
+.base-card__img.is-pouring { animation: tilt 1500ms var(--ease-in-out) both; }
+@keyframes tilt { 25%, 70% { transform: rotate(-32deg) translate(-6px, -8px); } }
+.base-card__body { display: grid; gap: 6px; justify-items: start; }
+.base-card__name { margin: 0; font-family: var(--font-serif); font-size: 1.5rem; line-height: 1.1; }
+.base-card__ml { margin: 0; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); font-weight: 600; }
+@media (max-width: 520px) { .base-card { grid-template-columns: 96px 1fr; } .base-card__img { width: 96px; height: 96px; } }
+
+/* botanicals step */
+.bot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 520px) { .bot-grid { grid-template-columns: repeat(2, 1fr); } }
+.bot-tile { position: relative; }
+.bot-tile__main { width: 100%; display: grid; justify-items: center; gap: 4px; padding: 14px 6px; border: 1px solid transparent; background: transparent; transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-base) var(--ease-out); }
+.bot-tile__main:hover { background: var(--bg-pearl); transform: translateY(-2px); }
+.bot-tile.is-in .bot-tile__main { border-color: #e6d4b0; background: #fffaf0; }
+.bot-tile__dish { width: 78px; height: 78px; border-radius: 50%; overflow: hidden; display: block; box-shadow: 0 10px 18px -12px rgb(80 58 24 / 0.5); }
+.bot-tile__dish img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); mix-blend-mode: multiply; }
+.bot-tile__name { font-family: var(--font-serif); font-size: 1.0625rem; line-height: 1.1; text-align: center; margin-top: 6px; }
+.bot-tile__meta { font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--text-3); }
+.bot-tile.is-in .bot-tile__meta { color: var(--accent-text); font-weight: 600; }
+.bot-tile:hover .kit-tile__info { opacity: 1; }
+.lab-note { display: flex; gap: 6px; align-items: flex-start; margin: 14px 0 0; }
+.lab-note svg { flex: none; margin-top: 3px; }
+
+/* beaker motion */
+.vessel__pour rect { transform-origin: top; animation: pour 1400ms var(--ease-in-out) both; }
+@keyframes pour { 0% { transform: scaleY(0); opacity: 1; } 35% { transform: scaleY(1); opacity: 1; } 80% { opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+.vessel__band { transition: y 1100ms var(--ease-out), height 1100ms var(--ease-out), opacity var(--t-base); }
+.vessel__tag, .vessel__callout { transition: transform 1100ms var(--ease-out); }
+.vessel__bubble { animation: bubble 5s ease-in infinite; }
+@keyframes bubble { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.8; } 90% { opacity: 0.6; } 100% { transform: translateY(-180px); opacity: 0; } }
+.vessel__float { transform: translateY(var(--fy)); animation: floatIn 1200ms var(--ease-out) both, floatBob 6s ease-in-out 1200ms infinite; transition: transform 1100ms var(--ease-out); }
+@keyframes floatIn { from { transform: translateY(-120px); opacity: 0; } }
+@keyframes floatBob { 0%, 100% { transform: translateY(var(--fy)); } 50% { transform: translateY(calc(var(--fy) - 7px)) rotate(2deg); } }
+@media (prefers-reduced-motion: reduce) { .vessel__pour, .vessel__bubble { display: none; } .vessel__float { animation: none; } .base-card__img.is-pouring { animation: none; } }
+.vessel-wrap { width: min(100%, 500px); }

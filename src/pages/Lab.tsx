@@ -12,22 +12,25 @@ import {
 } from "../data/ingredients";
 import { FORMULA_DISCLAIMER } from "../data/learning";
 import { FormulaInputError, MAX_ACCORDS, computeVolumes, formatMl, totalShare, validateBlend } from "../lib/formula";
-import { flyTo } from "../lib/fly";
+import { flyTo, prefersReducedMotion } from "../lib/fly";
 import type { AccordId, BotanicalId } from "../lib/types";
 
 export default function Lab() {
   const s = useApp();
-  const { draft, addToBlend, removeFromBlend, undo, undoStack, resetBlend, clearBlend, balance, setMode, lastChanges, creations, startNewDraft } = s;
+  const { draft, addToBlend, removeFromBlend, undo, undoStack, resetBlend, clearBlend, balance, setMode, lastChanges, creations, startNewDraft, setBase, toggleInfusion } = s;
   const nav = useNavigate();
   const [dropKey, setDropKey] = useState(0);
   const [dropColor, setDropColor] = useState("#c98f3e");
   const [hover, setHover] = useState<AccordId | null>(null);
   const [blocked, setBlocked] = useState<BotanicalId | null>(null);
   const [info, setInfo] = useState<AccordId | null>(null);
+  const [step, setStep] = useState(0);
+  const [pourKey, setPourKey] = useState(0);
   const vesselRef = useRef<HTMLDivElement>(null);
 
   const issues = validateBlend(draft.blend);
-  const valid = issues.length === 0;
+  const blendValid = issues.length === 0;
+  const valid = blendValid && draft.baseAdded;
   const total = totalShare(draft.blend);
   const vols = computeVolumes(draft.blend);
   const editing = draft.editingId ? creations.find((c) => c.id === draft.editingId) : undefined;
@@ -48,7 +51,16 @@ export default function Lab() {
     return out;
   }, [draft.blend]);
 
-  const previewBlockReason = issues[0]?.code === "empty" ? "Add at least one accord to preview." : issues[0]?.code === "unbalanced" ? `Blend totals ${total}%, rebalance to 100% to preview.` : issues.length ? "Fix the highlighted values to preview." : "";
+  const previewBlockReason = issues[0]?.code === "empty" ? "Add at least one oil from your kit to preview." : issues[0]?.code === "unbalanced" ? `Blend totals ${total}%, rebalance to 100% to preview.` : issues.length ? "Fix the highlighted values to preview." : !draft.baseAdded ? "Pour the 8 ml base to preview." : "";
+  // on small screens the beaker sits above the steps: bring it into view to watch the pour / drop
+  const showBeaker = () => { if (window.matchMedia("(max-width: 999px)").matches) vesselRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "center" }); };
+  const pour = () => { setPourKey((k) => k + 1); setBase(true); showBeaker(); };
+  const drop = (id: BotanicalId) => { const adding = !draft.infusions.includes(id); toggleInfusion(id); if (adding) showBeaker(); };
+  const steps = [
+    { label: "Oils", done: blendValid },
+    { label: "Base", done: draft.baseAdded },
+    { label: "Botanicals", done: draft.infusions.length > 0, optional: true },
+  ];
 
   const kitMl = KIT.accordVialMl;
 
@@ -82,24 +94,37 @@ export default function Lab() {
         <section className="lab__vessel" aria-labelledby="vessel-h">
           <h2 id="vessel-h" className="sr-only">Mixing beaker</h2>
           <div className="vessel-wrap" ref={vesselRef}>
-            <Vessel blend={draft.blend} dropKey={dropKey} dropColor={dropColor} highlight={hover} />
-            {draft.blend.length === 0 && (
+            <Vessel blend={draft.blend} baseAdded={draft.baseAdded} infusions={draft.infusions} pourKey={pourKey} dropKey={dropKey} dropColor={dropColor} highlight={hover} />
+            {draft.blend.length === 0 && !draft.baseAdded && (
               <div className="vessel-empty">
-                <p className="small body-2">Tap a bottle from your kit to begin</p>
+                <p className="small body-2">Start with a few oils from your kit</p>
                 <button className="link small" onClick={resetBlend}>or start from the demo composition</button>
               </div>
             )}
           </div>
-          <p className="vessel-caption small muted"><strong className="num">{formatMl(vols.fragranceCml)}</strong> of 2.00 ml · colours are visual coding only</p>
+          <p className="vessel-caption small muted"><strong className="num">{((draft.blend.length ? vols.fragranceCml : 0) / 100 + (draft.baseAdded ? 8 : 0)).toFixed(2)} ml</strong> of 10 ml · oils 2 ml + base 8 ml · colours are visual coding only</p>
         </section>
 
         {/* PANEL, kit + formula */}
         <div className="lab__panel">
-          <section className="lab__tray" aria-labelledby="tray-h">
-            <div className="lab-sec-head">
-              <h2 id="tray-h" className="eyebrow">From your Creator Kit</h2>
-              <span className="small muted num">{draft.blend.length}/{MAX_ACCORDS}</span>
-            </div>
+          <div className="lab-steps" role="tablist" aria-label="Build your perfume">
+            {steps.map((st, i) => (
+              <button key={st.label} role="tab" id={`step-${i}`} aria-controls={`panel-${i}`} aria-selected={step === i} className={`lab-step ${step === i ? "is-on" : ""} ${st.done ? "is-done" : ""}`} onClick={() => setStep(i)}>
+                <span className="lab-step__n" aria-hidden>{st.done ? <Check size={12} /> : i + 1}</span>
+                <span className="lab-step__label">{st.label}{st.optional && <em> optional</em>}</span>
+              </button>
+            ))}
+          </div>
+
+          {step === 0 && (
+            <section className="lab__tray" role="tabpanel" id="panel-0" aria-labelledby="step-0">
+              <div className="lab-sec-head">
+                <h2 id="tray-h" className="eyebrow">Oils from your Creator Kit</h2>
+                <div className="seg seg--sm" role="radiogroup" aria-label="Adjustment mode">
+                  <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
+                  <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
+                </div>
+              </div>
             <ul role="list" className="kit-grid">
               {ACCORDS.map((a) => {
                 const entry = draft.blend.find((e) => e.accordId === a.id);
@@ -126,29 +151,7 @@ export default function Lab() {
               })}
             </ul>
 
-            <div className="bot-block">
-              <p className="small muted"><Leaf size={13} aria-hidden /> Botanicals from the kit are for smelling only</p>
-              <ul role="list" className="bot-list">
-                {BOTANICALS.map((b) => (
-                  <li key={b.id}>
-                    <button className="bot-dish" onClick={() => setBlocked(b.id)} aria-label={`${b.name}, exploration only. Learn why it cannot be added`} title={b.name}>
-                      <img src={b.image} alt="" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-          <section className="lab__formula" aria-labelledby="formula-h">
-            <div className="lab-sec-head">
-              <h2 id="formula-h" className="eyebrow">Your formula</h2>
-              <div className="seg seg--sm" role="radiogroup" aria-label="Adjustment mode">
-                <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
-                <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
-              </div>
-            </div>
-
+              <div className="lab__formula" aria-label="Your formula">
             {draft.blend.length === 0 ? (
               <p className="formula-empty small muted">Add two or three accords, for example Woody, Citrus and Musk.</p>
             ) : (
@@ -180,6 +183,53 @@ export default function Lab() {
               </div>
             )}
 
+              </div>
+              {blendValid && !draft.baseAdded && <button className="btn btn--sm lab-next" onClick={() => setStep(1)}>Next: pour the base <ArrowRight size={14} aria-hidden /></button>}
+            </section>
+          )}
+
+          {step === 1 && (
+            <section role="tabpanel" id="panel-1" aria-labelledby="step-1" className="lab-base">
+              <div className="lab-sec-head"><h2 className="eyebrow">The base</h2><span className="small muted num">{draft.baseAdded ? "8.00" : "0.00"} / 8.00 ml</span></div>
+              <div className={`base-card ${draft.baseAdded ? "is-in" : ""}`}>
+                <img src="./assets/img/tool-alcohol.webp" alt="" className={`base-card__img ${pourKey ? "is-pouring" : ""}`} key={pourKey} />
+                <div className="base-card__body">
+                  <p className="base-card__name">Perfumer’s alcohol</p>
+                  <p className="base-card__ml num">8.00 ml · 80% of your bottle</p>
+                  <p className="small muted">Oils are used in small amounts. The base carries them and fills the bottle. In this demo the base is illustrative, with no handling steps.</p>
+                  {draft.baseAdded ? (
+                    <button className="btn btn--secondary btn--sm" onClick={() => setBase(false)}>Remove base</button>
+                  ) : (
+                    <button className="btn btn--sm" onClick={pour}>Pour the base</button>
+                  )}
+                </div>
+              </div>
+              {draft.baseAdded && <button className="link small lab-next" onClick={() => setStep(2)}>Next: botanicals, optional <ArrowRight size={14} aria-hidden /></button>}
+            </section>
+          )}
+
+          {step === 2 && (
+            <section role="tabpanel" id="panel-2" aria-labelledby="step-2" className="lab-bots">
+              <div className="lab-sec-head"><h2 className="eyebrow">Botanicals from your kit</h2><span className="small muted num">{draft.infusions.length}/4</span></div>
+              <ul role="list" className="bot-grid">
+                {BOTANICALS.map((b) => {
+                  const on = draft.infusions.includes(b.id);
+                  return (
+                    <li key={b.id} className={`bot-tile ${on ? "is-in" : ""}`}>
+                      <button className="bot-tile__main" aria-pressed={on} onClick={() => drop(b.id)} aria-label={`${on ? "Take out" : "Drop in"} ${b.name}`}>
+                        <span className="bot-tile__dish"><img src={b.image} alt="" /></span>
+                        <span className="bot-tile__name">{b.name.replace("Dried r", "R").replace("Dried o", "O")}</span>
+                        <span className="bot-tile__meta">{on ? "In the beaker" : "Drop in"}</span>
+                      </button>
+                      <button className="kit-tile__info" onClick={() => setBlocked(b.id)} aria-label={`${b.name}, exploration only. Learn why it is not counted`}><Info size={13} /></button>
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="small muted lab-note"><Leaf size={13} aria-hidden /> A visual infusion: botanicals float in the beaker so you can see the story, but they are not counted in the 10 ml formula.</p>
+            </section>
+          )}
+
             <details className="disclosure explain">
               <summary>How the formula works<Plus size={16} aria-hidden /></summary>
               <div>
@@ -194,7 +244,6 @@ export default function Lab() {
                 <p className="muted" style={{ marginTop: 8 }}>{FORMULA_DISCLAIMER}</p>
               </div>
             </details>
-          </section>
         </div>
       </div>
 
@@ -203,8 +252,8 @@ export default function Lab() {
         <div className="container lab-bar__inner">
           <div className="lab-bar__status">
             <span className="small num"><span className="muted">Blend</span> {formatMl(vols.fragranceCml)}</span>
-            <span className="small num"><span className="muted">Base</span> {formatMl(vols.baseCml)}</span>
-            <span className="small num"><strong>Total {draft.blend.length ? formatMl(vols.totalCml) : "0.00 ml"}</strong></span>
+            <span className="small num"><span className="muted">Base</span> {draft.baseAdded ? formatMl(vols.baseCml) : "0.00 ml"}</span>
+            <span className="small num"><strong>Total {(((draft.blend.length ? vols.fragranceCml : 0) + (draft.baseAdded ? vols.baseCml : 0)) / 100).toFixed(2)} ml</strong></span>
           </div>
           <div className="lab-bar__actions">
             <button className="icon-btn" onClick={undo} disabled={!undoStack.length} aria-label="Undo last change" title="Undo"><Undo2 size={18} /></button>
@@ -228,7 +277,7 @@ export default function Lab() {
         </>}>
         {blocked && (
           <div className="stack">
-            <Notice tone="warn"><strong>{botanicalById(blocked).name} is a raw botanical sample, exploration only.</strong> Raw plant material is not a fragrance concentrate and is not added to a perfume, even in this demo.</Notice>
+            <Notice tone="warn"><strong>{botanicalById(blocked).name} is a raw botanical sample, exploration only.</strong> Raw plant material is not a fragrance concentrate, so it is never counted in the 10 ml formula. In the beaker it appears only as a visual infusion, to tell the story of your blend.</Notice>
             <p className="body-2">For composition, use the related <strong>{accordById(botanicalById(blocked).relatedAccord).name} accord</strong>: an illustrative demo input with a similar family association. This is an educational relationship, not a claim that they are chemically equivalent.</p>
           </div>
         )}

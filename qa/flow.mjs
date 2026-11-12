@@ -41,6 +41,10 @@ await page.goto(B + "/lab"); await page.waitForTimeout(400);
 ok("lab keeps kit selection", await page.getByRole("button", { name: /Remove Woody from blend/ }).first().isVisible());
 await page.getByRole("button", { name: "Add Citrus accord to blend" }).click(); await page.waitForTimeout(500);
 await page.getByRole("button", { name: "Add Musk accord to blend" }).click(); await page.waitForTimeout(900);
+ok("preview needs the base", await page.getByRole("button", { name: /^Preview/ }).isDisabled());
+await page.getByRole("tab", { name: /Base/ }).click();
+await page.getByRole("button", { name: "Pour the base" }).click(); await page.waitForTimeout(600);
+await page.getByRole("tab", { name: /Oils/ }).click(); await page.waitForTimeout(200);
 await shot("06-lab-three");
 const bar = () => page.locator(".lab-bar").innerText();
 const totalTxt = () => page.locator(".total-row").innerText();
@@ -50,9 +54,13 @@ ok("10 proportional adjust total 100%", (await totalTxt()).includes("100%"));
 ok("12 total 10.00 ml", (await bar()).includes("Total 10.00 ml"));
 ok("recalc shown", await page.getByText("Recalculated").isVisible());
 // botanical block
+await page.getByRole("tab", { name: /Botanicals/ }).click();
+await page.getByRole("button", { name: /Drop in Cinnamon/ }).click(); await page.waitForTimeout(300);
+ok("botanical floats as visual infusion, total unchanged", (await bar()).includes("Total 10.00 ml"));
 await page.getByRole("button", { name: /Cinnamon sticks, exploration only/ }).click();
 ok("GAP5 botanical blocked", await page.getByRole("dialog", { name: /Botanicals can/ }).isVisible());
 await page.getByRole("button", { name: "Close" }).click();
+await page.getByRole("tab", { name: /Oils/ }).click(); await page.waitForTimeout(200);
 // manual mode
 await page.getByRole("radio", { name: "Manual" }).click();
 await page.locator("#share-citrus").fill("5"); await page.locator("#share-citrus").press("Enter"); await page.waitForTimeout(200);
