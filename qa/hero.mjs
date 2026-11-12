@@ -6,11 +6,11 @@ await ctx.addInitScript(() => { try { localStorage.setItem("sentyar.v1.flags", J
 const p = await ctx.newPage(); const errs = [];
 p.on("pageerror", (e) => errs.push(e.message)); p.on("console", (m) => m.type() === "error" && errs.push(m.text()));
 await p.goto("http://localhost:4173/#/", { waitUntil: "networkidle" }); await p.waitForTimeout(1500);
-const name = () => p.locator(".hx__name").textContent();
+const name = async () => (await p.locator(".hx__name").evaluate((e) => e.firstChild.textContent));
 const n0 = await name();
-await p.getByRole("button", { name: "Next bottle" }).click(); await p.waitForTimeout(1200);
+await p.getByRole("button", { name: "The Orb" }).click(); await p.waitForTimeout(1200);
 const n1 = await name();
-await p.getByRole("button", { name: "Next bottle" }).click(); await p.waitForTimeout(1200);
+await p.locator(".hx__stage").focus(); await p.keyboard.press("ArrowRight"); await p.waitForTimeout(1200);
 await p.mouse.move(1000, 400); await p.waitForTimeout(600);
 await p.screenshot({ path: out + "-next.png" });
 const n2 = await name();

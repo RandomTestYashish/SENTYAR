@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as RPointerEvent } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowRight, Pause, Play } from "lucide-react";
 import { prefersReducedMotion } from "../../lib/fly";
 
 const IMG = "./assets/img/";
@@ -85,7 +85,6 @@ export function HeroCarousel() {
   return (
     <section ref={root} className={`hx ${mounted ? "is-in" : ""}`} aria-label="SENTYAR bottle collection">
       <div className="hx__glow" aria-hidden />
-      <p className="hx__bgword" aria-hidden key={`bg-${slide.id}`}>{slide.name.replace("The ", "")}</p>
 
       <header className="hx__head">
         <p className="eyebrow hx__eyebrow"><span>The Personal Perfumery</span></p>
@@ -102,7 +101,7 @@ export function HeroCarousel() {
         className="hx__stage"
         role="group"
         aria-roledescription="carousel"
-        aria-label="Bottle silhouettes. Use the left and right arrow keys to browse."
+        aria-label="Bottle silhouettes. Drag, click a side bottle, or use the left and right arrow keys to browse."
         tabIndex={0}
         onKeyDown={onKey}
         onPointerDown={onDown}
@@ -140,15 +139,9 @@ export function HeroCarousel() {
       </div>
 
       <div className="hx__foot">
-        <div className="hx__caption" key={`cap-${slide.id}`}>
-          <p className="hx__count num"><span>{String(active + 1).padStart(2, "0")}</span> / {String(n).padStart(2, "0")} · {slide.style}</p>
-          <h2 className="hx__name">{slide.name}</h2>
-          <p className="hx__desc">{slide.line}</p>
-          <p className="hx__notes">{slide.notes.map((x) => <span key={x}>{x}</span>)}</p>
-        </div>
+        <p className="hx__name" key={`cap-${slide.id}`}>{slide.name}<span>{slide.style}</span></p>
 
         <div className="hx__controls">
-          <button className="hx__btn" onClick={prev} aria-label="Previous bottle"><ArrowLeft size={18} aria-hidden /></button>
           <div className="hx__dots" role="group" aria-label="Choose a bottle">
             {BOTTLES.map((b, i) => (
               <button key={b.id} aria-current={i === active ? "true" : undefined} aria-label={b.name} className={`hx__dot ${i === active ? "is-on" : ""}`} onClick={() => go(i)}>
@@ -156,20 +149,17 @@ export function HeroCarousel() {
               </button>
             ))}
           </div>
-          <button className="hx__btn" onClick={next} aria-label="Next bottle"><ArrowRight size={18} aria-hidden /></button>
-          <button className="hx__btn hx__btn--ghost" onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause autoplay" : "Play autoplay"}>
-            {playing ? <Pause size={14} aria-hidden /> : <Play size={14} aria-hidden />}
+          <button className="hx__pause" onClick={() => setPlaying((p) => !p)} aria-label={playing ? "Pause autoplay" : "Play autoplay"}>
+            {playing ? <Pause size={12} aria-hidden /> : <Play size={12} aria-hidden />}
           </button>
         </div>
 
         <div className="hx__ctas">
-          <Link to="/kits/creator-kit-v1" className="btn">Explore the Kit <ArrowRight size={16} aria-hidden /></Link>
-          <Link to="/lab" className="btn btn--secondary">Enter the Lab</Link>
-
+          <Link to="/kits/creator-kit-v1" className="btn btn--sm">Explore the Kit <ArrowRight size={14} aria-hidden /></Link>
+          <Link to="/lab" className="link small">Enter the Lab</Link>
         </div>
       </div>
 
-      <span className="hx__scroll" aria-hidden />
     </section>
   );
 }
