@@ -6,6 +6,7 @@ import {
 import type {
   AccordId, AdjustMode, Blend, BotanicalId, BottleConceptId, CartItem, Creation, DiscoveryNote, ShareChange,
 } from "../lib/types";
+import { BOTTLE_IDS } from "../lib/types";
 import { accordById } from "../data/ingredients";
 import { productById } from "../data/catalogue";
 
@@ -38,7 +39,7 @@ function readDraft(raw: unknown): LabDraft | null {
     name: typeof r.name === "string" ? r.name.slice(0, 40) : "",
     editingId: typeof r.editingId === "string" ? r.editingId : null,
     parentId: typeof r.parentId === "string" ? r.parentId : null,
-    bottle: r.bottle === "facet" || r.bottle === "atelier" ? r.bottle : "pebble",
+    bottle: (BOTTLE_IDS as unknown[]).includes(r.bottle) ? (r.bottle as BottleConceptId) : "pebble",
     baseAdded: r.baseAdded === true,
     infusions: Array.isArray(r.infusions) ? (r.infusions.filter((x) => BOTANICAL_IDS.includes(x as BotanicalId)) as BotanicalId[]).slice(0, 4) : [],
   };

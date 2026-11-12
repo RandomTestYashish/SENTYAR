@@ -62,7 +62,11 @@ export interface ShareChange {
   to: number;
 }
 
-export type BottleConceptId = "pebble" | "facet" | "atelier";
+/** silhouettes with a 2D concept drawing (brand page) */
+export type SvgBottleId = "pebble" | "facet" | "atelier";
+/** every bottle a creation can be presented in; "pebble" shows as The Signature */
+export type BottleConceptId = SvgBottleId | "orb" | "fluid" | "column" | "pearl";
+export const BOTTLE_IDS: BottleConceptId[] = ["pebble", "orb", "facet", "fluid", "atelier", "column", "pearl"];
 
 export interface CreationVersion {
   version: number;

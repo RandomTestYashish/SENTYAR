@@ -3,14 +3,14 @@ import { Check, X } from "lucide-react";
 import { Emblem, EmblemMonogram, EmblemNegative, Lockup, Wordmark } from "../components/Logo";
 import { Bottle, BOTTLES } from "../components/Bottle";
 import { Img } from "../components/ui";
-import type { BottleConceptId } from "../lib/types";
+import type { SvgBottleId } from "../lib/types";
 
 const COLORS = [
   ["Bone", "#F8F6F2", "Canvas"], ["Linen", "#E9E4DC", "Surfaces"], ["Stone", "#C8C0B4", "Borders"],
   ["Graphite", "#34312D", "Secondary ink"], ["Ink", "#0B0B0B", "Type, CTAs, packaging"], ["Champagne", "#B89972", "Foil accent"],
 ];
 
-const RATIONALE: Record<BottleConceptId, string> = {
+const RATIONALE: Record<SvgBottleId, string> = {
   pebble: "Recommended. A recognisable, softly asymmetric silhouette with a flat stable base, a single parting line and a standard 15 mm neck, mouldable in two-part tooling. The faceted stone cap becomes the signature. Front plane is calm enough for a label.",
   facet: "Strong shelf presence and crisp refraction, but many planes raise mould cost, risk visible sink marks, and label placement is constrained to one face.",
   atelier: "The most manufacturable and comfortable to grip, with a stepped shoulder detail, but closest to familiar classic bottles, so less ownable.",
@@ -91,7 +91,7 @@ export default function Brand() {
           <h2 id="bt-h" className="h2">Signature bottle: <em>three directions</em></h2>
           <p className="lead" style={{ marginTop: 8 }}>Geometry is modular (see <code>BOTTLES</code> in <code>src/components/Bottle.tsx</code>), so the chosen silhouette can change without rebuilding pages.</p>
           <div className="brand-grid brand-grid--3" style={{ marginTop: 32 }}>
-            {(Object.keys(BOTTLES) as BottleConceptId[]).map((k) => (
+            {(Object.keys(BOTTLES) as SvgBottleId[]).map((k) => (
               <figure key={k} className={`brand-tile brand-tile--bottle ${k === "pebble" ? "brand-tile--selected" : ""}`}>
                 <Bottle concept={k} fill={0.72} name="Signature" accents={["#D9973F", "#8A6A4E"]} animateFill={false} />
                 <figcaption>

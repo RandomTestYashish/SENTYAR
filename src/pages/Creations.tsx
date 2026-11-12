@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Columns2, Copy, CopyPlus, FlaskConical, Pencil, Trash2, X } from "lucide-react";
 import { useApp } from "../app/store";
-import { Bottle } from "../components/Bottle";
+import { BottlePhoto } from "../components/BottlePhoto";
 import { ConfirmDialog, Notice } from "../components/ui";
 import { accordById } from "../data/ingredients";
 import { compareBlends } from "../lib/formula";
@@ -53,7 +53,7 @@ export default function Creations() {
               return (
                 <li key={c.id} className={`creation card ${picked ? "is-picked" : ""}`}>
                   <Link to={`/creations/${c.id}`} className="creation__visual" aria-label={`Open ${c.name}`}>
-                    <Bottle concept={c.appearance.bottle} fill={0.82} name={c.name} accents={c.blend.map((e) => accordById(e.accordId).swatch)} animateFill={false} />
+                    <BottlePhoto concept={c.appearance.bottle} name={c.name} className="bphoto--card" />
                   </Link>
                   <div className="creation__body">
                     <h2 className="h4"><Link to={`/creations/${c.id}`} className="creation__title">{c.name}</Link></h2>

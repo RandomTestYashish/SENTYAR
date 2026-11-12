@@ -3,7 +3,7 @@
 // Liquid colour is a constant demo amber, it does not encode scent.
 
 import { useId } from "react";
-import type { BottleConceptId } from "../lib/types";
+import type { BottleConceptId, SvgBottleId } from "../lib/types";
 import { Emblem } from "./Logo";
 
 interface Geometry {
@@ -21,7 +21,7 @@ interface Geometry {
 }
 
 
-export const BOTTLES: Record<BottleConceptId, Geometry> = {
+export const BOTTLES: Record<SvgBottleId, Geometry> = {
   pebble: {
     name: "The Pebble",
     tagline: "Organic sculptural · controlled asymmetry",
@@ -89,7 +89,7 @@ export interface BottleProps {
 }
 
 export function Bottle({ concept = "pebble", fill = 0.72, name, accents = [], showLabel = true, className, title, animateFill = true }: BottleProps) {
-  const g = BOTTLES[concept];
+  const g = BOTTLES[concept as SvgBottleId] ?? BOTTLES.pebble;
   const uidRaw = useId().replace(/:/g, "");
   const id = (s: string) => `${s}-${uidRaw}`;
   const level = Math.max(0, Math.min(1, fill));

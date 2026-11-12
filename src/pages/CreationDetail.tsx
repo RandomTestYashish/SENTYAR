@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Check, Copy, CopyPlus, History, Pencil, ShoppingBag, Trash2 } from "lucide-react";
 import { useApp } from "../app/store";
-import { Bottle } from "../components/Bottle";
+import { BottlePhoto } from "../components/BottlePhoto";
 import { ConfirmDialog, Notice } from "../components/ui";
 import { ProductThumb } from "../components/ProductThumb";
 import { accordById, ingredientById } from "../data/ingredients";
@@ -55,7 +55,7 @@ export default function CreationDetail() {
 
       <div className="detail">
         <div className="detail__visual">
-          <Bottle concept={c.appearance.bottle} fill={0.82} name={c.name} accents={c.blend.map((e) => accordById(e.accordId).swatch)} />
+          <BottlePhoto concept={c.appearance.bottle} name={c.name} className="bphoto--card" />
         </div>
         <div className="detail__info">
           <p className="eyebrow">Creation · v{c.formulaVersion}</p>

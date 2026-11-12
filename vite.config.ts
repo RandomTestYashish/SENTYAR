@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      output: { manualChunks: { three: ["three"] } },
+      output: {  },
     },
   },
   test: { environment: "node" },

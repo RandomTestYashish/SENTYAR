@@ -3,8 +3,10 @@
 //, the rest of the app only talks to `load`/`save`.
 
 import { isAccordId, normalize } from "./formula";
+import { BOTTLE_IDS } from "./types";
 import type {
   Blend,
+  BottleConceptId,
   CartItem,
   Creation,
   CreationVersion,
@@ -124,7 +126,7 @@ export function readCreation(raw: unknown): Creation | null {
     botanicalNoteIds: Array.isArray(raw.botanicalNoteIds)
       ? raw.botanicalNoteIds.filter((x): x is string => typeof x === "string")
       : [],
-    appearance: { bottle: bottle === "facet" || bottle === "atelier" ? bottle : "pebble" },
+    appearance: { bottle: (BOTTLE_IDS as string[]).includes(bottle ?? "") ? (bottle as BottleConceptId) : "pebble" },
     disclaimerAcknowledged: raw.disclaimerAcknowledged === true,
     parentId: typeof raw.parentId === "string" ? raw.parentId : undefined,
     history: Array.isArray(raw.history)

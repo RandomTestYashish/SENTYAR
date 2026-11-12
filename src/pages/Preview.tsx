@@ -1,19 +1,15 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Box, Droplet, Check, CopyPlus, Image as ImageIcon, Pause, Play, RotateCcw, Save } from "lucide-react";
+import { ArrowLeft, Check, CopyPlus, Leaf, Save } from "lucide-react";
 import { useApp } from "../app/store";
-import { Bottle, BOTTLES } from "../components/Bottle";
+import { BottlePhoto, PHOTO_BOTTLES, photoBottle } from "../components/BottlePhoto";
 import { Dialog, Notice } from "../components/ui";
-import { accordById } from "../data/ingredients";
+import { accordById, botanicalById } from "../data/ingredients";
 import { FORMULA_DISCLAIMER } from "../data/learning";
 import { computeVolumes, formatMl, validateBlend } from "../lib/formula";
 import { prefersReducedMotion } from "../lib/fly";
-import { webglAvailable } from "../lib/webgl";
-import type { BottleConceptId } from "../lib/types";
 
-const Bottle3D = lazy(() => import("../features/lab/Bottle3D"));
 const SUGGESTIONS = ["My Sunday", "After Hours", "Orange Woods", "Rose Affair"];
-const FILL = 0.82;
 
 export default function Preview() {
   const { draft, setDraftName, setBottle, saveCreation, creations, loadIntoLab, toast } = useApp();
@@ -21,23 +17,30 @@ export default function Preview() {
   const issues = validateBlend(draft.blend);
   const valid = issues.length === 0;
   const vols = computeVolumes(draft.blend);
-  const accents = useMemo(() => draft.blend.map((e) => accordById(e.accordId).swatch), [draft.blend]);
   const editing = draft.editingId ? creations.find((c) => c.id === draft.editingId) : undefined;
-
-  const canGL = useMemo(() => webglAvailable(), []);
-  const [view, setView] = useState<"3d" | "2d">(() => (canGL && !window.matchMedia("(max-width: 380px)").matches ? "3d" : "2d"));
-  const [glError, setGlError] = useState<string | null>(canGL ? null : "WebGL isn’t available in this browser.");
-  const [glReady, setGlReady] = useState(false);
-  const [auto, setAuto] = useState(!prefersReducedMotion());
-  const [resetKey, setResetKey] = useState(0);
-  const [fill, setFill] = useState(0);
   const [ack, setAck] = useState(false);
   const [nameErr, setNameErr] = useState<string | null>(null);
   const [wearOpen, setWearOpen] = useState(false);
   const [justSaved, setJustSaved] = useState<string | null>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { const t = window.setTimeout(() => setFill(FILL), 250); return () => clearTimeout(t); }, []);
-  const use3D = view === "3d" && !glError && draft.bottle === "pebble";
+  // pointer tilt: the bottle turns towards the cursor, light sweeps across the glass
+  useEffect(() => {
+    const el = stageRef.current; if (!el || prefersReducedMotion()) return;
+    let raf = 0;
+    const move = (e: PointerEvent) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = el.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        el.style.setProperty("--ry", `${(x * 22).toFixed(2)}deg`); el.style.setProperty("--rx", `${(-y * 10).toFixed(2)}deg`);
+        el.style.setProperty("--sx", `${((x + 0.5) * 100).toFixed(1)}%`); el.classList.add("is-live");
+      });
+    };
+    const leave = () => { el.style.setProperty("--ry", "0deg"); el.style.setProperty("--rx", "0deg"); el.classList.remove("is-live"); };
+    el.addEventListener("pointermove", move); el.addEventListener("pointerleave", leave);
+    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); cancelAnimationFrame(raf); };
+  }, [valid]);
 
   if (!valid) {
     return (
@@ -67,43 +70,23 @@ export default function Preview() {
       <div className="preview__grid">
         <section className="preview__stage" aria-labelledby="stage-h">
           <h2 id="stage-h" className="sr-only">Bottle preview</h2>
-          <div className={`stage ${use3D ? "stage--3d" : ""}`}>
-            {use3D ? (
-              <Suspense fallback={<div className="stage__loading"><span className="small muted">Loading 3D bottle…</span></div>}>
-                <Bottle3D fill={fill} name={draft.name || "Your creation"} accents={accents} autoRotate={auto} resetKey={resetKey}
-                  onError={(m) => setGlError(m)} onReady={() => setGlReady(true)} />
-                {!glReady && <div className="stage__loading"><span className="small muted">Preparing glass and light…</span></div>}
-              </Suspense>
-            ) : (
-              <Bottle concept={draft.bottle} fill={fill} name={draft.name || "Your creation"} accents={accents} className="stage__svg" />
-            )}
-            <div className="stage__tools">
-              {use3D && <>
-                <button className="icon-btn" onClick={() => setAuto((a) => !a)} aria-label={auto ? "Pause rotation" : "Resume rotation"} aria-pressed={auto}>{auto ? <Pause size={18} /> : <Play size={18} />}</button>
-                <button className="icon-btn" onClick={() => setResetKey((k) => k + 1)} aria-label="Reset view"><RotateCcw size={18} /></button>
-              </>}
-              <button className="icon-btn" onClick={() => { setFill(0); window.setTimeout(() => setFill(FILL), 300); }} aria-label="Replay bottle filling"><Droplet size={18} /></button>
-              {draft.bottle === "pebble" && canGL && !glError && (
-                <div className="seg seg--sm" role="radiogroup" aria-label="Viewer">
-                  <button role="radio" aria-checked={view === "3d"} onClick={() => setView("3d")}><Box size={14} aria-hidden /> 3D</button>
-                  <button role="radio" aria-checked={view === "2d"} onClick={() => setView("2d")}><ImageIcon size={14} aria-hidden /> 2D</button>
-                </div>
-              )}
+          <div className="pv-stage" ref={stageRef}>
+            <div className="pv-stage__glow" aria-hidden />
+            <div className="pv-stage__turn" key={draft.bottle}>
+              <BottlePhoto concept={draft.bottle} name={draft.name || "Your creation"} className="pv-bottle" />
+              <span className="pv-sheen" aria-hidden />
             </div>
-            {use3D && glReady && <p className="stage__hint small muted">Drag to rotate</p>}
+            <div className="pv-stage__shadow" aria-hidden />
+            <p className="pv-stage__cap small"><span>{photoBottle(draft.bottle).name}</span> · {photoBottle(draft.bottle).style} · 10 ml</p>
           </div>
-          {glError && view === "3d" && draft.bottle === "pebble" && (
-            <Notice>Showing the 2D bottle. {glError} The 2D view shows the same name, fill and label information.</Notice>
-          )}
-          <div className="concepts" role="radiogroup" aria-label="Bottle concept">
-            {(Object.keys(BOTTLES) as BottleConceptId[]).map((k) => (
-              <button key={k} role="radio" aria-checked={draft.bottle === k} className="concept-pick" onClick={() => setBottle(k)}>
-                <Bottle concept={k} fill={0.6} showLabel={false} animateFill={false} title="" />
-                <span>{BOTTLES[k].name}{k === "pebble" && <span className="small muted"> · recommended</span>}</span>
+          <div className="pv-picker" role="radiogroup" aria-label="Bottle concept">
+            {PHOTO_BOTTLES.map((b) => (
+              <button key={b.id} role="radio" aria-checked={draft.bottle === b.id} className="pv-pick" onClick={() => setBottle(b.id)} aria-label={b.name}>
+                <BottlePhoto concept={b.id} engrave={false} className="pv-pick__img" />
+                <span>{b.name.replace("The ", "")}</span>
               </button>
             ))}
           </div>
-          {draft.bottle !== "pebble" && <p className="small muted">The 3D model is built for the recommended Pebble concept; other concepts are shown in 2D.</p>}
         </section>
 
         <section className="preview__info" aria-labelledby="concept-h">
@@ -136,11 +119,14 @@ export default function Preview() {
             </tbody>
             <tfoot>
               <tr><th scope="row">Fragrance blend</th><td className="num">100%</td><td className="num">{formatMl(vols.fragranceCml)}</td></tr>
-              <tr><th scope="row">Demo base</th><td /><td className="num">{formatMl(vols.baseCml)}</td></tr>
+              <tr><th scope="row">Perfumer’s alcohol base</th><td /><td className="num">{formatMl(vols.baseCml)}</td></tr>
               <tr className="formula-table__total"><th scope="row">Total</th><td /><td className="num">{formatMl(vols.totalCml)}</td></tr>
             </tfoot>
           </table>
 
+          {draft.infusions.length > 0 && (
+            <p className="small muted pv-infusion"><Leaf size={13} aria-hidden /> Visual infusion: {draft.infusions.map((b) => botanicalById(b).name.toLowerCase()).join(", ")}. Shown in the beaker, not counted in the formula.</p>
+          )}
           <Notice tone="warn">{FORMULA_DISCLAIMER}</Notice>
           <label className="ack">
             <input id="ack" type="checkbox" checked={ack} onChange={(e) => setAck(e.target.checked)} />
