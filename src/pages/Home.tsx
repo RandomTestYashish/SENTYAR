@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Compass } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useApp } from "../app/store";
-import { Emblem, Wordmark } from "../components/Logo";
+import { Emblem } from "../components/Logo";
+import { HeroCarousel } from "../features/hero/HeroCarousel";
 import { Img, SectionHead } from "../components/ui";
 import { BOTANICALS, accordById } from "../data/ingredients";
 import { KIT, formatInr } from "../data/catalogue";
@@ -19,32 +20,8 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="hero">
-        <div className="container hero__grid">
-          <div className="hero__copy">
-            <div className="hero__mark">
-              <Emblem size={44} stroke={2.2} />
-              <Wordmark size="md" descriptor />
-            </div>
-            <h1 className="display hero__title">Craft your <em className="gilt">signature</em> scent.</h1>
-            <p className="lead">
-              Discover real botanical materials, understand the art of fragrance, and compose a personal scent concept,
-              guided step by step, from raw ingredient to finished bottle.
-            </p>
-            <div className="row hero__ctas">
-              <Link to="/kits/creator-kit-v1" className="btn">Explore the Kit <ArrowRight size={16} aria-hidden /></Link>
-              <Link to="/lab" className="btn btn--secondary">Enter the Lab</Link>
-            </div>
-            <div className="row" style={{ gap: 24 }}>
-              <button className="link link--arrow small" onClick={startTour}><Compass size={16} aria-hidden /> New here? Take a guided tour</button>
-              <Link to="/prefer" className="link link--arrow small">Not sure where to start? Try 10 quick picks <ArrowRight size={14} aria-hidden /></Link>
-            </div>
-          </div>
-          <figure className="hero__media">
-            <Img src="./assets/img/hero-stilllife.jpg" alt="A cushioned SENTYAR crystal bottle of amber eau de parfum with a faceted gold cap on a travertine plinth, beside a red rose, petals, a halved orange, cedarwood and cinnamon sticks" eager ratio="1 / 1" />
-            <figcaption className="small muted">Concept still life. Bottle and labelling are design direction, not a finished product.</figcaption>
-          </figure>
-        </div>
+      <HeroCarousel onTour={startTour} />
+      <section className="hero hero--facts" aria-label="At a glance">
         <div className="container">
           <div className="hero-facts">
             <div><strong className="num">10 ml</strong><span>Fixed bottle</span></div>
