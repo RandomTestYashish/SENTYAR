@@ -31,7 +31,7 @@ const wrap = (i: number) => ((i % n) + n) % n;
 /** signed shortest distance from the active slide */
 const offsetOf = (i: number, active: number) => { let d = i - active; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d; };
 
-export function HeroCarousel({ onTour }: { onTour: () => void }) {
+export function HeroCarousel() {
   const [active, setActive] = useState(0);
   const [playing, setPlaying] = useState(() => !prefersReducedMotion());
   const [hover, setHover] = useState(false);
@@ -165,14 +165,11 @@ export function HeroCarousel({ onTour }: { onTour: () => void }) {
         <div className="hx__ctas">
           <Link to="/kits/creator-kit-v1" className="btn">Explore the Kit <ArrowRight size={16} aria-hidden /></Link>
           <Link to="/lab" className="btn btn--secondary">Enter the Lab</Link>
-          <div className="hx__links">
-            <button className="link small" onClick={onTour}>Take a guided tour</button>
-            <Link to="/prefer" className="link small">Find your taste in 10 picks</Link>
-          </div>
+
         </div>
       </div>
 
-      <p className="hx__note small muted">Concept bottles. Silhouettes and labelling are design direction, not finished products.</p>
+      <span className="hx__scroll" aria-hidden />
     </section>
   );
 }

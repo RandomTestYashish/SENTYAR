@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <HeroCarousel onTour={startTour} />
+      <HeroCarousel />
       <section className="hero hero--facts" aria-label="At a glance">
         <div className="container">
           <div className="hero-facts">
@@ -28,6 +28,13 @@ export default function Home() {
             <div><strong className="num">6</strong><span>Demo accords</span></div>
             <div><strong className="num">4</strong><span>Real botanicals</span></div>
             <div><strong className="num">8</strong><span>Step journeys</span></div>
+          </div>
+          <div className="hero-after">
+            <p className="small muted">Concept bottles. Silhouettes and labelling are design direction, not finished products.</p>
+            <div className="hero-after__links">
+              <button className="link small" onClick={startTour}>New here? Take a guided tour</button>
+              <Link to="/prefer" className="link small">Find your taste in 10 picks</Link>
+            </div>
           </div>
         </div>
       </section>
