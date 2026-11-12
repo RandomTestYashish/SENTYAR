@@ -1,0 +1,117 @@
+import { chromium } from "playwright-core";
+const B = "http://localhost:4173/#";
+const browser = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
+const W = Number(process.argv[2] || 1440);
+const ctx = await browser.newContext({ viewport: { width: W, height: 900 } });
+const page = await ctx.newPage();
+const errs = []; const log = [];
+page.on("pageerror", (e) => errs.push("PAGEERROR " + e.message));
+page.on("console", (m) => m.type() === "error" && errs.push(m.text()));
+const ok = (name, cond) => { log.push(`${cond ? "PASS" : "FAIL"} ${name}`); };
+const shot = (n) => page.screenshot({ path: `qa/out/${n}-${W}.png` });
+
+await page.goto(B + "/"); await page.waitForTimeout(600);
+ok("1 welcome dialog on first visit", await page.getByRole("dialog", { name: "Welcome to SENTYAR" }).isVisible());
+await shot("01-welcome");
+await page.getByRole("button", { name: "Explore on my own" }).click();
+await page.getByRole("link", { name: /Explore the Kit/ }).click();
+ok("2 kit detail", await page.getByRole("heading", { name: "SENTYAR Creator Kit V1" }).waitFor().then(() => true, () => false));
+await page.getByRole("link", { name: /Start unboxing/ }).click();
+await page.getByRole("button", { name: /Lift the lid/ }).click(); await page.waitForTimeout(1300);
+await shot("02-unbox-open");
+await page.getByRole("button", { name: /^Dried orange peel, botanical sample/ }).click();
+ok("5 botanical detail", await page.getByRole("heading", { name: "Dried orange peel" }).isVisible());
+await page.getByRole("button", { name: "Explore this sample" }).click(); await page.waitForTimeout(800);
+ok("5b exploration tray", await page.getByText("In exploration tray").isVisible());
+await page.getByRole("button", { name: /^Woody accord/ }).click();
+await page.getByRole("button", { name: "Add to lab" }).click(); await page.waitForTimeout(900);
+ok("8 accord added from kit", (await page.locator(".dock").first().innerText()).includes("Woody"));
+await shot("03-unbox-selected");
+
+await page.goto(B + "/nature-lab?b=orange-peel"); await page.waitForTimeout(500);
+for (let i = 0; i < 4; i++) { await page.getByRole("button", { name: /^Next/ }).click(); await page.waitForTimeout(250); }
+await shot("04-nature-evaluate");
+await page.getByRole("button", { name: "zesty" }).click();
+await page.getByRole("button", { name: /See outcome/ }).click();
+await page.getByRole("button", { name: /Save learning note/ }).click();
+ok("6 extraction outcome + note", await page.getByText("Learning note saved").isVisible());
+await shot("05-nature-outcome");
+
+await page.goto(B + "/lab"); await page.waitForTimeout(400);
+ok("lab keeps kit selection", await page.getByRole("button", { name: /Remove Woody from blend/ }).first().isVisible());
+await page.getByRole("button", { name: "Add Citrus accord to blend" }).click(); await page.waitForTimeout(500);
+await page.getByRole("button", { name: "Add Musk accord to blend" }).click(); await page.waitForTimeout(900);
+await shot("06-lab-three");
+const bar = () => page.locator(".lab-bar").innerText();
+const totalTxt = () => page.locator(".total-row").innerText();
+ok("11 total 100%", (await totalTxt()).includes("100%"));
+await page.getByLabel("Woody share of blend").fill("70"); await page.waitForTimeout(300);
+ok("10 proportional adjust total 100%", (await totalTxt()).includes("100%"));
+ok("12 total 10.00 ml", (await bar()).includes("Total 10.00 ml"));
+ok("recalc shown", await page.getByText("Recalculated").isVisible());
+// botanical block
+await page.getByRole("button", { name: /Cinnamon sticks — exploration only/ }).click();
+ok("GAP5 botanical blocked", await page.getByRole("dialog", { name: /Botanicals can/ }).isVisible());
+await page.getByRole("button", { name: "Close" }).click();
+// manual mode
+await page.getByRole("radio", { name: "Manual" }).click();
+await page.locator("#share-citrus").fill("5"); await page.locator("#share-citrus").press("Enter"); await page.waitForTimeout(200);
+ok("manual unbalanced blocks preview", await page.getByRole("button", { name: /^Preview/ }).isDisabled());
+await page.getByRole("button", { name: /Rebalance proportionally/ }).click();
+ok("rebalanced", (await totalTxt()).includes("100%"));
+// invalid input
+await page.getByRole("radio", { name: "Proportional" }).click();
+await page.locator("#share-musk").fill("abc"); await page.locator("#share-musk").press("Enter");
+ok("invalid input rejected", await page.getByRole("alert").filter({ hasText: "Enter a number" }).isVisible());
+await page.getByRole("button", { name: "Undo last change" }).click(); await page.waitForTimeout(200);
+ok("undo restores previous (unbalanced) state", await page.getByRole("button", { name: /^Preview/ }).isDisabled());
+await page.getByRole("button", { name: /Rebalance proportionally/ }).click();
+await shot("07-lab-adjusted");
+await page.getByRole("button", { name: /^Preview/ }).click(); await page.waitForTimeout(2500);
+await shot("08-preview");
+ok("preview 10 ml", (await page.locator(".formula-table").innerText()).includes("10.00 ml"));
+await page.getByRole("button", { name: "Orange Woods" }).click();
+await page.getByLabel(/I understand this is a demo concept/).check();
+await page.getByRole("button", { name: /Save creation/ }).click(); await page.waitForTimeout(400);
+ok("14 saved", await page.getByText("Saved to My Creations").isVisible());
+await page.reload(); await page.goto(B + "/creations"); await page.waitForTimeout(500);
+ok("15 persists after refresh", await page.getByRole("link", { name: "Orange Woods" }).first().isVisible());
+// variation
+await page.getByRole("button", { name: /Variation/ }).first().click(); await page.waitForTimeout(400);
+await page.getByRole("button", { name: "Add Rose accord to blend" }).click(); await page.waitForTimeout(300);
+await page.getByRole("button", { name: /^Preview/ }).click(); await page.waitForTimeout(600);
+await page.getByLabel(/I understand/).check();
+await page.getByRole("button", { name: /Save creation/ }).click(); await page.waitForTimeout(300);
+await page.goto(B + "/creations"); await page.waitForTimeout(400);
+const checks = page.getByRole("checkbox", { name: "Compare" });
+await checks.nth(0).check(); await checks.nth(1).check(); await page.waitForTimeout(300);
+ok("17 compare shows changes", (await page.locator(".compare").innerText()).includes("What changed"));
+await shot("09-creations-compare");
+// edit -> version 2
+await page.getByRole("link", { name: "Orange Woods", exact: true }).first().click(); await page.waitForTimeout(300);
+await page.getByRole("button", { name: /Edit in Lab/ }).click();
+await page.getByLabel("Citrus share of blend").fill("40"); await page.waitForTimeout(200);
+await page.getByRole("button", { name: /^Preview/ }).click(); await page.waitForTimeout(500);
+await page.getByLabel(/I understand/).check();
+await page.getByRole("button", { name: /Save as version 2/ }).click(); await page.waitForTimeout(300);
+await page.getByRole("link", { name: "View creation" }).click(); await page.waitForTimeout(400);
+ok("16 edit → v2 with history", (await page.locator(".history").innerText()).includes("v1"));
+await page.getByRole("button", { name: /Add selected to cart/ }).click(); await page.waitForTimeout(300);
+await shot("10-creation-detail");
+ok("20 recreate adds to cart", (await page.getByRole("button", { name: /Open cart, [1-9]/ }).count()) > 0);
+await page.goto(B + "/marketplace"); await page.waitForTimeout(400);
+await page.getByRole("button", { name: /Add Blotter strips to cart/ }).click();
+await page.getByRole("button", { name: /Open cart/ }).click(); await page.waitForTimeout(400);
+await shot("11-cart");
+const before = await page.locator(".cart-line").count();
+await page.getByRole("button", { name: "Remove Blotter strips from cart" }).click(); await page.waitForTimeout(200);
+ok("19 cart add/remove", (await page.locator(".cart-line").count()) === before - 1);
+await page.keyboard.press("Escape");
+// unknown route + ingredient journey
+await page.goto(B + "/ingredients/citrus"); await page.waitForTimeout(300);
+for (let i = 0; i < 7; i++) await page.getByRole("button", { name: /^Next$/ }).first().click();
+ok("journey reaches save step", await page.getByRole("button", { name: /Save discovery note/ }).isVisible());
+await page.goto(B + "/nope"); await page.waitForTimeout(300);
+ok("404 page", await page.getByText("This page isn’t part of the studio").isVisible());
+await browser.close();
+console.log(log.join("\n")); console.log(errs.length ? "ERRORS:\n" + errs.join("\n") : "no console errors");
