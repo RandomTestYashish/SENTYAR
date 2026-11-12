@@ -14,7 +14,7 @@ await p.locator(".hx__stage").focus(); await p.keyboard.press("ArrowRight"); awa
 await p.mouse.move(1000, 400); await p.waitForTimeout(600);
 await p.screenshot({ path: out + "-next.png" });
 const n2 = await name();
-await p.getByRole("button", { name: "The Crescent" }).click(); await p.waitForTimeout(1200);
+await p.getByRole("button", { name: "The Pearl" }).click(); await p.waitForTimeout(1200);
 const n3 = await name();
 // autoplay: move mouse off the stage and wait
 await p.mouse.move(5, 5); await p.waitForTimeout(4800);

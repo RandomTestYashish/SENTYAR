@@ -4,7 +4,9 @@ import { AlertTriangle, ArrowRight, Check, Info, Leaf, Minus, Plus, RotateCcw, S
 import { useApp } from "../app/store";
 import { Vessel } from "../components/Vessel";
 import { Dialog, Notice } from "../components/ui";
-import { GlossaryButton, HelpList } from "../components/Glossary";
+import { OilBottle } from "../components/KitItems";
+import { KIT } from "../data/catalogue";
+import { GlossaryButton } from "../components/Glossary";
 import {
   ACCORDS, BOTANICALS, PAIRING_LABEL, ROLE_LABEL, accordById, botanicalById, pairing,
 } from "../data/ingredients";
@@ -48,14 +50,16 @@ export default function Lab() {
 
   const previewBlockReason = issues[0]?.code === "empty" ? "Add at least one accord to preview." : issues[0]?.code === "unbalanced" ? `Blend totals ${total}%, rebalance to 100% to preview.` : issues.length ? "Fix the highlighted values to preview." : "";
 
+  const kitMl = KIT.accordVialMl;
+
   return (
     <div className="lab-page">
       <div className="container lab-head">
         <div>
-          <nav aria-label="Breadcrumb" className="crumbs"><Link to="/">Home</Link><span aria-hidden>/</span><span aria-current="page">Perfume Lab</span></nav>
-          <h1 className="h2" style={{ marginTop: 8 }}>Perfume Lab</h1>
+          <p className="eyebrow">Perfume Lab</p>
+          <h1 className="lab-title">Compose your <em>blend</em></h1>
         </div>
-        <div className="row row--tight">
+        <div className="lab-head__links">
           <GlossaryButton />
           <Link to="/nature-lab" className="btn btn--ghost btn--sm"><Leaf size={16} aria-hidden /> Nature Lab</Link>
         </div>
@@ -65,175 +69,139 @@ export default function Lab() {
         <div className="container">
           <div className="editing-bar">
             <span className="small">
-              {editing ? <>Editing <strong>“{editing.name}”</strong> · version {editing.formulaVersion}. Saving creates version {editing.formulaVersion + 1}; earlier versions stay in its history.</> :
-                <>Variation of <strong>“{parent!.name}”</strong>. Saving creates a new creation linked to the original.</>}
+              {editing ? <>Editing <strong>“{editing.name}”</strong> · version {editing.formulaVersion}. Saving creates version {editing.formulaVersion + 1}.</> :
+                <>Variation of <strong>“{parent!.name}”</strong>. Saving creates a new linked creation.</>}
             </span>
-            <button className="btn btn--ghost btn--xs" onClick={startNewDraft}>Start a new blend instead</button>
+            <button className="btn btn--ghost btn--xs" onClick={startNewDraft}>Start a new blend</button>
           </div>
         </div>
       )}
 
       <div className="container lab">
-        {/* LEFT, tray */}
-        <section className="lab__tray" aria-labelledby="tray-h">
-          <div className="row row--between">
-            <h2 id="tray-h" className="eyebrow">Fragrance accords</h2>
-            <span className="small muted num">{draft.blend.length}/{MAX_ACCORDS}</span>
-          </div>
-          <ul role="list" className="accord-list">
-            {ACCORDS.map((a) => {
-              const entry = draft.blend.find((e) => e.accordId === a.id);
-              return (
-                <li key={a.id} className={`accord-row ${entry ? "is-in" : ""}`} onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)}>
-                  <span className="accord-row__swatch" style={{ background: a.swatch }} aria-hidden />
-                  <div className="accord-row__text">
-                    <span className="accord-row__name">{a.name}</span>
-                    <span className="accord-row__desc">{a.descriptors.join(" · ")}</span>
-                  </div>
-                  <button className="icon-btn icon-btn--sm" onClick={() => setInfo(a.id)} aria-label={`About the ${a.name} accord`}><Info size={16} /></button>
-                  {entry ? (
-                    <button className="accord-row__btn is-in" onClick={() => removeFromBlend(a.id)} aria-label={`Remove ${a.name} from blend (currently ${entry.share}%)`}>
-                      <Check size={14} aria-hidden className="when-idle" /><X size={14} aria-hidden className="when-hover" /><span className="num">{entry.share}%</span>
-                    </button>
-                  ) : (
-                    <button data-accord-add={a.id} className="accord-row__btn" onClick={() => add(a.id)} disabled={draft.blend.length >= MAX_ACCORDS} aria-label={`Add ${a.name} accord to blend`}>
-                      <Plus size={14} aria-hidden /> Add
-                    </button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="bot-block">
-            <h2 className="eyebrow">Botanical samples</h2>
-            <p className="small muted">Exploration only, they never go into the formula.</p>
-            <ul role="list" className="bot-list">
-              {BOTANICALS.map((b) => (
-                <li key={b.id}>
-                  <button className="bot-pill" onClick={() => setBlocked(b.id)} aria-label={`${b.name}, exploration only. Learn why it cannot be added`}>
-                    <img src={b.image} alt="" />
-                    <span>{b.name.replace("Dried r", "R").replace("Dried o", "O")}</span>
-                    <Leaf size={14} aria-hidden className="muted" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-
-        {/* CENTRE, vessel */}
+        {/* STAGE, beaker */}
         <section className="lab__vessel" aria-labelledby="vessel-h">
-          <h2 id="vessel-h" className="sr-only">Mixing vessel</h2>
+          <h2 id="vessel-h" className="sr-only">Mixing beaker</h2>
           <div className="vessel-wrap" ref={vesselRef}>
             <Vessel blend={draft.blend} dropKey={dropKey} dropColor={dropColor} highlight={hover} />
             {draft.blend.length === 0 && (
               <div className="vessel-empty">
-                <p className="h4">The vessel is empty</p>
-                <p className="small body-2">Add accords from the tray, or start from the demo composition.</p>
-                <button className="btn btn--sm" onClick={resetBlend}>Use demo composition</button>
+                <p className="small body-2">Tap a bottle from your kit to begin</p>
+                <button className="link small" onClick={resetBlend}>or start from the demo composition</button>
               </div>
             )}
           </div>
-          <p className="vessel-caption small muted">Fragrance blend: <strong className="num">{formatMl(vols.fragranceCml)}</strong> of the 2.00 ml allocation · colours are visual coding only</p>
+          <p className="vessel-caption small muted"><strong className="num">{formatMl(vols.fragranceCml)}</strong> of 2.00 ml · colours are visual coding only</p>
         </section>
 
-        {/* RIGHT, formula */}
-        <section className="lab__formula" aria-labelledby="formula-h">
-          <div className="row row--between">
-            <h2 id="formula-h" className="h4">Formula</h2>
-            <span className="badge badge--demo">Demo formula</span>
-          </div>
-
-          <fieldset className="mode">
-            <legend className="sr-only">When I change one accord</legend>
-            <div className="seg" role="radiogroup" aria-label="Adjustment mode">
-              <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
-              <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
+        {/* PANEL, kit + formula */}
+        <div className="lab__panel">
+          <section className="lab__tray" aria-labelledby="tray-h">
+            <div className="lab-sec-head">
+              <h2 id="tray-h" className="eyebrow">From your Creator Kit</h2>
+              <span className="small muted num">{draft.blend.length}/{MAX_ACCORDS}</span>
             </div>
-            <p className="small muted">{draft.mode === "proportional" ? "Changing one accord rescales the others so the blend stays at 100%." : "Only the accord you change moves. Rebalance to 100% before previewing."}</p>
-          </fieldset>
-
-          {draft.blend.length === 0 ? (
-            <div className="formula-empty">
-              <p className="h4">No accords selected</p>
-              <p className="small body-2">Your perfume concept isn’t ready yet. Add two or three accords to begin, for example Woody, Citrus and Musk.</p>
-            </div>
-          ) : (
-            <ul role="list" className="shares">
-              {draft.blend.map((e) => (
-                <ShareRow key={e.accordId} id={e.accordId} share={e.share} cml={vols.entries.find((v) => v.accordId === e.accordId)!.cml}
-                  invalid={issues.some((i) => "accordId" in i && i.accordId === e.accordId)} />
-              ))}
+            <ul role="list" className="kit-grid">
+              {ACCORDS.map((a) => {
+                const entry = draft.blend.find((e) => e.accordId === a.id);
+                const used = entry ? vols.entries.find((v) => v.accordId === a.id)?.cml ?? 0 : 0;
+                return (
+                  <li key={a.id} className={`kit-tile ${entry ? "is-in" : ""}`} onMouseEnter={() => setHover(a.id)} onMouseLeave={() => setHover(null)}>
+                    {entry ? (
+                      <button className="kit-tile__main" onClick={() => removeFromBlend(a.id)} aria-label={`Remove ${a.name} from blend (currently ${entry.share}%)`}>
+                        <OilBottle name={a.name} color={a.swatch} className="kit-tile__art" />
+                        <span className="kit-tile__name">{a.name}</span>
+                        <span className="kit-tile__meta num">{entry.share}% · {formatMl(used)}</span>
+                        <span className="kit-tile__check" aria-hidden><Check size={12} /></span>
+                      </button>
+                    ) : (
+                      <button data-accord-add={a.id} className="kit-tile__main" onClick={() => add(a.id)} disabled={draft.blend.length >= MAX_ACCORDS} aria-label={`Add ${a.name} accord to blend`}>
+                        <OilBottle name={a.name} color={a.swatch} className="kit-tile__art" />
+                        <span className="kit-tile__name">{a.name}</span>
+                        <span className="kit-tile__meta">{kitMl} ml vial</span>
+                      </button>
+                    )}
+                    <button className="kit-tile__info" onClick={() => setInfo(a.id)} aria-label={`About the ${a.name} accord`}><Info size={13} /></button>
+                  </li>
+                );
+              })}
             </ul>
-          )}
 
-          {lastChanges.length > 1 && (
-            <div className="recalc" aria-live="polite">
-              <p className="small"><strong>Recalculated</strong> to keep the bottle at 10 ml:</p>
-              <ul role="list">
-                {lastChanges.map((c) => (
-                  <li key={c.accordId} className="small num">{accordById(c.accordId).name} {c.from}% → {c.to}%</li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          <div className={`total-row ${valid ? "is-ok" : draft.blend.length ? "is-bad" : ""}`}>
-            <span>Blend total</span>
-            <strong className="num">{total}%</strong>
-            {valid ? <span className="small"><Check size={14} aria-hidden /> Balanced</span> : draft.blend.length > 0 && <span className="small"><AlertTriangle size={14} aria-hidden /> {total < 100 ? `${100 - total}% unallocated` : `${total - 100}% over`}</span>}
-          </div>
-          {issues[0]?.code === "unbalanced" && (
-            <div className="row row--tight">
-              <button className="btn btn--sm" onClick={() => balance("proportional")}><Scale size={16} aria-hidden /> Rebalance proportionally</button>
-              <button className="btn btn--secondary btn--sm" onClick={() => balance("even")}>Split evenly</button>
-            </div>
-          )}
-
-          <table className="comp-table">
-            <caption className="sr-only">Composition summary</caption>
-            <tbody>
-              <tr><th scope="row">Fragrance blend <span className="muted">(20%)</span></th><td className="num">{formatMl(vols.fragranceCml)}</td></tr>
-              <tr><th scope="row">Demo base <span className="muted">(80%)</span></th><td className="num">{formatMl(vols.baseCml)}</td></tr>
-              <tr className="comp-table__total"><th scope="row">Total preview</th><td className="num">{draft.blend.length ? formatMl(vols.totalCml) : "0.00 ml"}</td></tr>
-            </tbody>
-          </table>
-
-          {pairs.length > 0 && (
-            <div className="pairs">
-              <p className="eyebrow">Pairing notes</p>
-              <ul role="list">
-                {pairs.map((p) => (
-                  <li key={`${p.a}-${p.b}`} className="small">
-                    <span className={`pair-tag pair-tag--${p.kind}`}>{PAIRING_LABEL[p.kind]}</span> {accordById(p.a).name} + {accordById(p.b).name}
+            <div className="bot-block">
+              <p className="small muted"><Leaf size={13} aria-hidden /> Botanicals from the kit are for smelling only</p>
+              <ul role="list" className="bot-list">
+                {BOTANICALS.map((b) => (
+                  <li key={b.id}>
+                    <button className="bot-dish" onClick={() => setBlocked(b.id)} aria-label={`${b.name}, exploration only. Learn why it cannot be added`} title={b.name}>
+                      <img src={b.image} alt="" />
+                    </button>
                   </li>
                 ))}
               </ul>
-              <p className="small muted">Illustrative creative suggestions, not validated compatibility data. Professional review required for any real formulation.</p>
             </div>
-          )}
+          </section>
 
-          <details className="disclosure explain">
-            <summary>How the formula works<Plus size={18} aria-hidden /></summary>
-            <div>
-              <p>The preview bottle is always <strong>10 ml</strong>. In this illustrative model, <strong>20% (2 ml)</strong> is the fragrance blend and <strong>80% (8 ml)</strong> is a demo base.</p>
-              <p style={{ marginTop: 8 }}>Accord shares are whole percentages of the 2 ml blend and always total 100%. Each 1% equals 0.02 ml, so volumes are exact, you will never see 9.99 or 10.01 ml.</p>
-              <p style={{ marginTop: 8 }}>Example: Woody 50% = 1.00 ml · Citrus 30% = 0.60 ml · Musk 20% = 0.40 ml · Base 8.00 ml · Total 10.00 ml.</p>
+          <section className="lab__formula" aria-labelledby="formula-h">
+            <div className="lab-sec-head">
+              <h2 id="formula-h" className="eyebrow">Your formula</h2>
+              <div className="seg seg--sm" role="radiogroup" aria-label="Adjustment mode">
+                <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
+                <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
+              </div>
             </div>
-          </details>
-          <div className="lab-help">
-            <p className="eyebrow" style={{ margin: "16px 0 4px" }}>Learn more</p>
-            <HelpList />
-          </div>
-        </section>
+
+            {draft.blend.length === 0 ? (
+              <p className="formula-empty small muted">Add two or three accords, for example Woody, Citrus and Musk.</p>
+            ) : (
+              <ul role="list" className="shares">
+                {draft.blend.map((e) => (
+                  <ShareRow key={e.accordId} id={e.accordId} share={e.share} cml={vols.entries.find((v) => v.accordId === e.accordId)!.cml}
+                    invalid={issues.some((i) => "accordId" in i && i.accordId === e.accordId)} />
+                ))}
+              </ul>
+            )}
+
+            {lastChanges.length > 1 && (
+              <p className="recalc small" aria-live="polite">
+                <strong>Recalculated</strong> to keep 10 ml: {lastChanges.map((c) => `${accordById(c.accordId).name} ${c.from}→${c.to}%`).join(" · ")}
+              </p>
+            )}
+
+            {draft.blend.length > 0 && (
+              <div className={`total-row ${valid ? "is-ok" : "is-bad"}`}>
+                <span>Blend total</span>
+                <strong className="num">{total}%</strong>
+                {valid ? <span className="small"><Check size={14} aria-hidden /> Balanced</span> : <span className="small"><AlertTriangle size={14} aria-hidden /> {total < 100 ? `${100 - total}% unallocated` : `${total - 100}% over`}</span>}
+              </div>
+            )}
+            {issues[0]?.code === "unbalanced" && (
+              <div className="row row--tight">
+                <button className="btn btn--sm" onClick={() => balance("proportional")}><Scale size={16} aria-hidden /> Rebalance proportionally</button>
+                <button className="btn btn--secondary btn--sm" onClick={() => balance("even")}>Split evenly</button>
+              </div>
+            )}
+
+            <details className="disclosure explain">
+              <summary>How the formula works<Plus size={16} aria-hidden /></summary>
+              <div>
+                <p>The preview bottle is always <strong>10 ml</strong>: <strong>2 ml</strong> fragrance blend and <strong>8 ml</strong> demo base. Accord shares are whole percentages of the 2 ml blend and always total 100%; each 1% is 0.02 ml.</p>
+                {pairs.length > 0 && (
+                  <ul role="list" className="pairs">
+                    {pairs.map((p) => (
+                      <li key={`${p.a}-${p.b}`}><span className={`pair-tag pair-tag--${p.kind}`}>{PAIRING_LABEL[p.kind]}</span> {accordById(p.a).name} + {accordById(p.b).name}</li>
+                    ))}
+                  </ul>
+                )}
+                <p className="muted" style={{ marginTop: 8 }}>{FORMULA_DISCLAIMER}</p>
+              </div>
+            </details>
+          </section>
+        </div>
       </div>
 
       {/* BOTTOM BAR */}
       <div className="lab-bar" role="region" aria-label="Formula status and actions">
         <div className="container lab-bar__inner">
           <div className="lab-bar__status">
-            <span className="badge badge--demo hide-sm">Demo, not a skin-use recipe</span>
             <span className="small num"><span className="muted">Blend</span> {formatMl(vols.fragranceCml)}</span>
             <span className="small num"><span className="muted">Base</span> {formatMl(vols.baseCml)}</span>
             <span className="small num"><strong>Total {draft.blend.length ? formatMl(vols.totalCml) : "0.00 ml"}</strong></span>
@@ -242,16 +210,12 @@ export default function Lab() {
             <button className="icon-btn" onClick={undo} disabled={!undoStack.length} aria-label="Undo last change" title="Undo"><Undo2 size={18} /></button>
             <button className="icon-btn" onClick={resetBlend} aria-label="Reset to demo composition" title="Reset to demo composition"><RotateCcw size={18} /></button>
             {draft.blend.length > 0 && <button className="icon-btn hide-sm" onClick={clearBlend} aria-label="Clear blend" title="Clear blend"><X size={18} /></button>}
-            <button className="btn" disabled={!valid} aria-describedby={!valid ? "preview-why" : undefined} onClick={() => nav("/lab/preview")}>
+            <button className="btn lab-bar__cta" disabled={!valid} aria-describedby={!valid ? "preview-why" : undefined} onClick={() => nav("/lab/preview")}>
               Preview <ArrowRight size={16} aria-hidden />
             </button>
           </div>
         </div>
         {!valid && <p id="preview-why" className="container small lab-bar__why">{previewBlockReason}</p>}
-      </div>
-
-      <div className="container" style={{ paddingBottom: 48 }}>
-        <Notice>{FORMULA_DISCLAIMER}</Notice>
       </div>
 
       {/* Botanical blocked */}
@@ -316,9 +280,9 @@ function ShareRow({ id, share, cml, invalid }: { id: AccordId; share: number; cm
   return (
     <li className={`share ${invalid ? "is-invalid" : ""}`}>
       <div className="share__top">
-        <label htmlFor={inputId} className="share__name"><span className="swatch" style={{ background: a.swatch }} />{a.name}</label>
+        <label htmlFor={inputId} className="share__name"><span className="swatch" style={{ background: a.swatch }} />{a.name}<span className="share__ml muted num">{formatMl(cml)}</span></label>
         <div className="share__num">
-          <button className="icon-btn icon-btn--sm" onClick={() => commit(share - 1)} disabled={share <= 1 || (draft.mode === "proportional" && others === 0)} aria-label={`Decrease ${a.name} by 1%`}><Minus size={14} /></button>
+          <button className="icon-btn icon-btn--sm" onClick={() => commit(share - 1)} disabled={share <= 1 || (draft.mode === "proportional" && others === 0)} aria-label={`Decrease ${a.name} by 1%`}><Minus size={13} /></button>
           <input id={inputId} className="share__input num" inputMode="numeric" value={text} aria-invalid={!!err || invalid}
             aria-describedby={err ? `${inputId}-err` : undefined}
             onChange={(e) => setText(e.target.value)}
@@ -326,7 +290,8 @@ function ShareRow({ id, share, cml, invalid }: { id: AccordId; share: number; cm
             onKeyDown={(e) => { if (e.key === "Enter") commit(text); }}
             disabled={draft.mode === "proportional" && others === 0} />
           <span aria-hidden className="muted">%</span>
-          <button className="icon-btn icon-btn--sm" onClick={() => commit(share + 1)} disabled={share >= max || (draft.mode === "proportional" && others === 0)} aria-label={`Increase ${a.name} by 1%`}><Plus size={14} /></button>
+          <button className="icon-btn icon-btn--sm" onClick={() => commit(share + 1)} disabled={share >= max || (draft.mode === "proportional" && others === 0)} aria-label={`Increase ${a.name} by 1%`}><Plus size={13} /></button>
+          <button className="icon-btn icon-btn--sm share__x" onClick={() => removeFromBlend(id)} aria-label={`Remove ${a.name} from blend`}><X size={13} /></button>
         </div>
       </div>
       <input type="range" className="range" min={1} max={100} step={1} value={share}
@@ -334,12 +299,8 @@ function ShareRow({ id, share, cml, invalid }: { id: AccordId; share: number; cm
         aria-label={`${a.name} share of blend`} aria-valuetext={`${share}%, ${formatMl(cml)}`}
         disabled={draft.mode === "proportional" && others === 0}
         onChange={(e) => commit(Number(e.target.value))} />
-      <div className="share__foot small">
-        <span className="muted num">{formatMl(cml)} of 2.00 ml</span>
-        <button className="link small" onClick={() => removeFromBlend(id)} aria-label={`Remove ${a.name} from blend`}>Remove</button>
-      </div>
       {err && <p id={`${inputId}-err`} className="field-error" role="alert">{err}</p>}
-      {others === 0 && draft.mode === "proportional" && <p className="small muted">A single accord is always 100% of the blend. Add another to adjust proportions.</p>}
+      {others === 0 && draft.mode === "proportional" && <p className="small muted">A single accord is always 100%. Add another to adjust proportions.</p>}
     </li>
   );
 }

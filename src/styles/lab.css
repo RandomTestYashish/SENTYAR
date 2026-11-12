@@ -129,3 +129,79 @@
   .vessel-wrap { width: min(100%, 260px); }
   .lab__formula { padding: var(--s-2); }
 }
+
+/* ==========================================================
+   Lab v2: minimal, kit-synced, beaker-first
+   ========================================================== */
+.lab-head { padding-block: var(--s-5) var(--s-3); align-items: end; }
+.lab-title { margin: 6px 0 0; font-family: var(--font-serif); font-weight: 400; font-size: clamp(2.25rem, 1.6rem + 2vw, 3.5rem); line-height: 1; letter-spacing: -0.02em; }
+.lab-title em { font-style: italic; background: var(--gold); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lab-head__links { display: flex; gap: 4px; }
+
+.lab { grid-template-columns: 1fr !important; gap: var(--s-5) !important; padding-bottom: var(--s-6); }
+@media (min-width: 1000px) {
+  .lab { grid-template-columns: minmax(0, 6fr) minmax(360px, 5fr) !important; gap: clamp(32px, 5vw, 96px) !important; align-items: start; }
+  .lab__vessel { position: sticky; top: calc(var(--header-h) + 24px); }
+}
+.lab__panel { display: grid; gap: var(--s-4); min-width: 0; }
+.lab__tray, .lab__formula { position: static !important; max-height: none !important; overflow: visible !important; background: transparent !important; border: 0 !important; padding: 0 !important; }
+.lab__formula { display: grid; gap: 14px; }
+.lab-sec-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+.lab-sec-head .eyebrow { margin: 0; }
+
+/* beaker stage */
+.lab__vessel { gap: 10px; }
+.vessel-wrap { width: min(100%, 460px); background: radial-gradient(60% 55% at 50% 60%, #fdf5e6 0%, rgb(255 255 255 / 0) 70%); }
+.vessel__callout { transition: transform var(--t-slow) var(--ease-out); }
+.vessel-empty { position: absolute; inset: auto 0 22% 0; background: transparent; border: 0; padding: 0; display: grid; justify-items: center; gap: 2px; }
+.vessel-caption { margin: 0; }
+
+/* kit grid: the six accord vials from the Creator Kit */
+.kit-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.kit-tile { position: relative; }
+.kit-tile__main {
+  width: 100%; display: grid; justify-items: center; gap: 2px; padding: 10px 6px 12px; border: 1px solid transparent; background: transparent;
+  border-radius: 0; transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-base) var(--ease-out);
+}
+.kit-tile__main:hover:not(:disabled) { background: var(--bg-pearl); transform: translateY(-2px); }
+.kit-tile__main:disabled { opacity: 0.4; cursor: not-allowed; }
+.kit-tile__art { height: 112px !important; width: auto; margin-bottom: 4px; }
+.kit-tile__name { font-family: var(--font-serif); font-size: 1.125rem; line-height: 1.1; }
+.kit-tile__meta { font-size: 0.6875rem; letter-spacing: 0.06em; color: var(--text-3); }
+.kit-tile.is-in .kit-tile__main { border-color: #e6d4b0; background: #fffaf0; }
+.kit-tile.is-in .kit-tile__meta { color: var(--accent-text); font-weight: 600; }
+.kit-tile__check { position: absolute; top: 8px; left: 8px; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: var(--c-ink); }
+.kit-tile__info { position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; border: 0; background: transparent; color: var(--text-3); border-radius: 50%; display: grid; place-items: center; opacity: 0; transition: opacity var(--t-fast); }
+.kit-tile:hover .kit-tile__info, .kit-tile__info:focus-visible { opacity: 1; }
+@media (hover: none) { .kit-tile__info { opacity: 0.7; } }
+
+.bot-block { margin-top: 14px; padding-top: 0; border-top: 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.bot-block p { display: inline-flex; align-items: center; gap: 6px; margin: 0; }
+.bot-list { display: flex; gap: 8px; margin: 0; grid-template-columns: none; }
+.bot-dish { width: 44px; height: 44px; padding: 0; border-radius: 50%; overflow: hidden; border: 1px solid #ecdfc6; background: #fff; transition: transform var(--t-fast); }
+.bot-dish:hover { transform: scale(1.08); }
+.bot-dish img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); mix-blend-mode: multiply; }
+
+/* formula: compact share rows */
+.shares { gap: 0; }
+.share { padding: 10px 0; gap: 2px; border-bottom-color: var(--border); }
+.share__name { gap: 8px; font-weight: 500; }
+.share__ml { font-size: 0.75rem; font-weight: 400; margin-left: 4px; }
+.share__input { width: 46px; height: 32px; border-radius: 0; }
+.share__x { color: var(--text-3); margin-left: 4px; }
+.recalc { margin: 0; padding: 10px 12px; background: var(--bg-pearl); border-radius: 0; border-left: 2px solid var(--c-champagne); }
+.total-row { border-radius: 0; padding: 10px 14px; }
+.total-row.is-ok { background: #fbf8f1; border-color: #ecdfc6; color: var(--accent-text); }
+.formula-empty { border: 0; padding: 4px 0; }
+.explain summary { font-size: var(--fs-small); }
+.explain .pairs { display: grid; gap: 6px; margin: 10px 0 0; }
+
+/* bottom bar */
+.lab-bar { border-top-color: var(--border); box-shadow: 0 -10px 30px -24px rgb(80 58 24 / 0.4); margin-bottom: 0; }
+.lab-bar__cta:not(:disabled) { background-color: #1c140b; background-image: linear-gradient(180deg, #3a2a17, #120d07); border-color: #2a1f12; color: #fff; padding-inline: 36px; }
+.lab-bar__cta:not(:disabled):hover { background-image: var(--gold); color: var(--c-ink); }
+@media (max-width: 999px) {
+  .lab__vessel { order: -1; }
+  .vessel-wrap { width: min(100%, 340px); }
+}
+@media (max-width: 520px) { .kit-tile__art { height: 80px !important; } }

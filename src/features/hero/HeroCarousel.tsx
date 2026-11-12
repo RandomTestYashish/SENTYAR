@@ -8,13 +8,13 @@ const IMG = "./assets/img/";
 type Slide = { id: string; name: string; style: string; mood: string; line: string; notes: string[]; img: string; alt: string };
 
 export const BOTTLES: Slide[] = [
-  { id: "signature", name: "The Signature", style: "Cushioned crystal", mood: "signature", line: "Heavy crystal, a faceted gold cap cut like a gem. The house silhouette.", notes: ["Amber", "Rose", "Cedar"], img: "bottle-signature", alt: "The Signature: a cushion-shaped crystal bottle of amber eau de parfum engraved SENTYAR, with a faceted gold cap" },
+  { id: "signature", name: "The Signature", style: "Cushioned crystal", mood: "signature", line: "Heavy crystal, a faceted gold cap cut like a gem. The house silhouette.", notes: ["Amber", "Rose", "Cedar"], img: "bottle-signature", alt: "The Signature: a cushion-shaped crystal bottle of amber eau de parfum engraved with the SENTYAR emblem and wordmark, with a faceted gold cap" },
   { id: "orb", name: "The Orb", style: "Modern minimal", mood: "luminous", line: "A perfect sphere of light under a slim ribbed gold column.", notes: ["Vanilla", "Musk"], img: "bottle-orb", alt: "The Orb: a spherical crystal bottle of golden liquid with a tall ribbed gold cap" },
   { id: "facet", name: "The Facet", style: "Architectural", mood: "bold", line: "Bevelled like a cut stone, crowned in black onyx.", notes: ["Woody", "Spicy"], img: "bottle-facet", alt: "The Facet: a tall octagonal faceted crystal bottle with a black onyx cap" },
   { id: "fluid", name: "The Fluid", style: "Organic sculptural", mood: "sensual", line: "A pebble shaped by water, with a smooth ivory stone cap.", notes: ["Rose", "Musk"], img: "bottle-fluid", alt: "The Fluid: an organic pebble-shaped crystal bottle with an ivory stone cap" },
-  { id: "atelier", name: "The Atelier", style: "Classic sculpted", mood: "timeless", line: "Fine vertical ribbing, a paper label and a heavy black cap.", notes: ["Citrus", "Woody"], img: "bottle-atelier", alt: "The Atelier: a ribbed rectangular crystal bottle with an ivory SENTYAR label and a square black cap" },
+  { id: "atelier", name: "The Atelier", style: "Classic sculpted", mood: "timeless", line: "Fluted crystal sides around a clear window, with a heavy black cap.", notes: ["Citrus", "Woody"], img: "bottle-atelier", alt: "The Atelier: a rounded crystal bottle with fluted sides, engraved SENTYAR, with a square black cap" },
   { id: "column", name: "The Column", style: "Pure vertical", mood: "modern", line: "A slender pillar of crystal on a weighted base, gold disc cap.", notes: ["Citrus", "Musk"], img: "bottle-column", alt: "The Column: a tall slim cylindrical crystal bottle with a gold disc cap" },
-  { id: "crescent", name: "The Crescent", style: "Romantic", mood: "romantic", line: "A half moon in rose amber, finished with a single pearl.", notes: ["Rose", "Vanilla"], img: "bottle-crescent", alt: "The Crescent: a crescent-moon crystal bottle of rose amber liquid with a pearl cap" },
+  { id: "pearl", name: "The Pearl", style: "Romantic", mood: "romantic", line: "A rounded flask in rose amber, finished with a single pearl.", notes: ["Rose", "Vanilla"], img: "bottle-pearl", alt: "The Pearl: a rounded crystal flask of rose amber liquid engraved SENTYAR, with a pearl cap" },
 ];
 
 const FLOATS = [
