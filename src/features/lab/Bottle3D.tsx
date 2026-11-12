@@ -17,7 +17,7 @@ export interface Bottle3DProps {
 }
 
 // Pebble body: a lathe profile, then a gentle asymmetric deformation
-// (controlled asymmetry — still mouldable with a flat, stable base).
+// (controlled asymmetry, still mouldable with a flat, stable base).
 function bodyGeometry(scale = 1, segments = 64) {
   const pts: THREE.Vector2[] = [];
   const prof = [

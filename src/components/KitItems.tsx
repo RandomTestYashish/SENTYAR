@@ -1,13 +1,53 @@
-// Drawn kit objects (original SVG, SENTYAR style): pipette, blotters, spray
-// bottle, measuring beaker, funnel, perfumery alcohol sample, accord oil
-// bottle, mixing vial, cards, journal, guide, QR card.
-// All share one light source (upper left) and the same glass treatment.
+// Drawn kit objects (original SVG, SENTYAR royal white style): pipette,
+// blotters, spray bottle, measuring beaker, funnel, perfumery alcohol sample,
+// accord oil bottle, mixing vials, cards, journal, guide, QR card.
+// Shared language: crystal glass, gilded metal, ivory paper, one light
+// source from the upper left and a soft contact shadow.
 
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { Emblem } from "./Logo";
 
-const GLASS = "#ffffff";
-const EDGE = "#5f574b";
+const LINE = "#aeb4b6";
+const GOLD_DEEP = "#85663a";
+
+function useIds() {
+  const raw = useId().replace(/[^a-zA-Z0-9]/g, "");
+  return { gold: `g${raw}`, goldH: `gh${raw}`, glass: `gl${raw}`, amber: `am${raw}`, shadow: `sh${raw}`, ivory: `iv${raw}`, liquid: `lq${raw}` };
+}
+type Ids = ReturnType<typeof useIds>;
+
+function Defs({ ids }: { ids: Ids }) {
+  return (
+    <defs>
+      <linearGradient id={ids.gold} x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stopColor="#7a5a2e" /><stop offset=".25" stopColor="#dcc08a" /><stop offset=".5" stopColor="#a37d45" />
+        <stop offset=".75" stopColor="#f3e2b6" /><stop offset="1" stopColor="#8a6936" />
+      </linearGradient>
+      <linearGradient id={ids.goldH} x1="0" x2="1">
+        <stop offset="0" stopColor="#7f5f31" /><stop offset=".3" stopColor="#e8d1a0" /><stop offset=".55" stopColor="#b08b52" />
+        <stop offset=".8" stopColor="#f5e6c0" /><stop offset="1" stopColor="#86653a" />
+      </linearGradient>
+      <linearGradient id={ids.glass} x1="0" x2="1">
+        <stop offset="0" stopColor="#d9dfe1" stopOpacity=".95" /><stop offset=".1" stopColor="#ffffff" stopOpacity=".85" />
+        <stop offset=".5" stopColor="#f5f7f7" stopOpacity=".25" /><stop offset=".88" stopColor="#ffffff" stopOpacity=".7" />
+        <stop offset="1" stopColor="#cfd6d8" stopOpacity=".95" />
+      </linearGradient>
+      <linearGradient id={ids.amber} x1="0" x2="1">
+        <stop offset="0" stopColor="#4b2508" /><stop offset=".22" stopColor="#9a571b" /><stop offset=".42" stopColor="#cf8d3d" />
+        <stop offset=".7" stopColor="#7c4212" /><stop offset="1" stopColor="#3a1c06" />
+      </linearGradient>
+      <linearGradient id={ids.liquid} x1="0" x2="1">
+        <stop offset="0" stopColor="#d79a45" /><stop offset=".45" stopColor="#f6d189" /><stop offset="1" stopColor="#c7832f" />
+      </linearGradient>
+      <linearGradient id={ids.ivory} x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stopColor="#ffffff" /><stop offset="1" stopColor="#f3ede2" />
+      </linearGradient>
+      <radialGradient id={ids.shadow} cx=".5" cy=".5" r=".5">
+        <stop offset="0" stopColor="#3b2a12" stopOpacity=".26" /><stop offset=".6" stopColor="#3b2a12" stopOpacity=".07" /><stop offset="1" stopColor="#3b2a12" stopOpacity="0" />
+      </radialGradient>
+    </defs>
+  );
+}
 
 function Svg({ children, label, vb = "0 0 100 160", className = "kit-svg" }: { children: ReactNode; label?: string; vb?: string; className?: string }) {
   return (
@@ -17,28 +57,52 @@ function Svg({ children, label, vb = "0 0 100 160", className = "kit-svg" }: { c
   );
 }
 
+const Shadow = ({ ids, cx = 50, cy = 154, rx = 40, ry = 5 }: { ids: Ids; cx?: number; cy?: number; rx?: number; ry?: number }) => (
+  <ellipse cx={cx} cy={cy} rx={rx} ry={ry} fill={`url(#${ids.shadow})`} />
+);
+
+/** Inline emblem drawn as SVG paths, so it scales inside other drawings. */
+function Mark({ x, y, size, color, stroke = 3 }: { x: number; y: number; size: number; color: string; stroke?: number }) {
+  return (
+    <g transform={`translate(${x - size / 2} ${y - size / 2})`} style={{ color }}>
+      <Emblem size={size} stroke={stroke} />
+    </g>
+  );
+}
+
 export function Pipette({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label}>
-      <rect x="42" y="6" width="16" height="30" rx="8" fill={GLASS} fillOpacity="0.7" stroke={EDGE} strokeOpacity="0.4" />
-      <path d="M44 36 H56 V128 L51 152 H49 L44 128 Z" fill={GLASS} fillOpacity="0.6" stroke={EDGE} strokeOpacity="0.4" />
-      {[60, 76, 92, 108].map((y, i) => (
+      <Defs ids={ids} />
+      <Shadow ids={ids} rx={18} ry={3} />
+      <rect x="41" y="4" width="18" height="30" rx="9" fill="#17140f" />
+      <rect x="44" y="7" width="4" height="22" rx="2" fill="#fff" opacity=".18" />
+      <rect x="39" y="32" width="22" height="9" rx="2" fill={`url(#${ids.goldH})`} />
+      <path d="M44 41 H56 V128 L51 151 H49 L44 128 Z" fill={`url(#${ids.glass})`} stroke={LINE} strokeWidth=".9" />
+      <path d="M45 100 H55 V128 L51 149 H49 L45 128 Z" fill={`url(#${ids.liquid})`} opacity=".7" />
+      {[56, 70, 84, 98, 112].map((y, i) => (
         <g key={y}>
-          <line x1="44" x2={i % 2 ? 49 : 52} y1={y} y2={y} stroke={EDGE} strokeOpacity="0.7" />
-          {i % 2 === 0 && <text x="58" y={y + 3} fontSize="7" fontFamily="var(--font-sans)" fill={EDGE}>{3 - i / 2}ml</text>}
+          <line x1="50" x2={i % 2 ? 55 : 56} y1={y} y2={y} stroke={GOLD_DEEP} strokeWidth=".9" />
+          {i % 2 === 0 && <text x="60" y={y + 2.4} fontSize="6.5" fontFamily="var(--font-serif)" fill={GOLD_DEEP}>{3 - i / 2}</text>}
         </g>
       ))}
-      <path d="M46 40 V124" stroke="#fff" strokeWidth="2" strokeLinecap="round" />
+      <path d="M46 44 V124" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
     </Svg>
   );
 }
 
 export function Blotters({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 120 160">
+      <Defs ids={ids} />
+      <Shadow ids={ids} cx={60} cy={152} rx={48} ry={5} />
       {[0, 1, 2, 3, 4].map((i) => (
-        <g key={i} transform={`translate(${12 + i * 18} ${8 + (i % 2) * 4}) rotate(${-6 + i * 3} 10 70)`}>
-          <path d="M0 0 H18 V136 L9 146 L0 136 Z" fill="#fff" stroke="#c8c0b4" />
+        <g key={i} transform={`rotate(${-16 + i * 8} 60 150)`}>
+          <path d="M51 14 H69 V140 L60 150 L51 140 Z" fill={`url(#${ids.ivory})`} stroke="#ddd0ba" strokeWidth=".8" />
+          <line x1="51" x2="69" y1="30" y2="30" stroke={`url(#${ids.goldH})`} strokeWidth="1.4" />
+          {i === 2 && <text x="60" y="24" textAnchor="middle" fontSize="4.6" fontFamily="var(--font-serif)" letterSpacing="1.4" fill={GOLD_DEEP}>SENTYAR</text>}
         </g>
       ))}
     </Svg>
@@ -46,107 +110,133 @@ export function Blotters({ label }: { label?: string }) {
 }
 
 export function SprayBottle({ label, ml = 10 }: { label?: string; ml?: number }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 100 160">
-      <rect x="38" y="6" width="24" height="10" rx="2" fill="#141312" />
-      <rect x="36" y="16" width="28" height="22" rx="2" fill="url(#ks-gold)" />
-      <defs>
-        <linearGradient id="ks-gold" x1="0" x2="1"><stop offset="0" stopColor="#8c7150" /><stop offset="0.45" stopColor="#e3cfae" /><stop offset="1" stopColor="#8c7150" /></linearGradient>
-        <linearGradient id="ks-glass" x1="0" x2="1"><stop offset="0" stopColor="#fff" stopOpacity="0.95" /><stop offset="0.5" stopColor="#f3efe8" stopOpacity="0.5" /><stop offset="1" stopColor="#d8d0c4" stopOpacity="0.8" /></linearGradient>
-      </defs>
-      <rect x="16" y="38" width="68" height="112" rx="6" fill="url(#ks-glass)" stroke={EDGE} strokeOpacity="0.4" />
-      <rect x="20" y="132" width="60" height="14" rx="3" fill="#fff" stroke={EDGE} strokeOpacity="0.2" />
-      <line x1="50" y1="38" x2="50" y2="138" stroke={EDGE} strokeOpacity="0.35" />
-      <path d="M24 46 V126" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
-      <text x="50" y="96" textAnchor="middle" fontSize="6.5" fontFamily="var(--font-sans)" fill={EDGE} letterSpacing="1">{ml} ML · EMPTY</text>
+      <Defs ids={ids} />
+      <Shadow ids={ids} rx={40} />
+      <rect x="38" y="4" width="24" height="16" rx="3" fill={`url(#${ids.goldH})`} />
+      <rect x="47" y="8" width="6" height="4" rx="1" fill="#7a5a2e" opacity=".6" />
+      <rect x="34" y="20" width="32" height="20" rx="2" fill={`url(#${ids.gold})`} />
+      {[25, 30, 35].map((y) => <line key={y} x1="34" x2="66" y1={y} y2={y} stroke="#6d5128" strokeOpacity=".3" strokeWidth=".7" />)}
+      <path d="M22 44 C22 41 24 40 28 40 H72 C76 40 78 41 78 44 V146 C78 150 76 152 72 152 H28 C24 152 22 150 22 146 Z" fill={`url(#${ids.glass})`} stroke={LINE} />
+      <line x1="50" y1="40" x2="50" y2="146" stroke={LINE} strokeOpacity=".7" strokeWidth=".8" />
+      <rect x="30" y="80" width="40" height="40" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
+      <Mark x={50} y={93} size={12} color="#a8844f" stroke={4} />
+      <text x="50" y="112" textAnchor="middle" fontSize="5.4" fontFamily="var(--font-sans)" fill={GOLD_DEEP} letterSpacing="1.1">{ml} ML</text>
+      <path d="M27 48 V140" stroke="#fff" strokeWidth="3.4" strokeLinecap="round" />
+      <rect x="22" y="146" width="56" height="6" rx="2" fill="#fff" opacity=".6" />
     </Svg>
   );
 }
 
 export function Beaker({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 100 160">
-      <path d="M22 30 H76 L80 24 H84 L78 34 V140 C78 146 74 150 68 150 H32 C26 150 22 146 22 140 Z" fill={GLASS} fillOpacity="0.55" stroke={EDGE} strokeOpacity="0.45" />
+      <Defs ids={ids} />
+      <Shadow ids={ids} cx={50} cy={153} rx={38} ry={5} />
+      {/* liquid */}
+      <path d="M22 108 H76 V141 C76 146 73 149 68 149 H30 C25 149 22 146 22 141 Z" fill={`url(#${ids.liquid})`} opacity=".62" />
+      <ellipse cx="49" cy="108" rx="27" ry="2.2" fill="#fbe2aa" opacity=".9" />
+      {/* glass body */}
+      <path d="M20 26 H78 L84 19 H88 L80 30 V141 C80 148 75 152 68 152 H30 C24 152 20 148 20 141 Z" fill={`url(#${ids.glass})`} stroke={LINE} strokeWidth="1" />
+      {/* gilded rim and foot */}
+      <path d="M18 26 H80 L85.5 19 H89" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 146 C22 150 26 152 30 152 H68 C73 152 78 150 79 146" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth="2.6" />
+      {/* engraved graduations */}
       {[2, 4, 6, 8, 10].map((v) => {
-        const y = 140 - v * 10;
+        const y = 140 - v * 10.5;
         return (
           <g key={v}>
-            <line x1="56" x2="66" y1={y} y2={y} stroke={EDGE} strokeOpacity="0.7" />
-            <text x="69" y={y + 2.5} fontSize="7" fontFamily="var(--font-sans)" fill={EDGE}>{v === 10 ? "10ml" : v}</text>
+            <line x1="58" x2="72" y1={y} y2={y} stroke={GOLD_DEEP} strokeWidth="1" />
+            <line x1="62" x2="72" y1={y + 5.25} y2={y + 5.25} stroke={GOLD_DEEP} strokeWidth=".6" opacity=".7" />
+            <text x="55" y={y + 2.4} textAnchor="end" fontSize="7" fontFamily="var(--font-serif)" fill={GOLD_DEEP}>{v}</text>
           </g>
         );
       })}
-      <path d="M28 40 V138" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+      <text x="66" y="40" textAnchor="middle" fontSize="5" fontFamily="var(--font-sans)" letterSpacing="1" fill={GOLD_DEEP}>ML</text>
+      <Mark x={37} y={66} size={16} color="#a8844f" stroke={3.4} />
+      {/* highlights */}
+      <path d="M26 34 V140" stroke="#fff" strokeWidth="4" strokeLinecap="round" opacity=".95" />
+      <path d="M76 40 V96" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" opacity=".8" />
     </Svg>
   );
 }
 
 export function Funnel({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 100 160">
-      <path d="M20 60 H80 L62 98 V130 H38 V98 Z" fill="#f4f1ec" stroke="#c8c0b4" />
-      <ellipse cx="50" cy="60" rx="30" ry="7" fill="#fbfaf7" stroke="#c8c0b4" />
-      <ellipse cx="50" cy="60" rx="10" ry="3" fill="#e2ddd4" />
-      <path d="M38 102 H62" stroke="#c8c0b4" />
+      <Defs ids={ids} />
+      <Shadow ids={ids} cx={50} cy={150} rx={24} ry={4} />
+      <path d="M18 58 H82 L60 100 V146 H40 V100 Z" fill={`url(#${ids.ivory})`} stroke="#ddd0ba" />
+      <path d="M26 66 L44 100" stroke="#fff" strokeWidth="4" strokeLinecap="round" />
+      <ellipse cx="50" cy="58" rx="32" ry="8" fill="#fff" stroke={`url(#${ids.goldH})`} strokeWidth="2.6" />
+      <ellipse cx="50" cy="59" rx="11" ry="3" fill="#ede5d6" />
+      <line x1="40" x2="60" y1="102" y2="102" stroke={`url(#${ids.goldH})`} strokeWidth="2" />
     </Svg>
   );
 }
 
 export function AlcoholBottle({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 100 160">
-      <rect x="34" y="8" width="32" height="24" rx="3" fill="#fbfaf7" stroke="#c8c0b4" />
-      <rect x="30" y="30" width="40" height="8" rx="2" fill="#efebe4" stroke="#c8c0b4" />
-      <path d="M22 44 C22 38 26 36 32 36 H68 C74 36 78 38 78 44 V146 C78 150 76 152 72 152 H28 C24 152 22 150 22 146 Z" fill={GLASS} fillOpacity="0.6" stroke={EDGE} strokeOpacity="0.4" />
-      <rect x="26" y="60" width="48" height="84" fill="#fff" />
-      <text x="50" y="76" textAnchor="middle" fontSize="6.4" fontFamily="var(--font-sans)" fontWeight="600" fill="#0b0b0b" letterSpacing="0.6">PERFUMERY</text>
-      <text x="50" y="85" textAnchor="middle" fontSize="6.4" fontFamily="var(--font-sans)" fontWeight="600" fill="#0b0b0b" letterSpacing="0.6">ALCOHOL</text>
-      <text x="50" y="104" textAnchor="middle" fontSize="5.6" fontFamily="var(--font-sans)" fill="#57534d">demo component</text>
-      <text x="50" y="112" textAnchor="middle" fontSize="5.6" fontFamily="var(--font-sans)" fill="#57534d">display only</text>
-      <line x1="34" x2="66" y1="124" y2="124" stroke="#b89972" />
-      <text x="50" y="136" textAnchor="middle" fontSize="6.4" fontFamily="var(--font-sans)" fill="#0b0b0b">30 ml</text>
-      <path d="M25 46 V142" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+      <Defs ids={ids} />
+      <Shadow ids={ids} rx={40} />
+      <rect x="33" y="6" width="34" height="26" rx="3" fill={`url(#${ids.goldH})`} />
+      {[12, 18, 24].map((y) => <line key={y} x1="33" x2="67" y1={y} y2={y} stroke="#6d5128" strokeOpacity=".3" strokeWidth=".7" />)}
+      <rect x="40" y="32" width="20" height="6" fill={`url(#${ids.glass})`} stroke={LINE} strokeWidth=".8" />
+      <path d="M20 46 C20 40 25 38 31 38 H69 C75 38 80 40 80 46 V146 C80 150 78 152 74 152 H26 C22 152 20 150 20 146 Z" fill={`url(#${ids.glass})`} stroke={LINE} />
+      <rect x="27" y="62" width="46" height="78" fill="#fffdf8" />
+      <rect x="30" y="65" width="40" height="72" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
+      <Mark x={50} y={77} size={10} color="#a8844f" stroke={4} />
+      <text x="50" y="94" textAnchor="middle" fontSize="6" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d" letterSpacing=".8">PERFUMERY</text>
+      <text x="50" y="102" textAnchor="middle" fontSize="6" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d" letterSpacing=".8">ALCOHOL</text>
+      <text x="50" y="114" textAnchor="middle" fontSize="4.6" fontFamily="var(--font-sans)" fill="#6e675e">display only</text>
+      <line x1="38" x2="62" y1="121" y2="121" stroke={`url(#${ids.goldH})`} />
+      <text x="50" y="131" textAnchor="middle" fontSize="6" fontFamily="var(--font-sans)" fill="#14110d">30 ml</text>
+      <path d="M24 50 V142" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
     </Svg>
   );
 }
 
-/** Amber accord bottle with black cap and SENTYAR label — the kit's accord vials. */
+/** Amber accord bottle with a gilded cap and ivory SENTYAR label. */
 export function OilBottle({ name, color, ml = 5, label, className = "kit-svg" }: { name: string; color: string; ml?: number; label?: string; className?: string }) {
-  const id = `ob-${name.replace(/\W/g, "")}`;
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 100 160" className={className}>
-      <defs>
-        <linearGradient id={id} x1="0" x2="1">
-          <stop offset="0" stopColor="#7a4a1c" />
-          <stop offset="0.35" stopColor="#b5732e" />
-          <stop offset="0.7" stopColor="#6a3c14" />
-          <stop offset="1" stopColor="#3f230b" />
-        </linearGradient>
-      </defs>
-      <rect x="30" y="6" width="40" height="34" rx="3" fill="#141312" />
-      {[12, 18, 24, 30].map((y) => <line key={y} x1="30" x2="70" y1={y} y2={y} stroke="#fff" strokeOpacity="0.08" />)}
-      <rect x="33" y="8" width="5" height="30" rx="2" fill="#fff" opacity="0.12" />
-      <path d="M34 40 H66 V46 C80 50 84 56 84 64 V146 C84 150 81 152 77 152 H23 C19 152 16 150 16 146 V64 C16 56 20 50 34 46 Z" fill={`url(#${id})`} />
-      <rect x="20" y="70" width="60" height="70" fill="#fbfaf7" />
-      <rect x="20" y="70" width="60" height="4" fill={color} />
-      <g transform="translate(50 86)"><foreignObject x="-6" y="-6" width="12" height="12"><div style={{ color: "#0b0b0b", display: "grid", placeItems: "center" }}><Emblem size={11} stroke={5} /></div></foreignObject></g>
-      <text x="50" y="104" textAnchor="middle" fontSize="10.5" fontFamily="var(--font-serif)" fontWeight="600" fill="#0b0b0b">{name}</text>
-      <text x="50" y="114" textAnchor="middle" fontSize="5" fontFamily="var(--font-sans)" fill="#57534d" letterSpacing="0.8">DEMO ACCORD</text>
-      <line x1="34" x2="66" y1="122" y2="122" stroke={color} strokeWidth="1.2" />
-      <text x="50" y="133" textAnchor="middle" fontSize="7" fontFamily="var(--font-sans)" fill="#0b0b0b">{ml} ml</text>
-      <path d="M21 58 V66 M21 142 V146" stroke="#fff" strokeOpacity="0.5" strokeWidth="2.5" strokeLinecap="round" />
+      <Defs ids={ids} />
+      <Shadow ids={ids} rx={40} />
+      <rect x="29" y="6" width="42" height="34" rx="3" fill={`url(#${ids.goldH})`} />
+      {[13, 20, 27, 34].map((y) => <line key={y} x1="29" x2="71" y1={y} y2={y} stroke="#6d5128" strokeOpacity=".28" strokeWidth=".8" />)}
+      <path d="M34 40 H66 V46 C80 50 84 56 84 64 V146 C84 150 81 152 77 152 H23 C19 152 16 150 16 146 V64 C16 56 20 50 34 46 Z" fill={`url(#${ids.amber})`} />
+      <rect x="21" y="70" width="58" height="70" fill="#fffdf8" />
+      <rect x="24" y="73" width="52" height="64" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
+      <rect x="24" y="73" width="52" height="3" fill={color} />
+      <Mark x={50} y={87} size={10} color="#a8844f" stroke={4.4} />
+      <text x="50" y="104" textAnchor="middle" fontSize="10" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d">{name}</text>
+      <text x="50" y="113" textAnchor="middle" fontSize="4.6" fontFamily="var(--font-sans)" fill="#6e675e" letterSpacing="1">DEMO ACCORD</text>
+      <line x1="38" x2="62" y1="120" y2="120" stroke={`url(#${ids.goldH})`} />
+      <text x="50" y="131" textAnchor="middle" fontSize="6.6" fontFamily="var(--font-sans)" fill="#14110d">{ml} ml</text>
+      <path d="M21 58 V66 M21 142 V146" stroke="#fff" strokeOpacity=".45" strokeWidth="2.5" strokeLinecap="round" />
     </Svg>
   );
 }
 
 export function MixingVials({ label }: { label?: string }) {
+  const ids = useIds();
   return (
     <Svg label={label} vb="0 0 120 160">
+      <Defs ids={ids} />
+      <Shadow ids={ids} cx={60} cy={154} rx={50} ry={5} />
       {[0, 1, 2].map((i) => (
         <g key={i} transform={`translate(${14 + i * 32} 20)`}>
-          <rect x="4" y="0" width="20" height="16" rx="2" fill="#141312" />
-          <path d="M2 16 H26 V124 C26 130 22 132 18 132 H10 C6 132 2 130 2 124 Z" fill={GLASS} fillOpacity="0.6" stroke={EDGE} strokeOpacity="0.4" />
-          <path d="M6 22 V120" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+          <rect x="3" y="0" width="22" height="18" rx="2" fill={`url(#${ids.goldH})`} />
+          <path d="M2 18 H26 V124 C26 130 22 132 18 132 H10 C6 132 2 130 2 124 Z" fill={`url(#${ids.glass})`} stroke={LINE} strokeWidth=".9" />
+          {i === 1 && <path d="M3 90 H25 V124 C25 129 22 131 18 131 H10 C6 131 3 129 3 124 Z" fill={`url(#${ids.liquid})`} opacity=".6" />}
+          <path d="M7 24 V120" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
         </g>
       ))}
     </Svg>
@@ -154,14 +244,19 @@ export function MixingVials({ label }: { label?: string }) {
 }
 
 export function PaperItem({ kind, label }: { kind: "cards" | "journal" | "guide" | "qr"; label?: string }) {
+  const ids = useIds();
   if (kind === "journal") {
     return (
       <Svg label={label} vb="0 0 120 160">
-        <rect x="18" y="14" width="86" height="132" rx="3" fill="#e9e4dc" stroke="#c8c0b4" />
-        <rect x="18" y="14" width="10" height="132" fill="#d8d0c4" />
-        <g transform="translate(62 64)"><foreignObject x="-12" y="-12" width="24" height="24"><div style={{ display: "grid", placeItems: "center", color: "#8c7150" }}><Emblem size={22} stroke={3} /></div></foreignObject></g>
-        <text x="62" y="98" textAnchor="middle" fontSize="8" fontFamily="var(--font-serif)" fill="#34312d" letterSpacing="1.5">FORMULA</text>
-        <text x="62" y="108" textAnchor="middle" fontSize="8" fontFamily="var(--font-serif)" fill="#34312d" letterSpacing="1.5">JOURNAL</text>
+        <Defs ids={ids} />
+        <Shadow ids={ids} cx={62} cy={150} rx={46} ry={5} />
+        <rect x="18" y="12" width="88" height="134" rx="2" fill={`url(#${ids.ivory})`} stroke="#ddd0ba" />
+        <rect x="18" y="12" width="9" height="134" fill="#efe6d6" />
+        <rect x="33" y="20" width="66" height="118" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth="1" />
+        <Mark x={66} y={62} size={22} color="#a8844f" stroke={3} />
+        <text x="66" y="96" textAnchor="middle" fontSize="8" fontFamily="var(--font-serif)" fill="#14110d" letterSpacing="1.6">FORMULA</text>
+        <text x="66" y="107" textAnchor="middle" fontSize="8" fontFamily="var(--font-serif)" fill="#14110d" letterSpacing="1.6">JOURNAL</text>
+        <rect x="88" y="12" width="5" height="40" fill={`url(#${ids.gold})`} />
       </Svg>
     );
   }
@@ -169,23 +264,30 @@ export function PaperItem({ kind, label }: { kind: "cards" | "journal" | "guide"
     const cells = [0, 1, 2, 3, 4, 5, 6].flatMap((r) => [0, 1, 2, 3, 4, 5, 6].map((c) => ({ r, c, on: (r * 3 + c * 5 + r * c) % 3 === 0 || (r < 2 && c < 2) || (r < 2 && c > 4) || (r > 4 && c < 2) })));
     return (
       <Svg label={label} vb="0 0 120 160">
-        <rect x="16" y="20" width="88" height="120" rx="4" fill="#fbfaf7" stroke="#c8c0b4" />
-        {cells.filter((x) => x.on).map(({ r, c }) => <rect key={`${r}-${c}`} x={32 + c * 8} y={36 + r * 8} width="8" height="8" fill="#0b0b0b" />)}
-        <text x="60" y="114" textAnchor="middle" fontSize="7" fontFamily="var(--font-sans)" fill="#34312d" letterSpacing="1">SCAN FOR</text>
-        <text x="60" y="124" textAnchor="middle" fontSize="7" fontFamily="var(--font-sans)" fill="#34312d" letterSpacing="1">TUTORIAL</text>
+        <Defs ids={ids} />
+        <Shadow ids={ids} cx={60} cy={146} rx={44} ry={5} />
+        <rect x="16" y="20" width="88" height="120" rx="2" fill={`url(#${ids.ivory})`} stroke="#ddd0ba" />
+        <rect x="21" y="25" width="78" height="110" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
+        {cells.filter((x) => x.on).map(({ r, c }) => <rect key={`${r}-${c}`} x={32 + c * 8} y={36 + r * 8} width="8" height="8" fill="#14110d" />)}
+        <text x="60" y="112" textAnchor="middle" fontSize="6.6" fontFamily="var(--font-sans)" fill={GOLD_DEEP} letterSpacing="1.2">SCAN FOR</text>
+        <text x="60" y="122" textAnchor="middle" fontSize="6.6" fontFamily="var(--font-sans)" fill={GOLD_DEEP} letterSpacing="1.2">TUTORIAL</text>
       </Svg>
     );
   }
   const title = kind === "cards" ? "CEDARWOOD" : "SAFETY";
-  const sub = kind === "cards" ? "botanical" : "& handling";
+  const sub = kind === "cards" ? "botanical" : "and handling";
   return (
     <Svg label={label} vb="0 0 120 160">
-      {kind === "cards" && <rect x="30" y="16" width="70" height="104" rx="3" fill="#f1eee8" stroke="#c8c0b4" transform="rotate(8 65 68)" />}
-      <rect x="22" y="26" width="70" height="104" rx="3" fill="#fbfaf7" stroke="#c8c0b4" />
-      <text x="57" y="62" textAnchor="middle" fontSize="7" fontFamily="var(--font-sans)" fill="#0b0b0b" letterSpacing="1.4">{title}</text>
-      <text x="57" y="74" textAnchor="middle" fontSize="8" fontFamily="var(--font-serif)" fontStyle="italic" fill="#57534d">{sub}</text>
-      <line x1="38" x2="76" y1="88" y2="88" stroke="#b89972" />
-      {[96, 102, 108].map((y) => <line key={y} x1="34" x2="80" y1={y} y2={y} stroke="#c8c0b4" />)}
+      <Defs ids={ids} />
+      <Shadow ids={ids} cx={60} cy={142} rx={44} ry={5} />
+      {kind === "cards" && <rect x="30" y="16" width="70" height="104" rx="2" fill="#f7f1e6" stroke="#ddd0ba" transform="rotate(8 65 68)" />}
+      <rect x="22" y="26" width="70" height="104" rx="2" fill={`url(#${ids.ivory})`} stroke="#ddd0ba" />
+      <rect x="27" y="31" width="60" height="94" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
+      <Mark x={57} y={48} size={12} color="#a8844f" stroke={4} />
+      <text x="57" y="68" textAnchor="middle" fontSize="6.6" fontFamily="var(--font-sans)" fill="#14110d" letterSpacing="1.4">{title}</text>
+      <text x="57" y="79" textAnchor="middle" fontSize="7.6" fontFamily="var(--font-serif)" fontStyle="italic" fill="#55504a">{sub}</text>
+      <line x1="40" x2="74" y1="90" y2="90" stroke={`url(#${ids.goldH})`} />
+      {[98, 104, 110].map((y) => <line key={y} x1="36" x2="78" y1={y} y2={y} stroke="#e4d9c6" />)}
     </Svg>
   );
 }

@@ -1,19 +1,18 @@
 import { Link } from "react-router-dom";
 import { useApp } from "../app/store";
-import { Lockup } from "./Logo";
+import { Emblem, Wordmark } from "./Logo";
 
 export function Footer() {
   const { setTourStep } = useApp();
   return (
     <footer className="site-footer">
       <div className="container">
-        <div className="site-footer__top">
-          <div className="site-footer__brand">
-            <Lockup size="md" inverse />
-            <p className="small" style={{ color: "var(--text-inverse-2)", maxWidth: "36ch", marginTop: 24 }}>
-              From raw ingredients to a scent that is entirely yours. An interactive prototype of a personal perfumery studio.
-            </p>
-          </div>
+        <div className="site-footer__crest">
+          <Emblem size={56} stroke={2} color="#a8844f" />
+          <Wordmark size="lg" descriptor />
+          <p className="small">From raw ingredients to a scent that is entirely yours. An interactive prototype of a personal perfumery studio.</p>
+        </div>
+        <div className="site-footer__top site-footer__top--center">
           <nav aria-label="Footer" className="site-footer__cols">
             <div>
               <p className="eyebrow">Studio</p>
@@ -22,7 +21,7 @@ export function Footer() {
                 <li><Link to="/kits/creator-kit-v1/unbox">Interactive kit</Link></li>
                 <li><Link to="/lab">Perfume Lab</Link></li>
                 <li><Link to="/nature-lab">Nature Lab</Link></li>
-                <li><Link to="/prefer">Prefer — taste quiz</Link></li>
+                <li><Link to="/prefer">Prefer taste quiz</Link></li>
               </ul>
             </div>
             <div>

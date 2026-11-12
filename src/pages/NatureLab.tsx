@@ -53,7 +53,7 @@ export default function NatureLab() {
         <header className="page-head">
           <p className="eyebrow">Nature Lab · educational simulation</p>
           <h1 className="h1">From material to impression</h1>
-          <p className="lead">Follow how a botanical becomes an extract — as a concept. No real protocol, no ratios, no heat. Just the ideas a perfumer works with.</p>
+          <p className="lead">Follow how a botanical becomes an extract, as a concept. No real protocol, no ratios, no heat. Just the ideas a perfumer works with.</p>
         </header>
 
         <div className="notice notice--ink nature__disclaimer" role="note">
@@ -65,7 +65,7 @@ export default function NatureLab() {
           {BOTANICALS.map((x) => (
             <button key={x.id} role="radio" aria-checked={bid === x.id} className="nat-pick" onClick={() => pick(x.id)}>
               <img src={x.image} alt="" />
-              <span>{x.name.replace("Dried ", "")} experiment</span>
+              <span>{x.name.replace("Dried r", "R").replace("Dried o", "O")} experiment</span>
               {done(x.id) && <span className="nat-pick__done"><Check size={12} aria-hidden /> Note saved</span>}
             </button>
           ))}
@@ -132,7 +132,7 @@ export default function NatureLab() {
                           <button key={w} className="chip" aria-pressed={words.includes(w)} onClick={() => setWords((ws) => ws.includes(w) ? ws.filter((x) => x !== w) : [...ws, w].slice(-5))}>{w}</button>
                         ))}
                       </div>
-                      <p className="small muted">Choose up to five. Perception varies — there is no wrong answer.</p>
+                      <p className="small muted">Choose up to five. Perception varies, there is no wrong answer.</p>
                     </fieldset>
                   )}
 
@@ -160,7 +160,7 @@ export default function NatureLab() {
                     <dl className="facts">
                       <div><dt>You noticed</dt><dd>{words.join(", ")}</dd></div>
                       <div><dt>Often described as</dt><dd>{b.descriptors.join(", ")}</dd></div>
-                      <div><dt>What you learned</dt><dd>Aroma moves from a material into a medium; the result must then be separated, evaluated and — before any skin use — professionally assessed.</dd></div>
+                      <div><dt>What you learned</dt><dd>Aroma moves from a material into a medium; the result must then be separated, evaluated and, before any skin use, professionally assessed.</dd></div>
                       <div><dt>Status</dt><dd>Concept only. Not a chemically verified extract.</dd></div>
                     </dl>
                     <div className="field">
@@ -175,7 +175,7 @@ export default function NatureLab() {
                   </div>
                   <div className="next-steps">
                     <p className="eyebrow">Next safe step</p>
-                    <p className="body-2">For composition, continue with the related <strong>{accord.name} accord</strong> — a demo input, not this botanical.</p>
+                    <p className="body-2">For composition, continue with the related <strong>{accord.name} accord</strong>: a demo input, not this botanical.</p>
                     <div className="row">
                       <button className="btn" onClick={() => { addToBlend(accord.id); nav("/lab"); }}><FlaskConical size={16} aria-hidden /> Add {accord.name} accord &amp; open Lab</button>
                       <Link to={`/ingredients/${accord.id}`} className="btn btn--secondary">Learn about {accord.name}</Link>

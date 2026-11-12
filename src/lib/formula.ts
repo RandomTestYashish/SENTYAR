@@ -182,7 +182,7 @@ export function setShare(
   return { blend: next, changes: diffShares(blend, next) };
 }
 
-/** Even split — used by the "Balance evenly" helper. */
+/** Even split, used by the "Balance evenly" helper. */
 export function evenSplit(blend: Blend): Blend {
   const shares = distribute(blend.map(() => 1), 100, MIN_SHARE);
   return blend.map((e, i) => ({ ...e, share: shares[i] }));

@@ -21,7 +21,7 @@ export function Emblem({ size = 40, stroke = 2.4, className, title, color = "cur
   );
 }
 
-/** Concept 2 — negative-space S knocked out of solid petals. */
+/** Concept 2, negative-space S knocked out of solid petals. */
 export function EmblemNegative({ size = 96, color = "currentColor" }: { size?: number; color?: string }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden>
@@ -40,7 +40,7 @@ export function EmblemNegative({ size = 96, color = "currentColor" }: { size?: n
   );
 }
 
-/** Concept 3 — refined monogram S inside a restrained leaf outline. */
+/** Concept 3, refined monogram S inside a restrained leaf outline. */
 export function EmblemMonogram({ size = 96, color = "currentColor" }: { size?: number; color?: string }) {
   return (
     <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden>

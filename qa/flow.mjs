@@ -50,7 +50,7 @@ ok("10 proportional adjust total 100%", (await totalTxt()).includes("100%"));
 ok("12 total 10.00 ml", (await bar()).includes("Total 10.00 ml"));
 ok("recalc shown", await page.getByText("Recalculated").isVisible());
 // botanical block
-await page.getByRole("button", { name: /Cinnamon sticks — exploration only/ }).click();
+await page.getByRole("button", { name: /Cinnamon sticks, exploration only/ }).click();
 ok("GAP5 botanical blocked", await page.getByRole("dialog", { name: /Botanicals can/ }).isVisible());
 await page.getByRole("button", { name: "Close" }).click();
 // manual mode

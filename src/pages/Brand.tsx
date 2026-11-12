@@ -11,9 +11,9 @@ const COLORS = [
 ];
 
 const RATIONALE: Record<BottleConceptId, string> = {
-  pebble: "Recommended. A recognisable, softly asymmetric silhouette with a flat stable base, a single parting line and a standard 15 mm neck — mouldable in two-part tooling. The faceted stone cap becomes the signature. Front plane is calm enough for a label.",
+  pebble: "Recommended. A recognisable, softly asymmetric silhouette with a flat stable base, a single parting line and a standard 15 mm neck, mouldable in two-part tooling. The faceted stone cap becomes the signature. Front plane is calm enough for a label.",
   facet: "Strong shelf presence and crisp refraction, but many planes raise mould cost, risk visible sink marks, and label placement is constrained to one face.",
-  atelier: "The most manufacturable and comfortable to grip, with a stepped shoulder detail — but closest to familiar classic bottles, so less ownable.",
+  atelier: "The most manufacturable and comfortable to grip, with a stepped shoulder detail, but closest to familiar classic bottles, so less ownable.",
 };
 
 export default function Brand() {
@@ -61,7 +61,7 @@ export default function Brand() {
       <section className="section--tight container" aria-labelledby="sz-h">
         <h2 id="sz-h" className="h2">In use &amp; at size</h2>
         <div className="brand-grid brand-grid--uses">
-          <figure className="brand-tile"><div className="row" style={{ alignItems: "end", gap: 24 }}><Emblem size={16} stroke={4.5} /><Emblem size={24} stroke={3.6} /><Emblem size={32} stroke={3} /></div><figcaption className="small muted">Favicon 16 / 24 / 32 px — stroke thickens at small sizes</figcaption></figure>
+          <figure className="brand-tile"><div className="row" style={{ alignItems: "end", gap: 24 }}><Emblem size={16} stroke={4.5} /><Emblem size={24} stroke={3.6} /><Emblem size={32} stroke={3} /></div><figcaption className="small muted">Favicon 16 / 24 / 32 px, stroke thickens at small sizes</figcaption></figure>
           <figure className="brand-tile"><div className="cap-disc"><Emblem size={56} stroke={2.6} color="#B89972" /></div><figcaption className="small muted">Bottle cap top (foil)</figcaption></figure>
           <figure className="brand-tile"><div className="label-mock"><Emblem size={28} stroke={3} /><Wordmark size="sm" /><span className="serif-italic">Orange Woods</span><span className="eyebrow" style={{ fontSize: 9 }}>10 ml · demo concept</span></div><figcaption className="small muted">Bottle label</figcaption></figure>
           <figure className="brand-tile brand-tile--ink"><div className="lid-mock"><Emblem size={44} stroke={2.2} color="#E9E4DC" /><Wordmark size="sm" /><span className="eyebrow" style={{ color: "#B9B2A7" }}>Creator kit</span></div><figcaption className="small">Kit lid</figcaption></figure>
@@ -74,8 +74,8 @@ export default function Brand() {
         <h2 id="rules-h" className="h2">Rules</h2>
         <div className="brand-grid brand-grid--3">
           <figure className="brand-tile"><div className="clearspace"><Emblem size={88} /></div><figcaption className="small"><strong>Clear space</strong> = one petal length on all sides.</figcaption></figure>
-          <figure className="brand-tile"><div className="row" style={{ gap: 24, alignItems: "end" }}><Emblem size={16} stroke={4.5} /><Wordmark size="sm" /></div><figcaption className="small"><strong>Minimum size</strong> — emblem 16 px, wordmark 80 px wide.</figcaption></figure>
-          <figure className="brand-tile"><div className="row" style={{ gap: 16 }}><span style={{ color: "#0B0B0B" }}><Emblem size={48} /></span><span style={{ color: "#B89972" }}><Emblem size={48} /></span><span className="brand-ink-dot"><Emblem size={48} color="#F8F6F2" /></span></div><figcaption className="small"><strong>Monochrome only</strong> — ink, champagne or bone.</figcaption></figure>
+          <figure className="brand-tile"><div className="row" style={{ gap: 24, alignItems: "end" }}><Emblem size={16} stroke={4.5} /><Wordmark size="sm" /></div><figcaption className="small"><strong>Minimum size</strong>: emblem 16 px, wordmark 80 px wide.</figcaption></figure>
+          <figure className="brand-tile"><div className="row" style={{ gap: 16 }}><span style={{ color: "#0B0B0B" }}><Emblem size={48} /></span><span style={{ color: "#B89972" }}><Emblem size={48} /></span><span className="brand-ink-dot"><Emblem size={48} color="#F8F6F2" /></span></div><figcaption className="small"><strong>Monochrome only</strong>: ink, champagne or bone.</figcaption></figure>
         </div>
         <h3 className="h4" style={{ marginTop: 32 }}>Incorrect use</h3>
         <div className="brand-grid brand-grid--4">
@@ -88,7 +88,7 @@ export default function Brand() {
 
       <section className="section section--white" aria-labelledby="bt-h">
         <div className="container">
-          <h2 id="bt-h" className="h2">Signature bottle — three directions</h2>
+          <h2 id="bt-h" className="h2">Signature bottle: <em>three directions</em></h2>
           <p className="lead" style={{ marginTop: 8 }}>Geometry is modular (see <code>BOTTLES</code> in <code>src/components/Bottle.tsx</code>), so the chosen silhouette can change without rebuilding pages.</p>
           <div className="brand-grid brand-grid--3" style={{ marginTop: 32 }}>
             {(Object.keys(BOTTLES) as BottleConceptId[]).map((k) => (
@@ -113,13 +113,13 @@ export default function Brand() {
           ))}
         </div>
         <div className="type-specimen">
-          <p className="display">Display — Cormorant 500</p>
+          <p className="display">Display: Cormorant 500</p>
           <p className="h1">Heading 1</p>
           <p className="h2">Heading 2</p>
           <p className="h3">Heading 3 <span className="serif-italic">with italic emphasis</span></p>
-          <p className="lead">Lead — Inter 400, for introductions and supporting copy.</p>
-          <p>Body — Inter 400 / 16 px / 1.6. Ingredient names and UI stay highly readable.</p>
-          <p className="eyebrow">Label — Inter 600 · 12 px · 0.16em</p>
+          <p className="lead">Lead: Inter 400, for introductions and supporting copy.</p>
+          <p>Body: Inter 400 / 16 px / 1.6. Ingredient names and UI stay highly readable.</p>
+          <p className="eyebrow">Label: Inter 600 · 12 px · 0.16em</p>
         </div>
         <div className="spacing-scale" aria-label="Spacing scale">
           {[4, 8, 16, 24, 32, 40, 48, 64, 80, 96, 128].map((s) => <div key={s}><span style={{ width: s, height: s }} /><span className="small num muted">{s}</span></div>)}
@@ -132,7 +132,7 @@ export default function Brand() {
         <div className="brand-grid brand-grid--4" style={{ marginTop: 24 }}>
           {["tex-matte", "tex-glass", "tex-stone", "tex-foil"].map((t) => <Img key={t} src={`./assets/img/${t}.jpg`} alt={`Material texture: ${t.replace("tex-", "")}`} ratio="1/1" />)}
         </div>
-        <Img src="./assets/img/emboss.jpg" alt="The S-flower emblem blind-embossed with champagne foil on black soft-touch board" ratio="268 / 311" className="emboss-img" />
+        <Img src="./assets/img/emboss.jpg" alt="The S-flower emblem blind-embossed and traced in champagne foil on ivory board" ratio="268 / 311" className="emboss-img" />
       </section>
     </>
   );

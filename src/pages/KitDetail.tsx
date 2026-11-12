@@ -16,7 +16,7 @@ export default function KitDetail() {
       <section className="container section--tight">
         <nav aria-label="Breadcrumb" className="crumbs"><Link to="/">Home</Link><span aria-hidden>/</span><Link to="/kits">Explore Kits</Link><span aria-hidden>/</span><span aria-current="page">Creator Kit V1</span></nav>
         <div className="kit-hero">
-          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit opened: amber vials, beaker, pipette, two larger bottles and an ingredients booklet in black compartments" className="kit-hero__img" ratio="604 / 311" eager />
+          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit opened: amber vials, beaker, pipette, two larger bottles and an ingredients booklet in gold-lined ivory compartments" className="kit-hero__img" ratio="604 / 311" eager />
           <div className="kit-hero__copy">
             <p className="eyebrow">Creator Kit · V1</p>
             <h1 className="h1">{KIT.name}</h1>
@@ -109,7 +109,7 @@ export default function KitDetail() {
             <ul role="list" className="ticks">
               <li>How a raw botanical differs from a prepared extract and from a fragrance accord.</li>
               <li>How to describe what you smell with a small, useful vocabulary.</li>
-              <li>What top, heart and base associations mean — and their limits.</li>
+              <li>What top, heart and base associations mean, and their limits.</li>
               <li>How proportions shape a blend while the bottle volume stays fixed.</li>
               <li>Why real formulations need professional validation before skin use.</li>
             </ul>

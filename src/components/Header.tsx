@@ -74,7 +74,7 @@ export function Header() {
             ))}
             <li><NavLink to="/marketplace" className="mobile-link">Ingredient Marketplace</NavLink></li>
             <li><NavLink to="/nature-lab" className="mobile-link">Nature Lab</NavLink></li>
-            <li><NavLink to="/prefer" className="mobile-link">Prefer — taste quiz</NavLink></li>
+            <li><NavLink to="/prefer" className="mobile-link">Prefer taste quiz</NavLink></li>
           </ul>
           <Link to="/lab" className="btn btn--block" style={{ marginTop: 24 }}>Start Creating</Link>
         </nav>

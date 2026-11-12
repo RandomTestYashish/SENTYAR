@@ -25,7 +25,7 @@ export default function HowItWorks() {
         </header>
         <ol className="flow" role="list">
           {[
-            ["Discover", "Open the Creator Kit. Inspect botanicals — real peel, wood, petals and bark — and meet six demo fragrance accords.", "/kits/creator-kit-v1/unbox"],
+            ["Discover", "Open the Creator Kit. Inspect botanicals, real peel, wood, petals and bark, and meet six demo fragrance accords.", "/kits/creator-kit-v1/unbox"],
             ["Learn", "Follow guided ingredient journeys and the Nature Lab simulation to understand the difference between a botanical, an extract and an accord.", "/ingredients"],
             ["Compose", "In the Perfume Lab, select accords and set their shares. The blend always totals 100% and the bottle always stays 10 ml.", "/lab"],
             ["Create", "Preview, name and save your concept. Edit it into new versions, branch variations and compare them.", "/creations"],

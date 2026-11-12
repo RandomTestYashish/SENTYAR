@@ -1,4 +1,4 @@
-// Prefer — a pick-one-of-two taste quiz that turns visual preferences into a
+// Prefer, a pick-one-of-two taste quiz that turns visual preferences into a
 // suggested demo blend. Scoring is an illustrative mapping, not a profile of
 // the person and not a perfumery method.
 
@@ -33,7 +33,7 @@ const ROUNDS: Round[] = [
   { axis: 0, a: { label: "Citrus accord", vial: "citrus", alt: "Citrus accord vial", w: { citrus: 2 } }, b: { label: "Vanilla accord", vial: "vanilla", alt: "Vanilla accord vial", w: { vanilla: 2 } } },
   { axis: 1, a: { label: "Rose accord", vial: "rose", alt: "Rose accord vial", w: { rose: 2 } }, b: { label: "Woody accord", vial: "woody", alt: "Woody accord vial", w: { woody: 2 } } },
   { axis: 3, a: { label: "The Orb", img: `${IMG}bottle-orb.jpg`, alt: "A rounded glass bottle with a slim gold cap", w: { rose: 1, vanilla: 1 } }, b: { label: "The Atelier", img: `${IMG}bottle-atelier.jpg`, alt: "A classic ribbed glass bottle with a black cap", w: { woody: 1, citrus: 1 } } },
-  { axis: 5, a: { label: "Blind emboss", img: `${IMG}emboss.jpg`, alt: "The S-flower emblem embossed on black board", w: { musk: 1, woody: 1 } }, b: { label: "Still life", img: `${IMG}hero-stilllife.jpg`, alt: "Amber bottle among wood, orange and cinnamon", w: { spicy: 1, citrus: 1, vanilla: 1 } } },
+  { axis: 5, a: { label: "Blind emboss", img: `${IMG}emboss.jpg`, alt: "The S-flower emblem embossed on ivory board", w: { musk: 1, woody: 1 } }, b: { label: "Still life", img: `${IMG}hero-stilllife.jpg`, alt: "A crystal bottle on an ivory plinth among rose, cedarwood, orange and cinnamon", w: { spicy: 1, citrus: 1, vanilla: 1 } } },
 ];
 
 const KEY = "prefer";
@@ -195,7 +195,7 @@ export default function Prefer() {
             )}
             <button className="pf-pill" onClick={() => setView("result")} disabled={picks.length < 3} title={picks.length < 3 ? "Make at least 3 picks first" : undefined}>Your result</button>
           </div>
-          <p className="pf-credit">Pick by instinct. Your choices become a suggested demo blend — an illustrative mapping, not a perfumer’s formula.</p>
+          <p className="pf-credit">Pick by instinct. Your choices become a suggested demo blend, an illustrative mapping, not a perfumer’s formula.</p>
         </div>
       </section>
     );
@@ -225,7 +225,7 @@ export default function Prefer() {
                   </li>
                 ))}
               </ul>
-              <p className="small muted">Fixed 10 ml demo: 2.00 ml blend + 8.00 ml base. Illustrative mapping from your picks — not a skin-use recipe.</p>
+              <p className="small muted">Fixed 10 ml demo: 2.00 ml blend + 8.00 ml base. Illustrative mapping from your picks, not a skin-use recipe.</p>
             </div>
           ) : <p className="pf-credit">Make at least three picks to see a suggested blend.</p>}
           <div className="pf-ctas">

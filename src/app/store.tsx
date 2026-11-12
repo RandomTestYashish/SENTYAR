@@ -200,7 +200,7 @@ function useStore() {
     if (as === "edit") {
       setDraft({ blend: c.blend, mode: "proportional", name: c.name, editingId: c.id, parentId: c.parentId ?? null, bottle: c.appearance.bottle });
     } else {
-      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} — variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle });
+      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle });
     }
   }, [draft.blend]);
 

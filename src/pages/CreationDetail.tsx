@@ -118,9 +118,9 @@ export default function CreationDetail() {
                 <td />
                 <th scope="row">Demo base</th>
                 <td className="num">{formatMl(vols.baseCml)}</td>
-                <td className="muted">—</td>
+                <td className="muted">Not mapped</td>
                 <td className="muted">Unknown</td>
-                <td className="muted">Not sold in this prototype — no validated base product exists to map.</td>
+                <td className="muted">Not sold in this prototype, no validated base product exists to map.</td>
               </tr>
             </tbody>
           </table>
@@ -131,7 +131,7 @@ export default function CreationDetail() {
           </button>
           <Link to="/marketplace" className="btn btn--secondary">Browse marketplace</Link>
         </div>
-        <p className="small muted" style={{ marginTop: 8 }}>Stock, delivery and shipping are not modelled. Demo prices only — no order is placed.</p>
+        <p className="small muted" style={{ marginTop: 8 }}>Stock, delivery and shipping are not modelled. Demo prices only, no order is placed.</p>
       </section>
 
       {/* HISTORY */}
@@ -167,7 +167,7 @@ export default function CreationDetail() {
           <h2 className="h3" style={{ marginTop: 32 }}>Exploration notes</h2>
           <p className="small muted">Kept separately from the formula.</p>
           {linkedNotes.length ? (
-            <ul role="list" className="ticks">{linkedNotes.map((n) => <li key={n.id} className="small">{ingredientById(n.ingredientId)?.name}: {n.descriptors.join(", ")}{n.text ? ` — “${n.text}”` : ""}</li>)}</ul>
+            <ul role="list" className="ticks">{linkedNotes.map((n) => <li key={n.id} className="small">{ingredientById(n.ingredientId)?.name}: {n.descriptors.join(", ")}{n.text ? `, “${n.text}”` : ""}</li>)}</ul>
           ) : <p className="small body-2">No discovery notes were linked when this was saved.</p>}
         </div>
       </section>

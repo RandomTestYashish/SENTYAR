@@ -27,12 +27,12 @@ export function CartDrawer() {
         <div className="empty" style={{ padding: "48px 8px" }}>
           <span className="empty-icon"><ShoppingBag size={22} aria-hidden /></span>
           <h3 className="h3">Your cart is empty</h3>
-          <p>Browse demo accords, botanical samples and tools — or open a saved creation to see what it would take to recreate it.</p>
+          <p>Browse demo accords, botanical samples and tools, or open a saved creation to see what it would take to recreate it.</p>
           <Link to="/marketplace" className="btn btn--sm" onClick={close}>Browse the marketplace</Link>
         </div>
       ) : (
         <>
-          <Notice>Prototype cart — items are saved on this device only.</Notice>
+          <Notice>Prototype cart, items are saved on this device only.</Notice>
           <ul role="list" className="cart-lines">
             {lines.map(({ product: p, qty }) => (
               <li key={p!.id} className="cart-line">

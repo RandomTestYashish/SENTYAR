@@ -46,7 +46,7 @@ export default function Lab() {
     return out;
   }, [draft.blend]);
 
-  const previewBlockReason = issues[0]?.code === "empty" ? "Add at least one accord to preview." : issues[0]?.code === "unbalanced" ? `Blend totals ${total}% — rebalance to 100% to preview.` : issues.length ? "Fix the highlighted values to preview." : "";
+  const previewBlockReason = issues[0]?.code === "empty" ? "Add at least one accord to preview." : issues[0]?.code === "unbalanced" ? `Blend totals ${total}%, rebalance to 100% to preview.` : issues.length ? "Fix the highlighted values to preview." : "";
 
   return (
     <div className="lab-page">
@@ -74,7 +74,7 @@ export default function Lab() {
       )}
 
       <div className="container lab">
-        {/* LEFT — tray */}
+        {/* LEFT, tray */}
         <section className="lab__tray" aria-labelledby="tray-h">
           <div className="row row--between">
             <h2 id="tray-h" className="eyebrow">Fragrance accords</h2>
@@ -107,13 +107,13 @@ export default function Lab() {
 
           <div className="bot-block">
             <h2 className="eyebrow">Botanical samples</h2>
-            <p className="small muted">Exploration only — they never go into the formula.</p>
+            <p className="small muted">Exploration only, they never go into the formula.</p>
             <ul role="list" className="bot-list">
               {BOTANICALS.map((b) => (
                 <li key={b.id}>
-                  <button className="bot-pill" onClick={() => setBlocked(b.id)} aria-label={`${b.name} — exploration only. Learn why it cannot be added`}>
+                  <button className="bot-pill" onClick={() => setBlocked(b.id)} aria-label={`${b.name}, exploration only. Learn why it cannot be added`}>
                     <img src={b.image} alt="" />
-                    <span>{b.name.replace("Dried ", "")}</span>
+                    <span>{b.name.replace("Dried r", "R").replace("Dried o", "O")}</span>
                     <Leaf size={14} aria-hidden className="muted" />
                   </button>
                 </li>
@@ -122,7 +122,7 @@ export default function Lab() {
           </div>
         </section>
 
-        {/* CENTRE — vessel */}
+        {/* CENTRE, vessel */}
         <section className="lab__vessel" aria-labelledby="vessel-h">
           <h2 id="vessel-h" className="sr-only">Mixing vessel</h2>
           <div className="vessel-wrap" ref={vesselRef}>
@@ -138,7 +138,7 @@ export default function Lab() {
           <p className="vessel-caption small muted">Fragrance blend: <strong className="num">{formatMl(vols.fragranceCml)}</strong> of the 2.00 ml allocation · colours are visual coding only</p>
         </section>
 
-        {/* RIGHT — formula */}
+        {/* RIGHT, formula */}
         <section className="lab__formula" aria-labelledby="formula-h">
           <div className="row row--between">
             <h2 id="formula-h" className="h4">Formula</h2>
@@ -157,7 +157,7 @@ export default function Lab() {
           {draft.blend.length === 0 ? (
             <div className="formula-empty">
               <p className="h4">No accords selected</p>
-              <p className="small body-2">Your perfume concept isn’t ready yet. Add two or three accords to begin — for example Woody, Citrus and Musk.</p>
+              <p className="small body-2">Your perfume concept isn’t ready yet. Add two or three accords to begin, for example Woody, Citrus and Musk.</p>
             </div>
           ) : (
             <ul role="list" className="shares">
@@ -196,7 +196,7 @@ export default function Lab() {
             <tbody>
               <tr><th scope="row">Fragrance blend <span className="muted">(20%)</span></th><td className="num">{formatMl(vols.fragranceCml)}</td></tr>
               <tr><th scope="row">Demo base <span className="muted">(80%)</span></th><td className="num">{formatMl(vols.baseCml)}</td></tr>
-              <tr className="comp-table__total"><th scope="row">Total preview</th><td className="num">{draft.blend.length ? formatMl(vols.totalCml) : "—"}</td></tr>
+              <tr className="comp-table__total"><th scope="row">Total preview</th><td className="num">{draft.blend.length ? formatMl(vols.totalCml) : "0.00 ml"}</td></tr>
             </tbody>
           </table>
 
@@ -218,7 +218,7 @@ export default function Lab() {
             <summary>How the formula works<Plus size={18} aria-hidden /></summary>
             <div>
               <p>The preview bottle is always <strong>10 ml</strong>. In this illustrative model, <strong>20% (2 ml)</strong> is the fragrance blend and <strong>80% (8 ml)</strong> is a demo base.</p>
-              <p style={{ marginTop: 8 }}>Accord shares are whole percentages of the 2 ml blend and always total 100%. Each 1% equals 0.02 ml, so volumes are exact — you will never see 9.99 or 10.01 ml.</p>
+              <p style={{ marginTop: 8 }}>Accord shares are whole percentages of the 2 ml blend and always total 100%. Each 1% equals 0.02 ml, so volumes are exact, you will never see 9.99 or 10.01 ml.</p>
               <p style={{ marginTop: 8 }}>Example: Woody 50% = 1.00 ml · Citrus 30% = 0.60 ml · Musk 20% = 0.40 ml · Base 8.00 ml · Total 10.00 ml.</p>
             </div>
           </details>
@@ -233,10 +233,10 @@ export default function Lab() {
       <div className="lab-bar" role="region" aria-label="Formula status and actions">
         <div className="container lab-bar__inner">
           <div className="lab-bar__status">
-            <span className="badge badge--demo hide-sm">Demo — not a skin-use recipe</span>
+            <span className="badge badge--demo hide-sm">Demo, not a skin-use recipe</span>
             <span className="small num"><span className="muted">Blend</span> {formatMl(vols.fragranceCml)}</span>
             <span className="small num"><span className="muted">Base</span> {formatMl(vols.baseCml)}</span>
-            <span className="small num"><strong>Total {draft.blend.length ? formatMl(vols.totalCml) : "—"}</strong></span>
+            <span className="small num"><strong>Total {draft.blend.length ? formatMl(vols.totalCml) : "0.00 ml"}</strong></span>
           </div>
           <div className="lab-bar__actions">
             <button className="icon-btn" onClick={undo} disabled={!undoStack.length} aria-label="Undo last change" title="Undo"><Undo2 size={18} /></button>
@@ -264,8 +264,8 @@ export default function Lab() {
         </>}>
         {blocked && (
           <div className="stack">
-            <Notice tone="warn"><strong>{botanicalById(blocked).name} is a raw botanical sample — exploration only.</strong> Raw plant material is not a fragrance concentrate and is not added to a perfume, even in this demo.</Notice>
-            <p className="body-2">For composition, use the related <strong>{accordById(botanicalById(blocked).relatedAccord).name} accord</strong> — an illustrative demo input with a similar family association. This is an educational relationship, not a claim that they are chemically equivalent.</p>
+            <Notice tone="warn"><strong>{botanicalById(blocked).name} is a raw botanical sample, exploration only.</strong> Raw plant material is not a fragrance concentrate and is not added to a perfume, even in this demo.</Notice>
+            <p className="body-2">For composition, use the related <strong>{accordById(botanicalById(blocked).relatedAccord).name} accord</strong>: an illustrative demo input with a similar family association. This is an educational relationship, not a claim that they are chemically equivalent.</p>
           </div>
         )}
       </Dialog>
@@ -278,12 +278,12 @@ export default function Lab() {
         </>}>
         {info && (() => { const a = accordById(info); return (
           <div className="stack">
-            <span className="badge badge--accord">Fragrance accord — illustrative demo input</span>
+            <span className="badge badge--accord">Fragrance accord, illustrative demo input</span>
             <p className="lead" style={{ fontSize: "1.0625rem" }}>{a.profile}</p>
             <p className="body-2">{a.everyday}</p>
             <dl className="facts">
               <div><dt>Family</dt><dd>{a.family}</dd></div>
-              <div><dt>Role</dt><dd>{ROLE_LABEL[a.role]} — illustrative only</dd></div>
+              <div><dt>Role</dt><dd>{ROLE_LABEL[a.role]}, illustrative only</dd></div>
               <div><dt>Related botanical</dt><dd>{botanicalById(a.relatedBotanical).name}</dd></div>
             </dl>
           </div>

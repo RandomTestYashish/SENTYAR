@@ -1,6 +1,6 @@
 // Small persistence abstraction over localStorage.
 // Production note: replace `driver` with an API client (e.g. /api/creations)
-// — the rest of the app only talks to `load`/`save`.
+//, the rest of the app only talks to `load`/`save`.
 
 import { isAccordId, normalize } from "./formula";
 import type {

@@ -42,7 +42,7 @@ export default function IngredientJourney() {
       <div className="journey__grid">
         <div className="journey__main">
           <div className="journey__top">
-            <span className={`badge ${isB ? "badge--botanical" : "badge--accord"}`}>{isB ? <><Leaf size={12} aria-hidden /> Botanical sample — exploration only</> : "Fragrance accord — illustrative demo input"}</span>
+            <span className={`badge ${isB ? "badge--botanical" : "badge--accord"}`}>{isB ? <><Leaf size={12} aria-hidden /> Botanical sample, exploration only</> : "Fragrance accord, illustrative demo input"}</span>
             <GlossaryButton />
           </div>
           <h1 className="h1">{ing.name}{!isB && " accord"}</h1>
@@ -81,7 +81,7 @@ export default function IngredientJourney() {
           <dl className="facts">
             <div><dt>What am I looking at?</dt><dd>{isB ? `A raw ${(ing as Botanical).materialType.toLowerCase()}.` : `A composed ${(ing as Accord).family.toLowerCase()} impression.`}</dd></div>
             <div><dt>Kind</dt><dd>{isB ? "Real botanical (not an extract, not an accord)" : "Fragrance accord (demo data)"}</dd></div>
-            <div><dt>Goes into the demo formula?</dt><dd>{isB ? <><X size={14} aria-hidden /> No — exploration only</> : <><Check size={14} aria-hidden /> Yes — as an illustrative input</>}</dd></div>
+            <div><dt>Goes into the demo formula?</dt><dd>{isB ? <><X size={14} aria-hidden /> No, exploration only</> : <><Check size={14} aria-hidden /> Yes, as an illustrative input</>}</dd></div>
             <div><dt>Related</dt><dd>{isB ? <Link className="link" to={`/ingredients/${(ing as Botanical).relatedAccord}`}>{accordById((ing as Botanical).relatedAccord).name} accord</Link> : <Link className="link" to={`/ingredients/${(ing as Accord).relatedBotanical}`}>{botanicalById((ing as Accord).relatedBotanical).name}</Link>}</dd></div>
             <div><dt>Can I undo?</dt><dd>Yes. Anything you add can be removed from the tray or lab at any time.</dd></div>
           </dl>
@@ -115,7 +115,7 @@ function BotanicalStep({ step, b }: { step: number; b: Botanical }) {
   switch (step) {
     case 0: return (<>
       <Img src={b.image} alt={b.imageAlt} ratio="16 / 9" className="jpanel__img" />
-      <p className="lead">{b.commonName}{b.botanicalName ? <> · <em>{b.botanicalName}</em></> : null} — {b.materialType.toLowerCase()}.</p>
+      <p className="lead">{b.commonName}{b.botanicalName ? <> · <em>{b.botanicalName}</em></> : null}, {b.materialType.toLowerCase()}.</p>
       <Notice><strong>{CATEGORY_LABEL.botanical}.</strong> {CATEGORY_EXPLAIN.botanical}</Notice>
     </>);
     case 1: return (<>
@@ -124,7 +124,7 @@ function BotanicalStep({ step, b }: { step: number; b: Botanical }) {
       <p className="small muted">Descriptions are illustrative smell references. Perception varies from person to person.</p>
     </>);
     case 2: return (<dl className="facts facts--lg">
-      <div><dt>What you are exploring</dt><dd>A raw, dried natural material — its texture, structure and smell.</dd></div>
+      <div><dt>What you are exploring</dt><dd>A raw, dried natural material, its texture, structure and smell.</dd></div>
       <div><dt>How it is used in this demo</dt><dd>As a sensory and learning sample in the kit, the ingredient journey and the Nature Lab simulation.</dd></div>
       <div><dt>Can this go into the formula?</dt><dd><strong>No.</strong> Raw botanicals are never added to the formula. For composition, use the related {a.name} accord.</dd></div>
       <div><dt>Why it’s in the kit</dt><dd>{b.whyInKit}</dd></div>
@@ -142,23 +142,23 @@ function BotanicalStep({ step, b }: { step: number; b: Botanical }) {
     </>);
     case 4: return (<>
       <ol className="numbered">
-        <li><strong>Discover</strong> — inspect and smell-reference the raw material.</li>
-        <li><strong>Prepare</strong> — preparation differs by material (concept only).</li>
-        <li><strong>Extract</strong> — a sealed, illustrative animation.</li>
-        <li><strong>Filter</strong> — separating solids from liquid, as a concept.</li>
-        <li><strong>Evaluate</strong> — compare on a blotter and record what you notice.</li>
+        <li><strong>Discover</strong>: inspect and smell-reference the raw material.</li>
+        <li><strong>Prepare</strong>: preparation differs by material (concept only).</li>
+        <li><strong>Extract</strong>: a sealed, illustrative animation.</li>
+        <li><strong>Filter</strong>: separating solids from liquid, as a concept.</li>
+        <li><strong>Evaluate</strong>: compare on a blotter and record what you notice.</li>
       </ol>
       <Link to={`/nature-lab?b=${b.id}`} className="btn" style={{ marginTop: 16 }}><Leaf size={16} aria-hidden /> Open the {b.name.replace("Dried ", "").toLowerCase()} simulation</Link>
       <p className="small muted" style={{ marginTop: 8 }}>The simulation never gives ratios, times, temperatures or heating instructions.</p>
     </>);
     case 5: return (<>
-      <p className="body-2">If you have the sample, smell the outer surface, then a freshly broken edge. Which is stronger? If not, choose “I don’t have it” — the reference description is enough to continue.</p>
+      <p className="body-2">If you have the sample, smell the outer surface, then a freshly broken edge. Which is stronger? If not, choose “I don’t have it”, the reference description is enough to continue.</p>
       <div className="row row--tight" role="radiogroup" aria-label="Which smelled stronger?">
         {([["surface", "Outer surface"], ["edge", "Broken edge"], ["same", "About the same"], ["", "I don’t have it"]] as const).map(([v, l]) => (
           <button key={l} role="radio" aria-checked={stronger === v} className="chip" onClick={() => setStronger(v)}>{l}</button>
         ))}
       </div>
-      {stronger && <p className="small">{stronger === "edge" ? "Common: breaking a material exposes fresh surfaces where more aroma is released." : stronger === "surface" ? "Interesting — the surface can hold aroma from handling or storage." : "That’s a valid observation; some materials are fairly uniform."} You can change your answer.</p>}
+      {stronger && <p className="small">{stronger === "edge" ? "Common: breaking a material exposes fresh surfaces where more aroma is released." : stronger === "surface" ? "Interesting: the surface can hold aroma from handling or storage." : "That’s a valid observation; some materials are fairly uniform."} You can change your answer.</p>}
       <div className="row">
         {exploring ? (
           <><span className="badge"><Check size={12} aria-hidden /> In your exploration tray</span><button className="btn btn--secondary btn--sm" onClick={() => toggleExplore(b.id, false)}>Remove</button></>
@@ -169,7 +169,7 @@ function BotanicalStep({ step, b }: { step: number; b: Botanical }) {
       <ul role="list" className="ticks">
         <li>{b.name} is a <strong>raw botanical</strong>: for smelling and learning.</li>
         <li>It is <strong>not</strong> an extract, and <strong>not</strong> a fragrance concentrate.</li>
-        <li>It relates educationally to the <strong>{a.name} accord</strong>, which is what goes into the demo formula — they are not chemically equivalent.</li>
+        <li>It relates educationally to the <strong>{a.name} accord</strong>, which is what goes into the demo formula, they are not chemically equivalent.</li>
       </ul>
       <Notice tone="warn">{b.safety}</Notice>
       <p className="body-2"><strong>Next safe step:</strong> explore the {a.name} accord, or run the Nature Lab simulation.</p>
@@ -196,10 +196,10 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
       <p className="small muted">Descriptions are illustrative; perception varies.</p>
     </>);
     case 2: return (<dl className="facts facts--lg">
-      <div><dt>What you are exploring</dt><dd>A composed fragrance impression — several materials combined to read as one idea.</dd></div>
+      <div><dt>What you are exploring</dt><dd>A composed fragrance impression, several materials combined to read as one idea.</dd></div>
       <div><dt>How it is used in this demo</dt><dd>As an input in the Perfume Lab composition model, with a share of the 2 ml fragrance allocation.</dd></div>
       <div><dt>Can this go into the formula?</dt><dd><strong>Yes</strong>, as an illustrative demo input. Its composition is fictional and not disclosed as a supplier formula.</dd></div>
-      <div><dt>Note role</dt><dd>{ROLE_LABEL[a.role]} — an illustrative association, not a fixed classification.</dd></div>
+      <div><dt>Note role</dt><dd>{ROLE_LABEL[a.role]}, an illustrative association, not a fixed classification.</dd></div>
     </dl>);
     case 3: return (<>
       <FamilyWheel active={a.id} />
@@ -224,7 +224,7 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
           </div>
         ))}
       </div>
-      <p className="small"><span className="pair-tag">{PAIRING_LABEL[pairing(a.id, other.id)]}</span> Illustrative suggestion — not validated compatibility data.</p>
+      <p className="small"><span className="pair-tag">{PAIRING_LABEL[pairing(a.id, other.id)]}</span> Illustrative suggestion, not validated compatibility data.</p>
       <div className="row">
         {inBlend ? (
           <><span className="badge"><Check size={12} aria-hidden /> In your blend at {inBlend.share}%</span><button className="btn btn--secondary btn--sm" onClick={() => removeFromBlend(a.id)}>Remove</button><Link to="/lab" className="btn btn--sm">Open Lab</Link></>
@@ -234,7 +234,7 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
     </>);
     case 6: return (<>
       <ul role="list" className="ticks">
-        <li>{a.name} is a <strong>fragrance accord</strong> — a demo composition input.</li>
+        <li>{a.name} is a <strong>fragrance accord</strong>: a demo composition input.</li>
         <li>Its share changes its volume within the fixed 2 ml blend; the 10 ml bottle never grows.</li>
         <li>It relates to the {b.name.toLowerCase()} botanical as an <em>educational</em> reference only.</li>
       </ul>

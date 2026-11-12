@@ -37,7 +37,7 @@ export default function Creations() {
         <div className="empty card">
           <span className="empty-icon"><FlaskConical size={22} aria-hidden /></span>
           <h2 className="h3">No creations yet</h2>
-          <p>Compose a blend in the Perfume Lab, preview it and save it — it will appear here and stay after a refresh.</p>
+          <p>Compose a blend in the Perfume Lab, preview it and save it, it will appear here and stay after a refresh.</p>
           <div className="row" style={{ justifyContent: "center" }}>
             <Link to="/lab" className="btn">Enter the Lab</Link>
             <Link to="/kits/creator-kit-v1/unbox" className="btn btn--secondary">Open the kit first</Link>
@@ -91,7 +91,7 @@ export default function Creations() {
 
       <section className="section--tight profile" aria-labelledby="prof-h">
         <h2 id="prof-h" className="h2">Your scent profile</h2>
-        <p className="body-2" style={{ marginTop: 8 }}>Based only on your own saved demo formulas — patterns, not personality.</p>
+        <p className="body-2" style={{ marginTop: 8 }}>Based only on your own saved demo formulas, patterns, not personality.</p>
         {!profile.enough ? (
           <div className="card card--pad" style={{ marginTop: 16 }}>
             <p className="h4">Create a few fragrances to discover your pattern</p>
@@ -120,7 +120,7 @@ export default function Creations() {
             <div className="card card--pad">
               <p className="eyebrow">To explore next</p>
               {profile.suggestions.length ? (
-                <ul role="list" className="ticks">{profile.suggestions.map((s) => <li key={s.accordId}><Link className="link" to={`/ingredients/${s.accordId}`}>{accordById(s.accordId).name}</Link> <span className="small muted">— an illustrative suggested pairing with {accordById(s.because).name}</span></li>)}</ul>
+                <ul role="list" className="ticks">{profile.suggestions.map((s) => <li key={s.accordId}><Link className="link" to={`/ingredients/${s.accordId}`}>{accordById(s.accordId).name}</Link> <span className="small muted">,  an illustrative suggested pairing with {accordById(s.because).name}</span></li>)}</ul>
               ) : <p className="small body-2">You’ve already tried the suggested pairings for your top accord.</p>}
             </div>
           </div>
@@ -146,8 +146,8 @@ export function Comparison({ a, b }: { a: Creation; b: Creation }) {
           {rows.map((r) => (
             <tr key={r.accordId} className={r.delta ? "is-changed" : ""}>
               <th scope="row"><span className="swatch" style={{ background: accordById(r.accordId).swatch }} /> {accordById(r.accordId).name}</th>
-              <td className="num">{r.a ? `${r.a}%` : "—"}</td>
-              <td className="num">{r.b ? `${r.b}%` : "—"}</td>
+              <td className="num">{r.a ? `${r.a}%` : "Not used"}</td>
+              <td className="num">{r.b ? `${r.b}%` : "Not used"}</td>
               <td className="num">{r.delta === 0 ? "No change" : r.a === 0 ? "Added" : r.b === 0 ? "Removed" : `${r.delta > 0 ? "+" : ""}${r.delta} pts`}</td>
             </tr>
           ))}

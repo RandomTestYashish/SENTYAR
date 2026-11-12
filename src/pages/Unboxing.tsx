@@ -48,7 +48,7 @@ export default function Unboxing() {
           <div>
             <p className="eyebrow">Interactive kit</p>
             <h1 className="h2">Open the Creator Kit</h1>
-            <p className="body-2" style={{ marginTop: 8, maxWidth: "60ch" }}>Select any item to read about it. Accords can be added to your lab blend; botanicals go to your exploration tray — they are never added to the formula.</p>
+            <p className="body-2" style={{ marginTop: 8, maxWidth: "60ch" }}>Select any item to read about it. Accords can be added to your lab blend; botanicals go to your exploration tray, they are never added to the formula.</p>
           </div>
         </header>
 
@@ -94,7 +94,7 @@ export default function Unboxing() {
                           <button data-item={b.id} className={`kit-item kit-item--dish ${sel?.id === b.id ? "is-selected" : ""} ${moved ? "is-moved" : ""}`}
                             aria-pressed={sel?.id === b.id} aria-label={`${b.name}, botanical sample${moved ? ", in your exploration tray" : ""}`} onClick={() => setSel({ kind: "botanical", id: b.id })}>
                             <span className="dish"><img src={b.image} alt="" /></span>
-                            <span className="kit-item__name">{b.name.replace("Dried ", "")}</span>
+                            <span className="kit-item__name">{b.name.replace("Dried r", "R").replace("Dried o", "O")}</span>
                             {moved && <span className="kit-item__state"><Check size={12} aria-hidden /> Exploring</span>}
                           </button>
                         </li>

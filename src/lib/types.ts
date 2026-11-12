@@ -39,7 +39,7 @@ export interface Accord {
   everyday: string;
   metaphor: string;
   role: NoteRole;
-  /** Visual coding only — not a claim about the material's real colour. */
+  /** Visual coding only, not a claim about the material's real colour. */
   swatch: string;
   status: "demo-accord";
   relatedBotanical: BotanicalId;

@@ -26,7 +26,7 @@ export default function Kits() {
               <li><strong>4</strong> botanical exploration samples</li>
               <li><strong>9</strong> tools &amp; learning items</li>
             </ul>
-            <p className="price"><span className="num">{formatInr(KIT.priceInr)}</span> <span className="small muted">prototype / demo pricing — not a live offer</span></p>
+            <p className="price"><span className="num">{formatInr(KIT.priceInr)}</span> <span className="small muted">prototype / demo pricing, not a live offer</span></p>
             <div className="row">
               <Link to="/kits/creator-kit-v1" className="btn">View kit <ArrowRight size={16} aria-hidden /></Link>
               <Link to="/kits/creator-kit-v1/unbox" className="btn btn--secondary">Open interactively</Link>

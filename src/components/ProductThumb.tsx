@@ -39,7 +39,7 @@ export function ProductThumb({ product, large }: { product: Product; large?: boo
   );
 }
 
-/** Accord vial — amber 5 ml bottle with SENTYAR label (see KitItems). */
+/** Accord vial, amber 5 ml bottle with SENTYAR label (see KitItems). */
 export function Vial({ color, label, small }: { color: string; label?: string; fill?: number; small?: boolean }) {
   return <OilBottle name={label ?? ""} color={color} className={`vial-svg ${small ? "vial-svg--sm" : ""}`} />;
 }

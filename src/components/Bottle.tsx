@@ -1,6 +1,6 @@
 // Modular 2D signature-bottle renderer. Geometry for each concept lives in
 // BOTTLES so the silhouette can be swapped without touching any page.
-// Liquid colour is a constant demo amber — it does not encode scent.
+// Liquid colour is a constant demo amber, it does not encode scent.
 
 import { useId } from "react";
 import type { BottleConceptId } from "../lib/types";

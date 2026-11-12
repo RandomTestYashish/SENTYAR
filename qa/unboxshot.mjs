@@ -1,0 +1,16 @@
+import { chromium } from "playwright-core";
+const b = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" });
+const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
+await ctx.addInitScript(() => { try { localStorage.setItem("sentyar.v1.flags", JSON.stringify({ welcomeSeen: true })); } catch {} });
+const p = await ctx.newPage();
+await p.goto("http://localhost:4173/#/kits/creator-kit-v1/unbox", { waitUntil: "networkidle" }); await p.waitForTimeout(800);
+await p.screenshot({ path: process.argv[2] + "-a.png" });
+await p.getByRole("button", { name: /lift the lid/i }).click(); await p.waitForTimeout(1800);
+await p.evaluate(() => window.scrollTo(0, 330)); await p.waitForTimeout(400);
+await p.screenshot({ path: process.argv[2] + "-b.png" });
+await p.goto("http://localhost:4173/#/lab", { waitUntil: "networkidle" }); await p.waitForTimeout(1000);
+await p.screenshot({ path: process.argv[2] + "-lab.png" });
+await p.goto("http://localhost:4173/#/marketplace", { waitUntil: "networkidle" }); await p.waitForTimeout(1000);
+await p.evaluate(() => window.scrollTo(0, 400)); await p.waitForTimeout(400);
+await p.screenshot({ path: process.argv[2] + "-mkt.png" });
+await b.close();

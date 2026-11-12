@@ -1,45 +1,48 @@
-/* SENTYAR design tokens — tuned against the approved concept board.
-   Neutral luxury: warm ivory canvas, ink typography and CTAs,
-   restrained champagne accents. Botanical colour comes from imagery. */
+/* SENTYAR design tokens, royal white edition.
+   A pure white canvas, ink typography, and gilded champagne accents
+   used sparingly as hairlines, numerals and ornaments. */
 :root {
-  /* colour — primitives */
+  /* colour , primitives */
   --c-white: #ffffff;
-  --c-bone: #f8f6f2;
-  --c-ivory: #fbfaf7;
-  --c-linen: #e9e4dc;
-  --c-stone: #c8c0b4;
+  --c-bone: #ffffff;
+  --c-ivory: #fdfbf7;
+  --c-linen: #f1ebe0;
+  --c-stone: #d6cab6;
   --c-graphite: #34312d;
-  --c-ink: #0b0b0b;
-  --c-champagne: #b89972;
-  --c-champagne-deep: #8c7150;
+  --c-ink: #14110d;
+  --c-champagne: #b08d57;
+  --c-champagne-deep: #85663a;
   --c-amber: #c98f3e;
 
-  /* colour — semantic */
+  /* colour , semantic */
   --bg: var(--c-bone);
   --bg-raised: var(--c-white);
-  --bg-sunken: #f1eee8;
+  --bg-sunken: #faf7f2;
+  --bg-pearl: #fcfaf6;
   --bg-inverse: #111110;
   --text: var(--c-ink);
-  --text-2: #57534d; /* 6.9:1 on bone */
-  --text-3: #6f6a62; /* 5.0:1 on bone — minimum for small text */
+  --text-2: #55504a; /* 7.6:1 on white */
+  --text-3: #6e675e; /* 5.6:1 on white, minimum for small text */
   --text-inverse: #f4f1ec;
   --text-inverse-2: #b9b2a7;
-  --border: #e2ddd4;
+  --border: #eee8de;
   --border-strong: var(--c-stone);
   --accent: var(--c-champagne);
   --accent-text: var(--c-champagne-deep);
-  --focus: #0b0b0b;
+  --focus: #14110d;
   --success: #3f5a3c;
   --warning: #8a5a12;
   --warning-bg: #f7efe1;
   --danger: #8f2d22;
   --danger-bg: #f8ebe8;
-  --info-bg: #f1eee8;
+  --info-bg: #faf7f2;
+  --gold: linear-gradient(115deg, #7f5f31 0%, #d9bd85 28%, #a37d45 52%, #f1dfb2 76%, #8a6936 100%);
+  --gold-line: linear-gradient(90deg, transparent, #c9ab76 20%, #e8d4a6 50%, #c9ab76 80%, transparent);
 
   /* typography */
   --font-serif: "Cormorant Garamond", "Cormorant", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --font-sans: "Inter", "Neue Haas Grotesk Text", "Helvetica Neue", Arial, system-ui, sans-serif;
-  --fs-display: clamp(3rem, 1.6rem + 5.2vw, 6rem);
+  --fs-display: clamp(3.25rem, 1.6rem + 5.6vw, 6.75rem);
   --fs-h1: clamp(2.5rem, 1.7rem + 3vw, 4rem);
   --fs-h2: clamp(2rem, 1.5rem + 1.9vw, 3rem);
   --fs-h3: clamp(1.5rem, 1.3rem + 0.7vw, 1.875rem);
@@ -54,7 +57,7 @@
   --tracking-label: 0.16em;
   --tracking-wordmark: 0.32em;
 
-  /* spacing — 8-point rhythm, 4px micro step */
+  /* spacing , 8-point rhythm, 4px micro step */
   --s-0: 4px;
   --s-1: 8px;
   --s-2: 16px;
@@ -72,7 +75,7 @@
   --container-narrow: 880px;
   --gutter: clamp(16px, 4vw, 48px);
   --grid-gap: clamp(16px, 2vw, 24px);
-  --header-h: 72px;
+  --header-h: 80px;
 
   /* radius / border / elevation */
   --r-0: 0;
@@ -81,9 +84,9 @@
   --r-3: 8px;
   --r-pill: 999px;
   --hairline: 1px solid var(--border);
-  --shadow-1: 0 1px 2px rgb(20 16 10 / 0.06);
-  --shadow-2: 0 8px 24px -8px rgb(20 16 10 / 0.16);
-  --shadow-3: 0 24px 64px -16px rgb(20 16 10 / 0.28);
+  --shadow-1: 0 1px 2px rgb(60 44 20 / 0.05);
+  --shadow-2: 0 18px 40px -18px rgb(80 58 24 / 0.22);
+  --shadow-3: 0 40px 80px -30px rgb(80 58 24 / 0.3);
 
   /* motion */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);

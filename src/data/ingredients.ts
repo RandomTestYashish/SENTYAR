@@ -22,7 +22,7 @@ export const BOTANICALS: Botanical[] = [
     whyInKit:
       "Peel is where citrus aroma is concentrated, so it is a clear first lesson in how a raw material relates to a familiar scent family.",
     whyInteresting:
-      "Rubbing or warming the peel between your fingers releases aroma — a simple way to notice how much smell lives in the surface of a material.",
+      "Rubbing or warming the peel between your fingers releases aroma, a simple way to notice how much smell lives in the surface of a material.",
     status: "exploration-only",
     safety:
       "For smelling and learning only. Citrus materials can irritate skin; do not apply peel or homemade preparations to skin.",
@@ -43,7 +43,7 @@ export const BOTANICALS: Botanical[] = [
     whyInKit:
       "Wood is a classic structural material in perfumery and its smell is easy to recognise, which makes it a good reference point.",
     whyInteresting:
-      "Wood smells stronger along freshly broken grain — notice the difference between the outer surface and a split edge.",
+      "Wood smells stronger along freshly broken grain, notice the difference between the outer surface and a split edge.",
     status: "exploration-only",
     safety: "For smelling and learning only. Avoid splinters and dust; do not burn the chips.",
     relatedAccord: "woody",
@@ -59,7 +59,7 @@ export const BOTANICALS: Botanical[] = [
     imageAlt: "Deep crimson rose petals with fine droplets on their surface",
     descriptors: ["soft", "floral", "tea-like", "powdery"],
     sensory:
-      "Often described as soft and floral with a tea-like, slightly powdery character once dried — quieter than a fresh rose.",
+      "Often described as soft and floral with a tea-like, slightly powdery character once dried, quieter than a fresh rose.",
     association: "Commonly associated with floral fragrance families.",
     whyInKit:
       "Comparing dried petals with the Rose accord shows how a raw flower and a composed floral impression can differ.",
@@ -83,7 +83,7 @@ export const BOTANICALS: Botanical[] = [
     whyInKit:
       "Spices are a vivid way to learn how a small amount of a strong material can change an overall impression.",
     whyInteresting:
-      "Smell the outside of the quill, then a broken end — the inner layers are often sharper and more intense.",
+      "Smell the outside of the quill, then a broken end, the inner layers are often sharper and more intense.",
     status: "exploration-only",
     safety:
       "For smelling and learning only. Cinnamon materials are known skin sensitisers; never apply to skin.",
@@ -128,7 +128,7 @@ export const ACCORDS: Accord[] = [
     name: "Rose",
     family: "Floral",
     descriptors: ["floral", "velvety", "romantic"],
-    profile: "A soft, velvety rose impression — floral without being sugary.",
+    profile: "A soft, velvety rose impression, floral without being sugary.",
     everyday: "A rose in a cool room rather than a sweet bouquet.",
     metaphor: "Velvet petal",
     role: "heart",
@@ -194,9 +194,9 @@ export const ingredientById = (id: string) =>
 export const isIngredientId = (id: string): id is IngredientId => ingredientById(id) !== undefined;
 
 export const CATEGORY_LABEL = {
-  botanical: "Botanical sample — exploration only",
-  extract: "Prepared extract — not approved for skin use unless specifically validated",
-  accord: "Fragrance accord — illustrative demo composition input",
+  botanical: "Botanical sample, exploration only",
+  extract: "Prepared extract, not approved for skin use unless specifically validated",
+  accord: "Fragrance accord, illustrative demo composition input",
 } as const;
 
 export const CATEGORY_EXPLAIN = {

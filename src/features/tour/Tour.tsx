@@ -16,10 +16,10 @@ export const TOUR: Step[] = [
   { title: "Open the Creator Kit", body: "Lift the lid and look at the three compartments: accords, botanicals and tools.", path: "/kits/creator-kit-v1/unbox" },
   { title: "Select a botanical sample", body: "Choose the dried orange peel (or any botanical) to read its card and add it to your exploration tray.", path: "/kits/creator-kit-v1/unbox", done: (s) => s.explore.length > 0 },
   { title: "Botanical vs accord", body: "A botanical is a raw material for smelling and learning. An accord is a prepared demo input for the formula. This page shows the difference.", path: "/ingredients/orange-peel" },
-  { title: "Open the Nature Lab", body: "The Nature Lab is an educational simulation of how materials become extracts — no real protocol.", path: "/nature-lab" },
+  { title: "Open the Nature Lab", body: "The Nature Lab is an educational simulation of how materials become extracts, no real protocol.", path: "/nature-lab" },
   { title: "Complete one simulation", body: "Step through Discover → Prepare → Extract → Filter → Evaluate and save a learning note.", path: "/nature-lab", done: (s) => s.notes.some((n) => n.source === "nature-lab") },
   { title: "Select two or more accords", body: "In the Perfume Lab, pick accords from the left-hand tray.", path: "/lab", done: (s) => s.draft.blend.length >= 2 },
-  { title: "Add them to the vessel", body: "Use Add — watch each accord drop into the mixing vessel and appear in the formula.", path: "/lab", done: (s) => s.draft.blend.length >= 2 },
+  { title: "Add them to the vessel", body: "Use Add, then watch each accord drop into the mixing vessel and appear in the formula.", path: "/lab", done: (s) => s.draft.blend.length >= 2 },
   { title: "Adjust the blend", body: "Move a slider. Other accords rescale so the blend stays at 100% and the bottle stays at 10 ml.", path: "/lab" },
   { title: "Preview your concept", body: "See the fixed 10 ml bottle fill with your blend.", path: "/lab/preview" },
   { title: "Name and save", body: "Give it a name and save it to My Creations. It stays after a refresh.", path: "/lab/preview", done: (s) => s.creations.length > 0 },
@@ -91,10 +91,10 @@ export function Welcome() {
         <p className="lead" style={{ fontSize: "1rem" }}>A personal perfumery studio. Here is how it works:</p>
         <ol className="welcome__list">
           <li><strong>Discover.</strong> Open the Creator Kit and meet real botanical materials and six demo fragrance accords.</li>
-          <li><strong>Experiment.</strong> Learn in the Nature Lab, then compose a blend in the Perfume Lab — the bottle always stays 10 ml.</li>
+          <li><strong>Experiment.</strong> Learn in the Nature Lab, then compose a blend in the Perfume Lab, the bottle always stays 10 ml.</li>
           <li><strong>Create.</strong> Name, save, compare and revisit your creations.</li>
         </ol>
-        <p className="small muted">This is a prototype. All ingredients, prices and formula values are illustrative demo data — nothing here is a skin-use recipe. You can replay the tour from How It Works at any time.</p>
+        <p className="small muted">This is a prototype. All ingredients, prices and formula values are illustrative demo data, nothing here is a skin-use recipe. You can replay the tour from How It Works at any time.</p>
       </div>
     </Dialog>
   );

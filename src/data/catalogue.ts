@@ -12,7 +12,7 @@ export const KIT = {
   tools: [
     { id: "vials", name: "Small mixing vials", note: "For organising demo samples." },
     { id: "pipettes", name: "Transfer pipettes, 3 ml", note: "Graduated pipettes for measured transfer in guided exercises." },
-    { id: "blotters", name: "Blotter strips", note: "Paper strips for smelling — never skin." },
+    { id: "blotters", name: "Blotter strips", note: "Paper strips for smelling, never skin." },
     { id: "sprays", name: "Empty spray bottle, 10 ml", note: "Empty glass atomiser with a champagne collar, for your finished concept." },
     { id: "beaker", name: "Measuring beaker, 10 ml", note: "Graduated glass beaker for reading volumes in guided exercises." },
     { id: "funnel", name: "Filling funnel", note: "Small ceramic-white funnel that fits the bottle neck." },

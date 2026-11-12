@@ -56,7 +56,7 @@ export default function Preview() {
     const c = saveCreation({ asNew });
     if (c) {
       setJustSaved(c.id);
-      toast(`Saved “${c.name}” — version ${c.formulaVersion}`, { tone: "success", action: { label: "View", onClick: () => nav(`/creations/${c.id}`) } });
+      toast(`Saved “${c.name}”, version ${c.formulaVersion}`, { tone: "success", action: { label: "View", onClick: () => nav(`/creations/${c.id}`) } });
     }
   };
 
@@ -177,7 +177,7 @@ export default function Preview() {
       <Dialog open={wearOpen} onClose={() => setWearOpen(false)} title="Can I make and wear this?"
         footer={<button className="btn btn--sm" onClick={() => setWearOpen(false)}>Understood</button>}>
         <div className="stack">
-          <Notice tone="danger"><strong>No — not from this preview.</strong> SENTYAR’s formula is a UI demonstration with illustrative accords and a demo base.</Notice>
+          <Notice tone="danger"><strong>No, not from this preview.</strong> SENTYAR’s formula is a UI demonstration with illustrative accords and a demo base.</Notice>
           <p className="body-2">A wearable perfume needs real, documented materials, concentrations set within applicable safety limits (for example IFRA standards where relevant), compatibility and stability testing, and validation by a qualified perfumer and safety assessor.</p>
           <p className="body-2">You can save this concept, compare variations and use it as a brief for a professional.</p>
         </div>
