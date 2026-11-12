@@ -10,7 +10,8 @@
     "typecheck": "tsc -b",
     "test": "vitest run",
     "qa:flow": "mkdir -p qa/out && node qa/flow.mjs 1440 && node qa/flow.mjs 390",
-    "qa:shots": "mkdir -p qa/out && node qa/shots.mjs"
+    "qa:shots": "mkdir -p qa/out && node qa/shots.mjs",
+    "deploy": "bash scripts/deploy.sh"
   },
   "dependencies": {
     "lucide-react": "^0.460.0",
