@@ -256,3 +256,9 @@ body { background: #fff; }
 .pf-pill:hover { background: var(--bg-pearl); border-color: var(--c-champagne); }
 .pf-pill--ink { background: var(--c-ink); border-color: var(--c-ink); color: #fff; }
 .pf-pill--ink:hover { background: var(--c-ink); color: #f1dfb2; }
+
+/* dialogs: serif titles, gold emblem */
+.dlg__head .h4, .dlg__head h2 { font-family: var(--font-serif); font-weight: 500; font-size: 1.625rem; letter-spacing: 0; }
+.dlg__head { position: relative; }
+.dlg__head::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--gold-line); }
+.welcome svg { color: var(--c-champagne); }
