@@ -132,7 +132,7 @@ export default function Brand() {
         <div className="brand-grid brand-grid--4" style={{ marginTop: 24 }}>
           {["tex-matte", "tex-glass", "tex-stone", "tex-foil"].map((t) => <Img key={t} src={`./assets/img/${t}.jpg`} alt={`Material texture: ${t.replace("tex-", "")}`} ratio="1/1" />)}
         </div>
-        <Img src="./assets/img/emboss.jpg" alt="The S-flower emblem blind-embossed and traced in champagne foil on ivory board" ratio="268 / 311" className="emboss-img" />
+        <Img src="./assets/img/emboss.jpg" alt="The S-flower emblem blind-embossed and traced in champagne foil on ivory board" ratio="4 / 5" className="emboss-img" />
       </section>
     </>
   );

@@ -202,25 +202,17 @@ export function AlcoholBottle({ label }: { label?: string }) {
   );
 }
 
-/** Amber accord bottle with a gilded cap and ivory SENTYAR label. */
+/** Amber accord bottle: studio photograph with the accord printed on its blank ivory label. */
 export function OilBottle({ name, color, ml = 5, label, className = "kit-svg" }: { name: string; color: string; ml?: number; label?: string; className?: string }) {
-  const ids = useIds();
   return (
-    <Svg label={label} vb="0 0 100 160" className={className}>
-      <Defs ids={ids} />
-      <Shadow ids={ids} rx={40} />
-      <rect x="29" y="6" width="42" height="34" rx="3" fill={`url(#${ids.goldH})`} />
-      {[13, 20, 27, 34].map((y) => <line key={y} x1="29" x2="71" y1={y} y2={y} stroke="#6d5128" strokeOpacity=".28" strokeWidth=".8" />)}
-      <path d="M34 40 H66 V46 C80 50 84 56 84 64 V146 C84 150 81 152 77 152 H23 C19 152 16 150 16 146 V64 C16 56 20 50 34 46 Z" fill={`url(#${ids.amber})`} />
-      <rect x="21" y="70" width="58" height="70" fill="#fffdf8" />
-      <rect x="24" y="73" width="52" height="64" fill="none" stroke={`url(#${ids.goldH})`} strokeWidth=".9" />
-      <rect x="24" y="73" width="52" height="3" fill={color} />
-      <Mark x={50} y={87} size={10} color="#a8844f" stroke={4.4} />
-      <text x="50" y="104" textAnchor="middle" fontSize="10" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d">{name}</text>
-      <text x="50" y="113" textAnchor="middle" fontSize="4.6" fontFamily="var(--font-sans)" fill="#6e675e" letterSpacing="1">DEMO ACCORD</text>
-      <line x1="38" x2="62" y1="120" y2="120" stroke={`url(#${ids.goldH})`} />
-      <text x="50" y="131" textAnchor="middle" fontSize="6.6" fontFamily="var(--font-sans)" fill="#14110d">{ml} ml</text>
-      <path d="M21 58 V66 M21 142 V146" stroke="#fff" strokeOpacity=".45" strokeWidth="2.5" strokeLinecap="round" />
+    <Svg label={label} vb="25 9 50 82" className={`${className} kit-photo`}>
+      <image href="./assets/img/oil-bottle.jpg" x="0" y="0" width="100" height="100" />
+      <rect x="42" y="55.3" width="16.2" height="0.9" fill={color} />
+      <g transform="translate(48.6 57.4)" style={{ color: "#a8844f" }}><Emblem size={2.8} stroke={5} /></g>
+      <text x="50" y="65.4" textAnchor="middle" fontSize="3.4" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d">{name}</text>
+      <text x="50" y="69.2" textAnchor="middle" fontSize="1.35" fontFamily="var(--font-sans)" fill="#6e675e" letterSpacing=".35">DEMO ACCORD</text>
+      <line x1="45.5" x2="54.5" y1="72" y2="72" stroke="#b08d57" strokeWidth=".25" />
+      <text x="50" y="76" textAnchor="middle" fontSize="2.2" fontFamily="var(--font-sans)" fill="#14110d">{ml} ml</text>
     </Svg>
   );
 }
@@ -292,8 +284,26 @@ export function PaperItem({ kind, label }: { kind: "cards" | "journal" | "guide"
   );
 }
 
-/** Map a kit tool id to its drawing. */
+const PHOTO: Record<string, string> = {
+  vials: "tool-vials", pipettes: "tool-pipettes", blotters: "tool-blotters", sprays: "tool-sprays", beaker: "tool-beaker",
+  funnel: "tool-funnel", alcohol: "tool-alcohol", cards: "tool-cards", journal: "tool-journal", guide: "tool-guide", qr: "tool-guide",
+};
+
+/** Map a kit tool id to its studio photograph (drawings remain as a fallback). */
 export function ToolArt({ id, label }: { id: string; label?: string }) {
+  const photo = PHOTO[id];
+  if (photo) {
+    return (
+      <Svg label={label} vb="8 8 84 84" className="kit-svg kit-photo kit-photo--tool">
+        <image href={`./assets/img/${photo}.jpg`} x="0" y="0" width="100" height="100" />
+      </Svg>
+    );
+  }
+  return <ToolDrawing id={id} label={label} />;
+}
+
+export function ToolDrawing({ id, label }: { id: string; label?: string }) {
+
   switch (id) {
     case "vials": return <MixingVials label={label} />;
     case "pipettes": return <Pipette label={label} />;

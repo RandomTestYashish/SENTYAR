@@ -25,15 +25,15 @@ const AXES: [string, string][] = [
 
 const ROUNDS: Round[] = [
   { axis: 0, a: { label: "Orange peel", img: `${IMG}orange-peel.jpg`, alt: "A curl of dried orange peel", w: { citrus: 2, musk: 1 } }, b: { label: "Cinnamon", img: `${IMG}cinnamon.jpg`, alt: "Rolled cinnamon bark quills", w: { vanilla: 1, spicy: 2 } } },
-  { axis: 1, a: { label: "Rose petals", img: `${IMG}rose-petals.jpg`, alt: "Crimson rose petals with droplets", w: { rose: 2 } }, b: { label: "Cedarwood", img: `${IMG}cedarwood.jpg`, alt: "Strips of reddish cedarwood", w: { woody: 2 } } },
-  { axis: 2, a: { label: "Clear glass", img: `${IMG}tex-glass.jpg`, alt: "Rippled clear glass texture", w: { citrus: 1, musk: 1 } }, b: { label: "Natural stone", img: `${IMG}tex-stone.jpg`, alt: "Pale mineral stone texture", w: { woody: 1, vanilla: 1 } } },
+  { axis: 1, a: { label: "Rose petals", img: `${IMG}rose-petals.jpg`, alt: "Dried crimson rose petals", w: { rose: 2 } }, b: { label: "Cedarwood", img: `${IMG}cedarwood.jpg`, alt: "Reddish cedarwood chips", w: { woody: 2 } } },
+  { axis: 2, a: { label: "Clear glass", img: `${IMG}tex-glass.jpg`, alt: "Rippled clear glass texture", w: { citrus: 1, musk: 1 } }, b: { label: "Natural stone", img: `${IMG}tex-stone.jpg`, alt: "Pale ivory travertine texture", w: { woody: 1, vanilla: 1 } } },
   { axis: 3, a: { label: "The Fluid", img: `${IMG}bottle-fluid.jpg`, alt: "An organic, asymmetric glass bottle with a stone cap", w: { rose: 1, musk: 1 } }, b: { label: "The Facet", img: `${IMG}bottle-facet.jpg`, alt: "A tall faceted glass bottle with an angular cap", w: { woody: 1, spicy: 1 } } },
   { axis: 4, a: { label: "Musk accord", vial: "musk", alt: "Musk accord vial", w: { musk: 2 } }, b: { label: "Spicy accord", vial: "spicy", alt: "Spicy accord vial", w: { spicy: 2 } } },
   { axis: 5, a: { label: "Matte black", img: `${IMG}tex-matte.jpg`, alt: "Soft-touch matte black board", w: { musk: 1, woody: 1 } }, b: { label: "Champagne foil", img: `${IMG}tex-foil.jpg`, alt: "Brushed champagne foil", w: { vanilla: 1, spicy: 1, rose: 1 } } },
   { axis: 0, a: { label: "Citrus accord", vial: "citrus", alt: "Citrus accord vial", w: { citrus: 2 } }, b: { label: "Vanilla accord", vial: "vanilla", alt: "Vanilla accord vial", w: { vanilla: 2 } } },
   { axis: 1, a: { label: "Rose accord", vial: "rose", alt: "Rose accord vial", w: { rose: 2 } }, b: { label: "Woody accord", vial: "woody", alt: "Woody accord vial", w: { woody: 2 } } },
   { axis: 3, a: { label: "The Orb", img: `${IMG}bottle-orb.jpg`, alt: "A rounded glass bottle with a slim gold cap", w: { rose: 1, vanilla: 1 } }, b: { label: "The Atelier", img: `${IMG}bottle-atelier.jpg`, alt: "A classic ribbed glass bottle with a black cap", w: { woody: 1, citrus: 1 } } },
-  { axis: 5, a: { label: "Blind emboss", img: `${IMG}emboss.jpg`, alt: "The S-flower emblem embossed on ivory board", w: { musk: 1, woody: 1 } }, b: { label: "Still life", img: `${IMG}hero-stilllife.jpg`, alt: "A crystal bottle on an ivory plinth among rose, cedarwood, orange and cinnamon", w: { spicy: 1, citrus: 1, vanilla: 1 } } },
+  { axis: 5, a: { label: "Blind emboss", img: `${IMG}emboss.jpg`, alt: "The S-flower emblem embossed on ivory board", w: { musk: 1, woody: 1 } }, b: { label: "Still life", img: `${IMG}hero-stilllife.jpg`, alt: "A crystal bottle on a travertine plinth among rose, orange, cedarwood and cinnamon", w: { spicy: 1, citrus: 1, vanilla: 1 } } },
 ];
 
 const KEY = "prefer";

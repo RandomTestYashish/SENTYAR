@@ -14,7 +14,7 @@ export default function Kits() {
       </header>
       <div className="kit-list">
         <article className="kit-card card">
-          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit opened to show vials, beaker, pipette and booklet" ratio="604 / 311" />
+          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit opened to show vials, beaker, pipette and booklet" ratio="3 / 2" />
           <div className="kit-card__body">
             <div className="row row--between">
               <h2 className="h3">{KIT.name}</h2>

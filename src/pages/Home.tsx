@@ -3,8 +3,6 @@ import { ArrowRight, Compass } from "lucide-react";
 import { useApp } from "../app/store";
 import { Emblem, Wordmark } from "../components/Logo";
 import { Img, SectionHead } from "../components/ui";
-import { Bottle } from "../components/Bottle";
-import { Vessel } from "../components/Vessel";
 import { BOTANICALS, accordById } from "../data/ingredients";
 import { KIT, formatInr } from "../data/catalogue";
 import { DEFAULT_BLEND, computeVolumes, formatMl } from "../lib/formula";
@@ -43,7 +41,7 @@ export default function Home() {
             </div>
           </div>
           <figure className="hero__media">
-            <Img src="./assets/img/hero-stilllife.jpg" alt="A cushioned SENTYAR crystal bottle with amber liquid and a faceted gold cap on an ivory plinth beneath a gilded arch, with a rose, cedarwood, a halved orange and cinnamon sticks" eager ratio="546 / 490" />
+            <Img src="./assets/img/hero-stilllife.jpg" alt="A cushioned SENTYAR crystal bottle of amber eau de parfum with a faceted gold cap on a travertine plinth, beside a red rose, petals, a halved orange, cedarwood and cinnamon sticks" eager ratio="1 / 1" />
             <figcaption className="small muted">Concept still life. Bottle and labelling are design direction, not a finished product.</figcaption>
           </figure>
         </div>
@@ -97,7 +95,7 @@ export default function Home() {
       {/* KIT */}
       <section className="kit-band" aria-labelledby="kit-title">
         <div className="container kit-band__grid">
-          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit: an ivory box lined in gold with amber vials, a gilded measuring beaker, pipette, two larger bottles and an ingredients booklet, beside an ivory gift box tied with a gold ribbon" className="kit-band__img" ratio="604 / 311" />
+          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit open: an ivory linen box with six amber dropper bottles with gold collars, a gold-rimmed beaker, a pipette, a spray bottle and a booklet, beside an ivory gift box tied with a gold satin bow" className="kit-band__img" ratio="3 / 2" />
           <div className="kit-band__copy">
             <p className="eyebrow">The Creator Kit</p>
             <h2 id="kit-title" className="h2">Everything to begin, in one <em>ivory</em> box.</h2>
@@ -137,9 +135,9 @@ export default function Home() {
       {/* LAB */}
       <section className="section section--white" aria-labelledby="lab-title">
         <div className="container lab-teaser">
-          <div className="lab-teaser__visual" aria-hidden>
-            <Vessel blend={DEFAULT_BLEND} />
-          </div>
+          <figure className="lab-teaser__photo">
+            <Img src="./assets/img/atelier.jpg" alt="A perfumer's white marble worktable: a pipette releases a drop of golden oil into a gold-rimmed beaker among amber dropper bottles, blotters and dried rose petals" ratio="3 / 2" />
+          </figure>
           <div className="lab-teaser__copy">
             <p className="eyebrow">The Perfume Lab</p>
             <h2 id="lab-title" className="h2">Compose with <em>proportions</em>, not guesswork.</h2>
@@ -181,9 +179,9 @@ export default function Home() {
             </div>
           </div>
           <div className="creations-teaser__bottles" aria-hidden>
-            <Bottle concept="atelier" fill={0.55} name="My Sunday" accents={["#D9973F", "#B9AFA3"]} />
-            <Bottle concept="pebble" fill={0.72} name={latest?.name ?? "Orange Woods"} accents={(latest?.blend ?? DEFAULT_BLEND).map((e) => accordById(e.accordId).swatch)} />
-            <Bottle concept="facet" fill={0.6} name="After Hours" accents={["#8A6A4E", "#8C3F25"]} />
+            <img src="./assets/img/bottle-atelier.jpg" alt="" loading="lazy" />
+            <img src="./assets/img/bottle-orb.jpg" alt="" loading="lazy" />
+            <img src="./assets/img/bottle-facet.jpg" alt="" loading="lazy" />
           </div>
         </div>
       </section>

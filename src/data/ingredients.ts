@@ -14,7 +14,7 @@ export const BOTANICALS: Botanical[] = [
     botanicalName: "Citrus sinensis",
     materialType: "Dried fruit peel",
     image: `${IMG}orange-peel.jpg`,
-    imageAlt: "A curl of dried orange peel with a glossy, textured rind",
+    imageAlt: "Curls of dried orange peel and two dried orange wheels in a gold-rimmed porcelain dish",
     descriptors: ["bright", "zesty", "slightly bitter", "sweet"],
     sensory:
       "Often described as bright and zesty with a soft, sweet edge and a faint bitterness from the pith. Drying can mute the sparkle of fresh peel.",
@@ -35,7 +35,7 @@ export const BOTANICALS: Botanical[] = [
     commonName: "Cedarwood",
     materialType: "Wood chips",
     image: `${IMG}cedarwood.jpg`,
-    imageAlt: "Stacked strips of cedarwood showing deep reddish-brown grain",
+    imageAlt: "Reddish cedarwood chips and shavings with visible grain in a gold-rimmed porcelain dish",
     descriptors: ["dry", "pencil-shaving", "woody", "calm"],
     sensory:
       "Often described as dry and woody, reminiscent of pencil shavings and a quiet wooden drawer.",
@@ -56,7 +56,7 @@ export const BOTANICALS: Botanical[] = [
     botanicalName: "Rosa spp.",
     materialType: "Dried flower petals",
     image: `${IMG}rose-petals.jpg`,
-    imageAlt: "Deep crimson rose petals with fine droplets on their surface",
+    imageAlt: "Dried deep crimson rose petals and buds in a gold-rimmed porcelain dish",
     descriptors: ["soft", "floral", "tea-like", "powdery"],
     sensory:
       "Often described as soft and floral with a tea-like, slightly powdery character once dried, quieter than a fresh rose.",
@@ -76,7 +76,7 @@ export const BOTANICALS: Botanical[] = [
     commonName: "Cinnamon bark",
     materialType: "Dried bark quills",
     image: `${IMG}cinnamon.jpg`,
-    imageAlt: "Rolled cinnamon bark quills with a warm brown, papery surface",
+    imageAlt: "A bundle of rolled cinnamon quills tied with twine on a gold-rimmed porcelain plate",
     descriptors: ["warm", "spicy", "sweet", "woody"],
     sensory: "Often described as warm, sweet and spicy with a dry, woody undertone.",
     association: "Commonly associated with spicy and warm fragrance families.",

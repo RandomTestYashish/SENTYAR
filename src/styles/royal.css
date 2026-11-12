@@ -262,3 +262,66 @@ body { background: #fff; }
 .dlg__head { position: relative; }
 .dlg__head::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: var(--gold-line); }
 .welcome svg { color: var(--c-champagne); }
+
+/* ==========================================================
+   EDITORIAL PASS: photography first, no wireframe outlines
+   ========================================================== */
+.kit-photo image { image-rendering: auto; }
+@media (min-width: 960px) { .hero__grid { grid-template-columns: 5fr 7fr; } }
+.hero__media .media { aspect-ratio: 1 / 1; }
+.hero__media figcaption { margin-top: 0; }
+
+/* movements: open editorial columns instead of boxed cards */
+.movement { border: 0; padding: var(--s-3) 0 0; background: transparent; box-shadow: none !important; transform: none !important; }
+.movement::before { right: auto; width: 64px; height: 1px; }
+
+/* ingredient tiles: big photographs, no outlines */
+.ing-tile { border: 0; padding: 0; background: transparent; box-shadow: none !important; transform: none !important; gap: 4px; }
+.ing-tile .media { margin-bottom: 14px; overflow: hidden; }
+.ing-tile .media img { transition: transform 900ms var(--ease-out); }
+.ing-tile:hover .media img { transform: scale(1.06); }
+.ing-tile > * { padding-inline: 0; }
+
+/* lab teaser: lifestyle photograph */
+.lab-teaser__photo { margin: 0; }
+.lab-teaser__photo .media { box-shadow: var(--shadow-3); }
+@media (min-width: 900px) { .lab-teaser { grid-template-columns: 7fr 5fr; gap: var(--s-8); } }
+
+/* creations: real bottles */
+.creations-teaser__bottles { gap: 8px; align-items: end; }
+.creations-teaser__bottles img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; }
+.creations-teaser__bottles img:nth-child(2) { transform: translateY(-24px); }
+
+/* kit band and kit hero: let the photograph breathe */
+.kit-band__img, .kit-hero__img { border: 0 !important; box-shadow: none !important; }
+
+/* product cards: photograph on top, quiet card */
+.product.card { border-color: transparent; transition: box-shadow var(--t-base), border-color var(--t-base); }
+.product.card:hover { border-color: #efe5d3; box-shadow: var(--shadow-2); }
+.product .pthumb { aspect-ratio: 1 / 1; height: auto; }
+.product .pthumb img { object-fit: cover; }
+.product .pthumb--draw { background: #fff; }
+.product .pthumb--draw svg, .product .pthumb--draw .kit-svg { height: 86% !important; }
+
+/* flat lay: photos sit directly on white */
+.flatlay, .flatlay::before { border: 0; }
+.flatlay::before { display: none; }
+.flatlay .kit-svg { height: 150px; width: auto; }
+.flatlay__row--oils .kit-svg { height: 170px; }
+.included__toolart .kit-svg { height: 56px; width: 56px; }
+
+/* unboxing tiles: photo objects */
+.kit-item .kit-photo { height: 76px; width: auto; }
+.kit-item--vial .vial-svg { height: 104px; }
+.panel__art .kit-svg { height: 180px; }
+.dish img { object-fit: cover; transform: scale(1.18); }
+
+/* photographs shot on white melt into the page */
+.kit-photo image, .media img, .flatlay img, .dish img, .creations-teaser__bottles img, .pf-tile img, .pthumb img { mix-blend-mode: multiply; }
+.lab-teaser__photo .media img, img[src*="atelier"], img[src*="tex-"] { mix-blend-mode: normal; }
+svg.kit-photo { mix-blend-mode: multiply; }
+svg.kit-photo--tool { -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 72%, transparent 100%); mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 72%, transparent 100%); }
+.media img, .pthumb img { -webkit-mask-image: none; }
+.kit-item__art { filter: none; height: 72px; }
+.kit-item--tool { grid-template-rows: 72px auto; }
+.kit-item__art .kit-svg { height: 72px; width: 72px; }
