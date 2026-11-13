@@ -22,6 +22,6 @@ Process: `npm run qa:shots` captures full-page screenshots of every route at 144
 - **Wordmark** is set in Cormorant Garamond with custom tracking. It is not hand-drawn letterforms, so it is softer than the board's Canela-like wordmark.
 - **Fonts**: Cormorant Garamond and Inter stand in for Canela and Neue Haas Grotesk, which are licensed fonts we don't have.
 - **Photography** is cropped from the 1536 px board, so ingredient images are low resolution and are only shown at small sizes.
-- **3D glass** is physically based but simpler than the board's rendering: no caustics, and only an approximate meniscus. On a real GPU it looks clearer than in the SwiftShader screenshots.
+- **3D bottles** (all seven silhouettes) use transmissive crystal, studio reflections and a projected gold-foil label; no caustics. Headless SwiftShader renders the glass slightly milkier than a real GPU.
 - **Hero bottle** (from the board) differs from the recommended "Pebble" geometry used in the app. This is intentional: the board is the art direction, and the Pebble keeps its asymmetric, stone-capped character in a form that can be manufactured.
 - Pixel-perfect parity with the board is **not** claimed. The board is a moodboard, not a UI screen.
