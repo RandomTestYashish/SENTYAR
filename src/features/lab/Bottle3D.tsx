@@ -9,10 +9,13 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { DecalGeometry } from "three/examples/jsm/geometries/DecalGeometry.js";
 import { EMBLEM_PATH } from "../../components/Logo";
-import type { BottleConceptId } from "../../lib/types";
+import type { BottleConceptId, BottleVolume, CapChoice } from "../../lib/types";
+import { bodyById } from "../../data/bottles";
 
 export interface Bottle3DProps {
   concept: BottleConceptId;
+  cap?: CapChoice;
+  volume?: BottleVolume;
   name: string;
   tint?: string;            // liquid colour
   autoRotate: boolean;
@@ -123,6 +126,30 @@ function buildShape(id: BottleConceptId, m: ReturnType<typeof mats>): Built {
   }
 }
 
+/** Interchangeable caps. The body's own default keeps its signature material (stone, pearl). */
+function buildCap(body: BottleConceptId, cap: CapChoice, m: ReturnType<typeof mats>, own: THREE.Object3D): THREE.Object3D {
+  const d = bodyById(body).defaultCap;
+  if (cap.shape === "classic" && cap.shape === d.shape && cap.finish === d.finish) return own;
+  const g = new THREE.Group();
+  const gold = cap.finish === "gold";
+  switch (cap.shape) {
+    case "tall": { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.72, 28), gold ? m.goldFacet : m.matteBlack); c.position.y = 0.36; g.add(c); break; }
+    case "disc": { const c = new THREE.Mesh(new THREE.CylinderGeometry(0.31, 0.31, 0.16, 64), gold ? m.gold : m.matteBlack); c.position.y = 0.08; g.add(c); break; }
+    case "gem": {
+      const mat = gold ? m.goldFacet : m.onyx;
+      const a = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.38, 0.24, 10), mat); a.position.y = 0.12;
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.3, 0.2, 10), mat); b.position.y = 0.34; g.add(a, b); break;
+    }
+    case "classic":
+    default: {
+      // the silhouette's own cap geometry, re-finished in black or gold
+      own.traverse((o) => { const mesh = o as THREE.Mesh; if (mesh.isMesh) mesh.material = gold ? m.gold : m.matteBlack; });
+      return own;
+    }
+  }
+  return g;
+}
+
 /* ---------- label texture: emblem + SENTYAR + name ---------- */
 function drawLabel(ctx: CanvasRenderingContext2D, name: string) {
   const W = ctx.canvas.width, H = ctx.canvas.height;
@@ -144,10 +171,14 @@ function drawLabel(ctx: CanvasRenderingContext2D, name: string) {
   ctx.fillText(name, W / 2, H * 0.06 + em + fs * 1.15 + ns * 1.45);
 }
 
-export default function Bottle3D({ concept, name, tint = "#d99a35", autoRotate, resetKey, background = "#fbf7f0", onReady, onError }: Bottle3DProps) {
+const VOLUME_SCALE: Record<BottleVolume, number> = { 10: 0.8, 50: 1, 100: 1.14 };
+
+export default function Bottle3D({ concept, cap, volume = 50, name, tint = "#d99a35", autoRotate, resetKey, background = "#fbf7f0", onReady, onError }: Bottle3DProps) {
   const host = useRef<HTMLDivElement>(null);
   const nameRef = useRef(name);
-  const api = useRef<{ setName: (n: string) => void; setAuto: (a: boolean) => void; reset: () => void; setTint: (c: string) => void } | null>(null);
+  const volumeRef = useRef<BottleVolume>(volume);
+  const capKey = cap ? `${cap.shape}.${cap.finish}` : "";
+  const api = useRef<{ setScale: (v: BottleVolume) => void; setName: (n: string) => void; setAuto: (a: boolean) => void; reset: () => void; setTint: (c: string) => void } | null>(null);
 
   // one renderer per mount; rebuild the bottle when the concept changes
   useEffect(() => {
@@ -211,7 +242,9 @@ export default function Bottle3D({ concept, name, tint = "#d99a35", autoRotate, 
     // neck + gold collar + cap
     const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.17, 0.14, 48), m.glass); neck.position.y = b.top + 0.05; bottle.add(neck);
     const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, 0.12, 64), m.gold); collar.position.y = b.top + 0.16; bottle.add(collar);
-    b.cap.position.y = b.top + 0.22; bottle.add(b.cap);
+    const capObj = cap ? buildCap(concept, cap, m, b.cap) : b.cap;
+    capObj.position.y = b.top + 0.22; bottle.add(capObj);
+    bottle.scale.setScalar(VOLUME_SCALE[volumeRef.current]);
     // centre the bottle vertically in frame
     const height = b.top + 0.9;
     bottle.position.y = 0;
@@ -260,6 +293,7 @@ export default function Bottle3D({ concept, name, tint = "#d99a35", autoRotate, 
 
     const home = { pos: camera.position.clone() };
     api.current = {
+      setScale: (v: BottleVolume) => { bottle.scale.setScalar(VOLUME_SCALE[v]); },
       setName,
       setAuto: (a) => { controls.autoRotate = a; },
       reset: () => { camera.position.copy(home.pos); controls.update(); },
@@ -283,12 +317,13 @@ export default function Bottle3D({ concept, name, tint = "#d99a35", autoRotate, 
       api.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [concept, background]);
+  }, [concept, capKey, background]);
 
   useEffect(() => { nameRef.current = name; api.current?.setName(name); }, [name]);
   useEffect(() => { api.current?.setAuto(autoRotate); }, [autoRotate]);
   useEffect(() => { if (resetKey) api.current?.reset(); }, [resetKey]);
   useEffect(() => { api.current?.setTint(tint); }, [tint]);
+  useEffect(() => { volumeRef.current = volume; api.current?.setScale(volume); }, [volume]);
 
   return <div ref={host} className="bottle3d" />;
 }

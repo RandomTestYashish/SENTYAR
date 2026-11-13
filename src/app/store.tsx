@@ -4,7 +4,7 @@ import {
   initStorage, load, readBlend, readCart, readCreations, readNotes, save, storageAvailable, uid,
 } from "../lib/storage";
 import type {
-  AccordId, AdjustMode, Blend, BotanicalId, BottleConceptId, CartItem, Creation, DiscoveryNote, ShareChange,
+  AccordId, AdjustMode, Blend, BotanicalId, BottleConceptId, BottleVolume, CapChoice, CartItem, Creation, DiscoveryNote, ShareChange,
 } from "../lib/types";
 import { BOTTLE_IDS } from "../lib/types";
 import { accordById } from "../data/ingredients";
@@ -25,10 +25,22 @@ interface LabDraft {
   baseAdded: boolean;
   /** botanicals dropped in as a visual infusion; never part of the formula */
   infusions: BotanicalId[];
+  cap?: CapChoice;
+  bottleVolume?: BottleVolume;
+  recipeId?: string;
+  /** Create Your Own: chosen kit (limits available accords) and UI level */
+  kitId?: string;
+  level?: "beginner" | "advanced";
 }
 
 const BOTANICAL_IDS: BotanicalId[] = ["orange-peel", "cedarwood", "rose-petals", "cinnamon"];
 
+function readCap(raw: unknown): CapChoice | undefined {
+  if (typeof raw !== "object" || raw === null) return undefined;
+  const c = raw as Record<string, unknown>;
+  const shapes = ["classic", "tall", "disc", "gem"], finishes = ["black", "gold"];
+  return shapes.includes(c.shape as string) && finishes.includes(c.finish as string) ? { shape: c.shape as CapChoice["shape"], finish: c.finish as CapChoice["finish"] } : undefined;
+}
 function readDraft(raw: unknown): LabDraft | null {
   if (typeof raw !== "object" || raw === null) return null;
   const r = raw as Record<string, unknown>;
@@ -41,6 +53,11 @@ function readDraft(raw: unknown): LabDraft | null {
     parentId: typeof r.parentId === "string" ? r.parentId : null,
     bottle: (BOTTLE_IDS as unknown[]).includes(r.bottle) ? (r.bottle as BottleConceptId) : "pebble",
     baseAdded: r.baseAdded === true,
+    cap: readCap(r.cap),
+    bottleVolume: r.bottleVolume === 10 || r.bottleVolume === 50 || r.bottleVolume === 100 ? r.bottleVolume : undefined,
+    recipeId: typeof r.recipeId === "string" ? r.recipeId : undefined,
+    kitId: typeof r.kitId === "string" ? r.kitId : undefined,
+    level: r.level === "advanced" ? "advanced" : "beginner",
     infusions: Array.isArray(r.infusions) ? (r.infusions.filter((x) => BOTANICAL_IDS.includes(x as BotanicalId)) as BotanicalId[]).slice(0, 4) : [],
   };
 }
@@ -169,6 +186,11 @@ function useStore() {
   const setMode = useCallback((mode: AdjustMode) => setDraft((d) => ({ ...d, mode })), []);
   const setDraftName = useCallback((name: string) => setDraft((d) => ({ ...d, name: name.slice(0, 40) })), []);
   const setBottle = useCallback((bottle: BottleConceptId) => setDraft((d) => ({ ...d, bottle })), []);
+  const setBottleConfig = useCallback((cfg: { body: BottleConceptId; cap: CapChoice; volume: BottleVolume }) => {
+    setDraft((d) => ({ ...d, bottle: cfg.body, cap: cfg.cap, bottleVolume: cfg.volume }));
+  }, []);
+  const setLabKit = useCallback((kitId: string) => setDraft((d) => ({ ...d, kitId })), []);
+  const setLevel = useCallback((level: "beginner" | "advanced") => setDraft((d) => ({ ...d, level, mode: level === "beginner" ? "proportional" : d.mode })), []);
   const setBase = useCallback((on: boolean) => {
     setDraft((d) => ({ ...d, baseAdded: on }));
     announce(on ? "Perfumer's alcohol base poured: 8.00 ml." : "Base removed from the beaker.");
@@ -192,6 +214,7 @@ function useStore() {
         updatedAt: now,
         formulaVersion: editing.formulaVersion + 1,
         appearance: { bottle: draft.bottle },
+        cap: draft.cap, bottleVolumeMl: draft.bottleVolume, recipeId: draft.recipeId ?? editing.recipeId, kitId: draft.kitId ?? editing.kitId,
         disclaimerAcknowledged: true,
         history: [...editing.history, { version: editing.formulaVersion, savedAt: editing.updatedAt, name: editing.name, blend: editing.blend }].slice(-20),
       };
@@ -200,7 +223,8 @@ function useStore() {
       saved = {
         schema: 1, id: uid(), name, createdAt: now, updatedAt: now, formulaVersion: 1, volumeMl: 10,
         blend: draft.blend, botanicalNoteIds: notes.map((n) => n.id).slice(-12),
-        appearance: { bottle: draft.bottle }, disclaimerAcknowledged: true,
+        appearance: { bottle: draft.bottle }, cap: draft.cap, bottleVolumeMl: draft.bottleVolume, recipeId: draft.recipeId, kitId: draft.kitId,
+        disclaimerAcknowledged: true,
         parentId: draft.parentId ?? undefined, history: [],
       };
       setCreations((cs) => [saved, ...cs]);
@@ -214,18 +238,18 @@ function useStore() {
     setUndoStack((s) => [...s.slice(-29), draft.blend]);
     setLastChanges([]);
     if (as === "edit") {
-      setDraft({ blend: c.blend, mode: "proportional", name: c.name, editingId: c.id, parentId: c.parentId ?? null, bottle: c.appearance.bottle, baseAdded: true, infusions: [] });
+      setDraft({ blend: c.blend, mode: "proportional", name: c.name, editingId: c.id, parentId: c.parentId ?? null, bottle: c.appearance.bottle, cap: c.cap, bottleVolume: c.bottleVolumeMl, recipeId: c.recipeId, kitId: c.kitId, baseAdded: true, infusions: [] });
     } else {
-      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle, baseAdded: true, infusions: [] });
+      setDraft({ blend: c.blend, mode: "proportional", name: `${c.name} variation`.slice(0, 40), editingId: null, parentId: c.id, bottle: c.appearance.bottle, cap: c.cap, bottleVolume: c.bottleVolumeMl, recipeId: c.recipeId, kitId: c.kitId, baseAdded: true, infusions: [] });
     }
   }, [draft.blend]);
 
   /** Replace the lab draft with a suggested blend (e.g. from the Prefer quiz). */
-  const loadBlend = useCallback((blend: Blend, name: string) => {
+  const loadBlend = useCallback((blend: Blend, name: string, recipeId?: string) => {
     if (!isBlendValid(blend)) return;
     setUndoStack((s) => [...s.slice(-29), draft.blend]);
     setLastChanges([]);
-    setDraft({ ...EMPTY_DRAFT, blend, name: name.slice(0, 40) });
+    setDraft({ ...EMPTY_DRAFT, blend, name: name.slice(0, 40), recipeId, level: "beginner" });
     announce(`Suggested blend loaded into the lab: ${blend.map((e) => `${accordById(e.accordId).name} ${e.share}%`).join(", ")}.`);
   }, [draft.blend, announce]);
 
@@ -315,7 +339,7 @@ function useStore() {
     storageOk: storageAvailable(), recovered: initial.recovered, saveFailed,
     // actions
     announce, toast, dismissToast,
-    addToBlend, removeFromBlend, changeShare, undo, resetBlend, clearBlend, balance, setMode, setDraftName, setBottle, setBase, toggleInfusion,
+    addToBlend, removeFromBlend, changeShare, undo, resetBlend, clearBlend, balance, setMode, setDraftName, setBottle, setBottleConfig, setLabKit, setLevel, setBase, toggleInfusion,
     saveCreation, loadIntoLab, loadBlend, startNewDraft, duplicateCreation, deleteCreation, restoreVersion, renameCreation,
     addNote, deleteNote, toggleExplore,
     addToCart, setQty, removeFromCart, clearCart, setCartOpen,

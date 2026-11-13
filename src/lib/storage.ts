@@ -127,6 +127,11 @@ export function readCreation(raw: unknown): Creation | null {
       ? raw.botanicalNoteIds.filter((x): x is string => typeof x === "string")
       : [],
     appearance: { bottle: (BOTTLE_IDS as string[]).includes(bottle ?? "") ? (bottle as BottleConceptId) : "pebble" },
+    cap: readCapLoose(raw.cap),
+    bottleVolumeMl: raw.bottleVolumeMl === 10 || raw.bottleVolumeMl === 50 || raw.bottleVolumeMl === 100 ? raw.bottleVolumeMl : undefined,
+    recipeId: typeof raw.recipeId === "string" ? raw.recipeId : undefined,
+    kitId: typeof raw.kitId === "string" ? raw.kitId : undefined,
+    notes: typeof raw.notes === "string" ? raw.notes.slice(0, 500) : undefined,
     disclaimerAcknowledged: raw.disclaimerAcknowledged === true,
     parentId: typeof raw.parentId === "string" ? raw.parentId : undefined,
     history: Array.isArray(raw.history)
@@ -138,6 +143,13 @@ export function readCreation(raw: unknown): Creation | null {
 export function readCreations(raw: unknown): Creation[] | null {
   if (!Array.isArray(raw)) return null;
   return raw.map(readCreation).filter((c): c is Creation => c !== null);
+}
+
+function readCapLoose(raw: unknown): Creation["cap"] {
+  if (!isObj(raw)) return undefined;
+  const shape = raw.shape, finish = raw.finish;
+  if (!["classic", "tall", "disc", "gem"].includes(shape as string) || !["black", "gold"].includes(finish as string)) return undefined;
+  return { shape, finish } as Creation["cap"];
 }
 
 export function readCart(raw: unknown): CartItem[] | null {

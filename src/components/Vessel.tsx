@@ -188,7 +188,7 @@ export function Vessel({ blend, baseAdded = false, infusions = [], dropKey = 0, 
       <path d="M244 100 V190" stroke="#fff" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
 
       {/* layer tags on the right: oils and base */}
-      {blend.length > 0 && (
+      {blend.length > 0 && baseAdded && (
         <g className="vessel__tag" style={{ transform: `translateY(${oilsMid}px)` }}>
           <line x1={R + 22} x2={R + 30} y1="0" y2="0" stroke="#c4a877" />
           <text x={R + 34} y="3.5" fontSize="10" fontFamily="var(--font-sans)" fill="#6e675e">oils {formatMl(vols.fragranceCml)}</text>

@@ -9,6 +9,7 @@ import "./styles/lab.css";
 import "./styles/prefer.css";
 import "./styles/royal.css";
 import "./styles/hero.css";
+import "./styles/p2.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

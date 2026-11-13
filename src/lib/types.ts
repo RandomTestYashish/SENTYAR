@@ -1,7 +1,8 @@
 // Typed domain models for the SENTYAR prototype.
 // All catalogue values are illustrative demo data, not supplier formulas.
 
-export type AccordId = "woody" | "citrus" | "rose" | "vanilla" | "musk" | "spicy";
+export type AccordId = "woody" | "citrus" | "rose" | "vanilla" | "musk" | "spicy" | "aquatic" | "aromatic" | "oud" | "amber";
+export const ACCORD_IDS: AccordId[] = ["woody", "citrus", "rose", "vanilla", "musk", "spicy", "aquatic", "aromatic", "oud", "amber"];
 export type BotanicalId = "orange-peel" | "cedarwood" | "rose-petals" | "cinnamon";
 export type IngredientId = AccordId | BotanicalId;
 
@@ -42,7 +43,10 @@ export interface Accord {
   /** Visual coding only, not a claim about the material's real colour. */
   swatch: string;
   status: "demo-accord";
-  relatedBotanical: BotanicalId;
+  /** kit botanical used to explain this accord, where the kit includes one */
+  relatedBotanical?: BotanicalId;
+  /** learning-library entry for this material */
+  learnId?: string;
   compareWith: AccordId;
 }
 
@@ -68,6 +72,11 @@ export type SvgBottleId = "pebble" | "facet" | "atelier";
 export type BottleConceptId = SvgBottleId | "orb" | "fluid" | "column" | "pearl";
 export const BOTTLE_IDS: BottleConceptId[] = ["pebble", "orb", "facet", "fluid", "atelier", "column", "pearl"];
 
+export type BottleVolume = 10 | 50 | 100;
+export type CapShape = "classic" | "tall" | "disc" | "gem";
+export type CapFinish = "black" | "gold";
+export interface CapChoice { shape: CapShape; finish: CapFinish }
+
 export interface CreationVersion {
   version: number;
   savedAt: string;
@@ -84,6 +93,12 @@ export interface Creation {
   formulaVersion: number;
   volumeMl: 10;
   blend: Blend;
+  /** bottle the creation is presented/ordered in */
+  bottleVolumeMl?: BottleVolume;
+  cap?: CapChoice;
+  kitId?: string;
+  recipeId?: string;
+  notes?: string;
   /** Botanical exploration notes are kept separately from the formula. */
   botanicalNoteIds: string[];
   appearance: { bottle: BottleConceptId };
@@ -101,7 +116,7 @@ export interface DiscoveryNote {
   source: "ingredient-journey" | "nature-lab";
 }
 
-export type ProductCategory = "accords" | "botanicals" | "tools" | "bottles" | "packs";
+export type ProductCategory = "accords" | "botanicals" | "tools" | "bottles" | "caps" | "accessories" | "refills" | "packs" | "kits";
 
 export interface Product {
   id: string;
@@ -117,6 +132,12 @@ export interface Product {
   contentMl?: number;
   /** drawn tool illustration id (see KitItems.ToolArt) */
   art?: string;
+  /** pack sizes this product is actually offered in (indicative prices) */
+  sizes?: { ml: BottleVolume; priceInr: number }[];
+  /** what the product is for, in plain words */
+  use?: string;
+  /** validation / compatibility status shown to the buyer */
+  status?: string;
 }
 
 export interface CartItem {

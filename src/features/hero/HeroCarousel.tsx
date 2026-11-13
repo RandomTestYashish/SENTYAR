@@ -30,6 +30,9 @@ const n = BOTTLES.length;
 const wrap = (i: number) => ((i % n) + n) % n;
 /** signed shortest distance from the active slide */
 const offsetOf = (i: number, active: number) => { let d = i - active; if (d > n / 2) d -= n; if (d < -n / 2) d += n; return d; };
+/** centre-to-centre distance (in slide widths) so neighbours sit with an even gap after scaling */
+const SCALE = (a: number) => 1 - a * 0.22;
+const spread = (a: number) => { let x = 0; for (let k = 1; k <= a; k++) x += SCALE(k - 1) / 2 + SCALE(k) / 2; return x; };
 
 export function HeroCarousel() {
   const [active, setActive] = useState(0);
@@ -125,7 +128,7 @@ export function HeroCarousel() {
               <li
                 key={b.id}
                 className={`hx__slide ${o === 0 ? "is-active" : ""} ${abs >= 3 ? "is-far" : ""}`}
-                style={{ "--o": o, "--a": abs } as CSSProperties}
+                style={{ "--o": o, "--a": abs, "--xf": Math.sign(o) * spread(abs), "--s": SCALE(abs) } as CSSProperties}
                 aria-hidden={o !== 0}
                 aria-roledescription="slide"
                 aria-label={`${i + 1} of ${n}: ${b.name}`}

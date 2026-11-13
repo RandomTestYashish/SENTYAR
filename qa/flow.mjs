@@ -15,7 +15,7 @@ ok("1 welcome dialog on first visit", await page.getByRole("dialog", { name: "We
 await shot("01-welcome");
 await page.getByRole("button", { name: "Explore on my own" }).click();
 await page.getByRole("link", { name: /Explore the Kit/ }).click();
-ok("2 kit detail", await page.getByRole("heading", { name: "SENTYAR Creator Kit V1" }).waitFor().then(() => true, () => false));
+ok("2 kit detail", await page.getByRole("heading", { name: "SENTYAR Creator Kit" }).waitFor().then(() => true, () => false));
 await page.getByRole("link", { name: /Start unboxing/ }).click();
 await page.getByRole("button", { name: /Lift the lid/ }).click(); await page.waitForTimeout(1300);
 await shot("02-unbox-open");
@@ -62,6 +62,7 @@ ok("GAP5 botanical blocked", await page.getByRole("dialog", { name: /Botanicals 
 await page.getByRole("button", { name: "Close" }).click();
 await page.getByRole("tab", { name: /Oils/ }).click(); await page.waitForTimeout(200);
 // manual mode
+await page.getByRole("radio", { name: "Advanced" }).click(); await page.waitForTimeout(150);
 await page.getByRole("radio", { name: "Manual" }).click();
 await page.locator("#share-citrus").fill("5"); await page.locator("#share-citrus").press("Enter"); await page.waitForTimeout(200);
 ok("manual unbalanced blocks preview", await page.getByRole("button", { name: /^Preview/ }).isDisabled());

@@ -6,6 +6,8 @@ import { Vessel } from "../components/Vessel";
 import { Dialog, Notice } from "../components/ui";
 import { OilBottle } from "../components/KitItems";
 import { KIT } from "../data/catalogue";
+import { kitAccords, kitById, type KitId } from "../data/kits";
+import { FAMILIES, familyById, recipeById, type FamilyId } from "../data/fragrances";
 import { GlossaryButton } from "../components/Glossary";
 import {
   ACCORDS, BOTANICALS, PAIRING_LABEL, ROLE_LABEL, accordById, botanicalById, pairing,
@@ -17,7 +19,7 @@ import type { AccordId, BotanicalId } from "../lib/types";
 
 export default function Lab() {
   const s = useApp();
-  const { draft, addToBlend, removeFromBlend, undo, undoStack, resetBlend, clearBlend, balance, setMode, lastChanges, creations, startNewDraft, setBase, toggleInfusion } = s;
+  const { draft, addToBlend, removeFromBlend, undo, undoStack, resetBlend, clearBlend, balance, setMode, lastChanges, creations, startNewDraft, setBase, toggleInfusion, setLabKit, setLevel } = s;
   const nav = useNavigate();
   const [dropKey, setDropKey] = useState(0);
   const [dropColor, setDropColor] = useState("#c98f3e");
@@ -25,6 +27,7 @@ export default function Lab() {
   const [blocked, setBlocked] = useState<BotanicalId | null>(null);
   const [info, setInfo] = useState<AccordId | null>(null);
   const [step, setStep] = useState(0);
+  const [family, setFamily] = useState<FamilyId | "all">("all");
   const [pourKey, setPourKey] = useState(0);
   const vesselRef = useRef<HTMLDivElement>(null);
 
@@ -63,6 +66,14 @@ export default function Lab() {
   ];
 
   const kitMl = KIT.accordVialMl;
+  const level = draft.level ?? "beginner";
+  const recipe = draft.recipeId ? recipeById(draft.recipeId) : undefined;
+  const kitOpts: KitId[] = recipe ? ["inspired", "mini", "creator-kit-v1", "advanced"] : ["mini", "creator-kit-v1", "advanced"];
+  const kitId = (kitOpts.includes(draft.kitId as KitId) ? draft.kitId : recipe ? "inspired" : "creator-kit-v1") as KitId;
+  const kit = kitById(kitId)!;
+  const kitAcc = kitAccords(kit, recipe?.blend.map((e) => e.accordId));
+  const available = ACCORDS.filter((a) => kitAcc.includes(a.id) || draft.blend.some((e) => e.accordId === a.id))
+    .filter((a) => family === "all" || familyById(family)!.accords.includes(a.id));
 
   return (
     <div className="lab-page">
@@ -118,15 +129,33 @@ export default function Lab() {
 
           {step === 0 && (
             <section className="lab__tray" role="tabpanel" id="panel-0" aria-labelledby="step-0">
-              <div className="lab-sec-head">
-                <h2 id="tray-h" className="eyebrow">Oils from your Creator Kit</h2>
-                <div className="seg seg--sm" role="radiogroup" aria-label="Adjustment mode">
-                  <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
-                  <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
+              <div className="lab-ctrl">
+                <label className="lab-ctrl__kit"><span className="eyebrow">Kit</span>
+                  <select className="input" value={kitId} onChange={(e) => setLabKit(e.target.value)} aria-label="Kit you are composing with">
+                    {kitOpts.map((k) => <option key={k} value={k}>{kitById(k)!.name}{k === "inspired" && recipe ? ` (${recipe.name})` : ""}</option>)}
+                  </select>
+                </label>
+                <div className="seg seg--sm" role="radiogroup" aria-label="Experience level">
+                  <button role="radio" aria-checked={level === "beginner"} onClick={() => setLevel("beginner")}>Beginner</button>
+                  <button role="radio" aria-checked={level === "advanced"} onClick={() => setLevel("advanced")}>Advanced</button>
                 </div>
               </div>
+              <div className="chips-row lab-fams" role="group" aria-label="Filter by scent family">
+                <button className="chip" aria-pressed={family === "all"} onClick={() => setFamily("all")}>All</button>
+                {FAMILIES.filter((f) => f.accords.some((a) => kitAcc.includes(a))).map((f) => <button key={f.id} className="chip" aria-pressed={family === f.id} onClick={() => setFamily(f.id)}>{f.name}</button>)}
+              </div>
+              <div className="lab-sec-head">
+                <h2 id="tray-h" className="eyebrow">Oils from your {kit.name}</h2>
+                {level === "advanced" ? (
+                  <div className="seg seg--sm" role="radiogroup" aria-label="Adjustment mode">
+                    <button role="radio" aria-checked={draft.mode === "proportional"} onClick={() => setMode("proportional")}>Proportional</button>
+                    <button role="radio" aria-checked={draft.mode === "manual"} onClick={() => setMode("manual")}>Manual</button>
+                  </div>
+                ) : <Link to="/learn" className="link small">What are top, heart and base?</Link>}
+              </div>
+            {available.length === 0 && <p className="small muted">This kit has no accords in the {familyById(family as FamilyId)?.name ?? ""} family. Try another family or kit.</p>}
             <ul role="list" className="kit-grid">
-              {ACCORDS.map((a) => {
+              {available.map((a) => {
                 const entry = draft.blend.find((e) => e.accordId === a.id);
                 const used = entry ? vols.entries.find((v) => v.accordId === a.id)?.cml ?? 0 : 0;
                 return (
@@ -142,7 +171,7 @@ export default function Lab() {
                       <button data-accord-add={a.id} className="kit-tile__main" onClick={() => add(a.id)} disabled={draft.blend.length >= MAX_ACCORDS} aria-label={`Add ${a.name} accord to blend`}>
                         <OilBottle name={a.name} color={a.swatch} className="kit-tile__art" />
                         <span className="kit-tile__name">{a.name}</span>
-                        <span className="kit-tile__meta">{kitMl} ml vial</span>
+                        <span className="kit-tile__meta">{ROLE_LABEL[a.role]} · {kitMl} ml vial</span>
                       </button>
                     )}
                     <button className="kit-tile__info" onClick={() => setInfo(a.id)} aria-label={`About the ${a.name} accord`}><Info size={13} /></button>
@@ -297,7 +326,7 @@ export default function Lab() {
             <dl className="facts">
               <div><dt>Family</dt><dd>{a.family}</dd></div>
               <div><dt>Role</dt><dd>{ROLE_LABEL[a.role]}, illustrative only</dd></div>
-              <div><dt>Related botanical</dt><dd>{botanicalById(a.relatedBotanical).name}</dd></div>
+              {a.relatedBotanical && <div><dt>Related botanical</dt><dd>{botanicalById(a.relatedBotanical).name}</dd></div>}
             </dl>
           </div>
         ); })()}
@@ -330,6 +359,9 @@ function ShareRow({ id, share, cml, invalid }: { id: AccordId; share: number; cm
     <li className={`share ${invalid ? "is-invalid" : ""}`}>
       <div className="share__top">
         <label htmlFor={inputId} className="share__name"><span className="swatch" style={{ background: a.swatch }} />{a.name}<span className="share__ml muted num">{formatMl(cml)}</span></label>
+        {draft.level !== "advanced" ? (
+          <div className="share__num"><span className="share__pct num">{share}%</span><button className="icon-btn icon-btn--sm share__x" onClick={() => removeFromBlend(id)} aria-label={`Remove ${a.name} from blend`}><X size={13} /></button></div>
+        ) : (
         <div className="share__num">
           <button className="icon-btn icon-btn--sm" onClick={() => commit(share - 1)} disabled={share <= 1 || (draft.mode === "proportional" && others === 0)} aria-label={`Decrease ${a.name} by 1%`}><Minus size={13} /></button>
           <input id={inputId} className="share__input num" inputMode="numeric" value={text} aria-invalid={!!err || invalid}
@@ -342,6 +374,7 @@ function ShareRow({ id, share, cml, invalid }: { id: AccordId; share: number; cm
           <button className="icon-btn icon-btn--sm" onClick={() => commit(share + 1)} disabled={share >= max || (draft.mode === "proportional" && others === 0)} aria-label={`Increase ${a.name} by 1%`}><Plus size={13} /></button>
           <button className="icon-btn icon-btn--sm share__x" onClick={() => removeFromBlend(id)} aria-label={`Remove ${a.name} from blend`}><X size={13} /></button>
         </div>
+        )}
       </div>
       <input type="range" className="range" min={1} max={100} step={1} value={share}
         style={{ ["--fill" as string]: `${share}%` }}

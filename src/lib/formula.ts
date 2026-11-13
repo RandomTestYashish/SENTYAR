@@ -9,6 +9,7 @@
 // millilitre (1 % share = 0.02 ml = 2 cml) so totals are always exact:
 // no 9.99 ml or 10.01 ml can appear.
 
+import { ACCORD_IDS } from "./types";
 import type { AccordId, AdjustMode, Blend, BlendEntry, ShareChange } from "./types";
 
 export const TOTAL_ML = 10;
@@ -20,7 +21,7 @@ export const BASE_CML = TOTAL_CML - FRAGRANCE_CML; // 800
 export const MIN_SHARE = 1;
 export const MAX_ACCORDS = 6;
 
-const VALID_IDS: AccordId[] = ["woody", "citrus", "rose", "vanilla", "musk", "spicy"];
+const VALID_IDS: AccordId[] = ACCORD_IDS;
 
 export const DEFAULT_BLEND: Blend = [
   { accordId: "woody", share: 50 },

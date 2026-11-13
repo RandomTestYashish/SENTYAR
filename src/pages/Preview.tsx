@@ -1,6 +1,8 @@
 import { Suspense, lazy, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, CopyPlus, Leaf, Pause, Play, RotateCcw, Save } from "lucide-react";
+import { ArrowLeft, Check, CopyPlus, Leaf, Pause, Play, RotateCcw, Save, SlidersHorizontal } from "lucide-react";
+import { BottleConfigurator, type BottleConfig } from "../components/BottleConfigurator";
+import { bodyById, capLabel } from "../data/bottles";
 import { useApp } from "../app/store";
 import { BottlePhoto, PHOTO_BOTTLES, photoBottle } from "../components/BottlePhoto";
 import { Dialog, Notice } from "../components/ui";
@@ -26,7 +28,9 @@ function liquidTint(swatches: { c: string; w: number }[]) {
 }
 
 export default function Preview() {
-  const { draft, setDraftName, setBottle, saveCreation, creations, loadIntoLab, toast } = useApp();
+  const { draft, setDraftName, setBottle, setBottleConfig, saveCreation, creations, loadIntoLab, toast } = useApp();
+  const [sheet, setSheet] = useState(false);
+  const cfg: BottleConfig = { body: draft.bottle, cap: draft.cap ?? bodyById(draft.bottle).defaultCap, volume: draft.bottleVolume ?? bodyById(draft.bottle).volumes[0] };
   const nav = useNavigate();
   const issues = validateBlend(draft.blend);
   const valid = issues.length === 0;
@@ -74,7 +78,7 @@ export default function Preview() {
           <div className="pv-stage">
             {use3D ? (
               <Suspense fallback={<div className="stage__loading"><span className="small muted">Preparing glass and light…</span></div>}>
-                <Bottle3D concept={draft.bottle} name={draft.name || "Your creation"} tint={tint} autoRotate={auto} resetKey={resetKey}
+                <Bottle3D concept={draft.bottle} cap={cfg.cap} volume={cfg.volume} name={draft.name || "Your creation"} tint={tint} autoRotate={auto} resetKey={resetKey}
                   onReady={() => setGlReady(true)} onError={(m) => setGlError(m)} />
                 {!glReady && <div className="stage__loading"><span className="small muted">Preparing glass and light…</span></div>}
               </Suspense>
@@ -87,17 +91,22 @@ export default function Preview() {
                 <button className="icon-btn icon-btn--sm" onClick={() => setResetKey((k) => k + 1)} aria-label="Reset view"><RotateCcw size={15} /></button>
               </div>
             )}
-            <p className="pv-stage__cap small"><span>{photoBottle(draft.bottle).name}</span> · {photoBottle(draft.bottle).style} · 10 ml{use3D && glReady ? " · drag to turn" : ""}</p>
+            <p className="pv-stage__cap small"><span>{photoBottle(draft.bottle).name}</span> · {capLabel(cfg.cap)} · {cfg.volume} ml{use3D && glReady ? " · drag to turn" : ""}</p>
           </div>
           {glError && <Notice>Showing the studio photograph. {glError}</Notice>}
           <div className="pv-picker" role="radiogroup" aria-label="Bottle concept">
             {PHOTO_BOTTLES.map((b) => (
-              <button key={b.id} role="radio" aria-checked={draft.bottle === b.id} className="pv-pick" onClick={() => setBottle(b.id)} aria-label={b.name}>
+              <button key={b.id} role="radio" aria-checked={draft.bottle === b.id} className="pv-pick" onClick={() => { setBottle(b.id); setBottleConfig({ body: b.id, cap: bodyById(b.id).defaultCap, volume: bodyById(b.id).volumes.includes(cfg.volume) ? cfg.volume : bodyById(b.id).volumes[0] }); }} aria-label={b.name}>
                 <BottlePhoto concept={b.id} engrave={false} className="pv-pick__img" />
                 <span>{b.name.replace("The ", "")}</span>
               </button>
             ))}
           </div>
+          <div className="pv-cfg">
+            <p className="small"><strong>{bodyById(cfg.body).name}</strong> · {capLabel(cfg.cap)} · {cfg.volume} ml</p>
+            <button className="btn btn--secondary btn--sm" onClick={() => setSheet(true)}><SlidersHorizontal size={14} aria-hidden /> Cap and size</button>
+          </div>
+          <BottleConfigurator open={sheet} onClose={() => setSheet(false)} value={cfg} name={draft.name || "Your creation"} onConfirm={setBottleConfig} confirmLabel="Use this bottle" />
         </section>
 
         <section className="preview__info" aria-labelledby="concept-h">

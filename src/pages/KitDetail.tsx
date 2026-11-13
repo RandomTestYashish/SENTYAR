@@ -7,6 +7,7 @@ import { ToolArt } from "../components/KitItems";
 import { ACCORDS, BOTANICALS } from "../data/ingredients";
 import { KIT, formatInr } from "../data/catalogue";
 import { TOUR } from "../features/tour/Tour";
+import { KitBuyPanel } from "../components/KitBuyPanel";
 
 export default function KitDetail() {
   const { addToCart, setCartOpen, setTourStep, toast } = useApp();
@@ -22,7 +23,7 @@ export default function KitDetail() {
             <h1 className="h1">{KIT.name}</h1>
             <p className="lead">{KIT.description}</p>
             <p className="price price--lg"><span className="num">{formatInr(KIT.priceInr)}</span></p>
-            <p className="small muted">Prototype / demo pricing. Not a confirmed live offer; the kit is not for sale.</p>
+            <p className="small muted">Indicative presentation price. Not a confirmed live offer; the kit is not for sale yet.</p>
             <div className="row" style={{ marginTop: 24 }}>
               <Link to="/kits/creator-kit-v1/unbox" className="btn">Start unboxing <ArrowRight size={16} aria-hidden /></Link>
               <button className="btn btn--secondary" onClick={() => { addToCart("kit-v1"); toast("Creator Kit added to your demo cart", { action: { label: "View cart", onClick: () => setCartOpen(true) } }); }}><ShoppingBag size={16} aria-hidden /> Add to demo cart</button>
@@ -65,6 +66,13 @@ export default function KitDetail() {
             </ul>
           </div>
           <p className="small muted" style={{ marginTop: 16 }}>Illustrations of the illustrative kit contents. Quantities are provisional; the alcohol sample is shown as a component only, with no handling instructions.</p>
+        </div>
+      </section>
+
+      <section className="section section--tight fpage__buy" aria-labelledby="buy-h">
+        <div className="container container--narrow">
+          <h2 id="buy-h" className="h2">Choose size and <em>bottle</em></h2>
+          <KitBuyPanel kitIds={["creator-kit-v1"]} />
         </div>
       </section>
 

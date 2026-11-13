@@ -22,6 +22,17 @@ const Marketplace = lazy(() => import("../pages/Marketplace"));
 const HowItWorks = lazy(() => import("../pages/HowItWorks"));
 const Brand = lazy(() => import("../pages/Brand"));
 const Prefer = lazy(() => import("../pages/Prefer"));
+const Discover = lazy(() => import("../pages/Discover"));
+const FragrancePage = lazy(() => import("../pages/FragrancePage"));
+const FamilyPage = lazy(() => import("../pages/FamilyPage"));
+const KitPage = lazy(() => import("../pages/KitPage"));
+const Studio = lazy(() => import("../pages/Studio"));
+const Recipes = lazy(() => import("../pages/Recipes"));
+const RecipePage = lazy(() => import("../pages/RecipePage"));
+const GuidedMaking = lazy(() => import("../pages/GuidedMaking"));
+const Learn = lazy(() => import("../pages/Learn"));
+const LearnEntry = lazy(() => import("../pages/LearnEntry"));
+const About = lazy(() => import("../pages/About"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -88,6 +99,17 @@ function Shell() {
             <Route path="/" element={<Home />} />
             <Route path="/kits" element={<Kits />} />
             <Route path="/kits/creator-kit-v1" element={<KitDetail />} />
+            <Route path="/kits/:id" element={<KitPage />} />
+            <Route path="/discover" element={<Discover />} />
+            <Route path="/fragrances/:id" element={<FragrancePage />} />
+            <Route path="/families/:id" element={<FamilyPage />} />
+            <Route path="/studio" element={<Studio />} />
+            <Route path="/studio/recipes" element={<Recipes />} />
+            <Route path="/studio/recipes/:id" element={<RecipePage />} />
+            <Route path="/studio/guide/:id" element={<GuidedMaking />} />
+            <Route path="/learn" element={<Learn />} />
+            <Route path="/learn/:id" element={<LearnEntry />} />
+            <Route path="/about" element={<About />} />
             <Route path="/kits/creator-kit-v1/unbox" element={<Unboxing />} />
             <Route path="/lab" element={<Lab />} />
             <Route path="/lab/preview" element={<Preview />} />

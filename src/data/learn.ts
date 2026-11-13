@@ -1,0 +1,190 @@
+// Scent Learning Library. Plain-language, high-level content.
+// Factual claims are kept general and each entry carries internal source notes
+// (`sources`) for editorial review. These notes are not shown as citations to
+// customers; they exist so claims can be checked before launch.
+
+import type { AccordId } from "../lib/types";
+
+const IMG = "./assets/img/";
+
+/** The five material categories must never be presented as interchangeable. */
+export const MATERIAL_KINDS = [
+  { id: "botanical", name: "Raw botanical", nameHi: "कच्चा वनस्पति पदार्थ", desc: "Peel, wood, petals, bark. For smelling and learning. Never added to a skin perfume." },
+  { id: "extract", name: "Prepared extract", nameHi: "तैयार अर्क", desc: "Made by professionals from botanicals (for example by distillation). Needs documentation and safety limits." },
+  { id: "accord", name: "Fragrance accord", nameHi: "अकॉर्ड", desc: "A blend of materials that reads as one idea, like 'rose' or 'oud'. This is what goes into a kit recipe." },
+  { id: "base", name: "Perfume base", nameHi: "परफ्यूम बेस", desc: "Perfumery alcohol that carries the accords and fills most of the bottle." },
+  { id: "decor", name: "Decorative accessory", nameHi: "सजावटी सामान", desc: "Boxes, trays and display pieces. Not part of the formula." },
+] as const;
+
+export interface LearnSection { h: string; hHi?: string; body: string }
+export interface LearnEntry {
+  id: string;
+  name: string;
+  nameHi: string;
+  kind: "material" | "family";
+  oneLine: string;
+  oneLineHi: string;
+  image: string;
+  imageAlt: string;
+  scent: string[];
+  intensity: 1 | 2 | 3 | 4 | 5;
+  intensityNote: string;
+  sections: LearnSection[];
+  related: AccordId[];
+  recipes: string[];
+  safety: string;
+  sources: string[];
+}
+
+export const LEARN: LearnEntry[] = [
+  {
+    id: "oud", name: "Oud", nameHi: "ऊद / अगरवुड", kind: "material",
+    oneLine: "A deep, resinous wood note from agarwood, prized for centuries.",
+    oneLineHi: "अगरवुड से मिलने वाली गहरी, रालदार लकड़ी जैसी खुशबू।",
+    image: `${IMG}family-oud.jpg`, imageAlt: "Dark resinous agarwood chips on pale travertine",
+    scent: ["woody", "resinous", "smoky", "leathery", "slightly sweet"],
+    intensity: 5, intensityNote: "Very strong. A small share can dominate a blend, so recipes use it sparingly.",
+    sections: [
+      { h: "What is Oud?", hHi: "ऊद क्या है?", body: "Oud is the name for the dark, fragrant resin-filled heartwood of Aquilaria trees, also called agarwood. Healthy wood is pale and mostly odourless; the fragrant resin forms when the tree responds to injury or infection." },
+      { h: "Where it comes from", hHi: "यह कहाँ से आता है", body: "Aquilaria species grow in South and Southeast Asia, including north-east India (Assam is well known for agarwood). Wild trees have been heavily harvested, and most agarwood today comes from plantations where the resin formation is encouraged." },
+      { h: "A little history", hHi: "थोड़ा इतिहास", body: "Agarwood has been burned as incense and used in perfumery for centuries across India, the Middle East, China and Japan. In many Middle Eastern traditions oud oil and oud incense remain a mark of hospitality." },
+      { h: "How it is obtained", hHi: "यह कैसे मिलता है", body: "At a high level, resinous wood is collected and processed by specialists. Oud oil is usually made by distilling the wood. This is professional work; SENTYAR kits never ask you to extract anything at home." },
+      { h: "How perfumers describe it", hHi: "परफ्यूमर इसे कैसे बताते हैं", body: "Woody, resinous and smoky, sometimes leathery or animalic, with a sweet balsamic side. Because natural oud is rare and expensive, many perfumes use an 'oud accord' built from other materials to suggest the effect." },
+      { h: "What 'strong' means here", hHi: "'तेज़' का मतलब", body: "Oud has high impact: it is noticed quickly and tends to last. In a composition that means a small share is enough, and it can easily cover lighter notes like citrus." },
+      { h: "How it differs from other woods", hHi: "दूसरी लकड़ियों से कैसे अलग", body: "Cedarwood smells dry and pencil-like, sandalwood creamy and soft. Oud is darker, denser and smokier than both." },
+      { h: "In a composition", hHi: "मिश्रण में", body: "Oud is usually a base note. It pairs classically with rose, and with amber, saffron-like spice and other woods." },
+    ],
+    related: ["oud", "woody", "rose", "amber"], recipes: ["midnight-agar"],
+    safety: "The SENTYAR Oud accord is a demo composition input. Wild agarwood is protected: Aquilaria species are listed in CITES Appendix II, so real oud must be legally and responsibly sourced with documentation.",
+    sources: [
+      "CITES Appendices: Aquilaria spp. and Gyrinops spp. listed in Appendix II (genus-level listing adopted 2004). cites.org/eng/app/appendices.php",
+      "IUCN Red List entries for Aquilaria malaccensis and related species (threat status).",
+      "General perfumery references on agarwood formation (wound/fungal response) and distillation, e.g. Fragrantica/Perfumer & Flavorist encyclopaedia entries; to be confirmed by the consulting perfumer.",
+    ],
+  },
+  {
+    id: "amber", name: "Amber (in perfume)", nameHi: "अम्बर", kind: "family",
+    oneLine: "A warm, glowing 'accord', not the fossil gemstone.",
+    oneLineHi: "गर्म, चमकती खुशबू का मिश्रण, पत्थर वाला अम्बर नहीं।",
+    image: `${IMG}family-amber.jpg`, imageAlt: "Pieces of golden resin and a vanilla pod in warm light",
+    scent: ["warm", "resinous", "sweet", "powdery"], intensity: 4, intensityNote: "Rich and long-lasting; usually a base note.",
+    sections: [
+      { h: "What is amber in perfume?", hHi: "परफ्यूम में अम्बर क्या है?", body: "In perfumery 'amber' usually means a warm accord, often built from resins such as labdanum and benzoin together with vanilla-like notes. It is a style, not a single raw material, and it is not made from fossil amber." },
+      { h: "Where the name comes from", hHi: "नाम कहाँ से आया", body: "The word has a long, mixed history and has also been used for ambergris, a different material. Modern perfume 'amber' refers to the warm resinous accord." },
+      { h: "In a composition", hHi: "मिश्रण में", body: "Amber gives warmth and glow at the base. It pairs well with vanilla, spice and woods." },
+    ],
+    related: ["amber", "vanilla", "spicy"], recipes: ["golden-hour", "sable-storm"],
+    safety: "The SENTYAR Amber accord is a demo composition input.",
+    sources: ["Perfumery glossaries on the amber accord (labdanum, benzoin, vanillin based); to be confirmed by the consulting perfumer."],
+  },
+  {
+    id: "aquatic-notes", name: "Aquatic notes", nameHi: "समुद्री नोट्स", kind: "family",
+    oneLine: "The fresh 'sea air' family made popular in the 1990s.",
+    oneLineHi: "ताज़ी 'समुद्री हवा' जैसी खुशबू।",
+    image: `${IMG}family-aquatic.jpg`, imageAlt: "Smooth sea glass and a ripple of water on pale stone",
+    scent: ["watery", "airy", "clean"], intensity: 3, intensityNote: "Fresh and noticeable; often a top or heart effect.",
+    sections: [
+      { h: "What are aquatic notes?", hHi: "समुद्री नोट्स क्या हैं?", body: "Water has no smell of its own, so 'aquatic' notes are created by perfumers with materials that suggest sea air, wet stone or melon-like freshness." },
+      { h: "A little history", hHi: "थोड़ा इतिहास", body: "The style became very popular in the late 1980s and 1990s with fresh aquatic fragrances for everyday wear." },
+      { h: "In a composition", hHi: "मिश्रण में", body: "Aquatic accords brighten a blend. They pair with citrus, herbs and clean musk." },
+    ],
+    related: ["aquatic", "citrus", "musk"], recipes: ["azure-drift"],
+    safety: "The SENTYAR Aquatic accord is a demo composition input.",
+    sources: ["Fragrance history overviews of the aquatic/marine family (e.g. Calone-based fragrances of the 1990s); to be confirmed by the consulting perfumer."],
+  },
+  {
+    id: "lavender", name: "Lavender and aromatic herbs", nameHi: "लैवेंडर और खुशबूदार जड़ी-बूटियाँ", kind: "family",
+    oneLine: "Clean, herbal freshness at the heart of many fresh fragrances.",
+    oneLineHi: "कई ताज़ा परफ्यूम के बीच में साफ़, हर्बल ताज़गी।",
+    image: `${IMG}family-fresh.jpg`, imageAlt: "Sprigs of lavender and mint on white stone",
+    scent: ["herbal", "clean", "slightly floral"], intensity: 3, intensityNote: "Clear and fresh; usually a heart note.",
+    sections: [
+      { h: "What is 'aromatic'?", hHi: "'एरोमैटिक' क्या है?", body: "Perfumers call herb-led fragrances 'aromatic': lavender, rosemary, sage and mint. They feel clean and energetic." },
+      { h: "In a composition", hHi: "मिश्रण में", body: "Aromatic notes pair with citrus and woods, and form the classic 'fougère' style when combined with soft woody and mossy notes." },
+    ],
+    related: ["aromatic", "citrus", "woody"], recipes: ["sable-storm", "citrus-courtyard"],
+    safety: "The SENTYAR Aromatic accord is a demo composition input.",
+    sources: ["Perfumery family classifications (aromatic/fougère); to be confirmed by the consulting perfumer."],
+  },
+  {
+    id: "bergamot", name: "Bergamot and citrus", nameHi: "बर्गमॉट और सिट्रस", kind: "family",
+    oneLine: "The bright opening of countless perfumes.",
+    oneLineHi: "बहुत से परफ्यूम की चमकदार शुरुआत।",
+    image: `${IMG}orange-peel.jpg`, imageAlt: "Dried orange peel in a gold-rimmed dish",
+    scent: ["bright", "zesty", "fresh"], intensity: 2, intensityNote: "Bright but fades fastest; a classic top note.",
+    sections: [
+      { h: "What is citrus in perfume?", hHi: "परफ्यूम में सिट्रस क्या है?", body: "Citrus notes come from the peel of fruits such as bergamot, lemon and orange. They smell bright and are usually the first thing you notice." },
+      { h: "Why it fades first", hHi: "यह पहले क्यों उड़ जाता है", body: "Citrus materials are among the most volatile in perfumery, so they are noticed first and fade sooner." },
+    ],
+    related: ["citrus", "aromatic"], recipes: ["citrus-courtyard", "orange-woods"],
+    safety: "Some citrus peel materials can cause skin sensitivity in sunlight; professional formulas respect IFRA limits. The SENTYAR Citrus accord is a demo input.",
+    sources: ["IFRA Standards on phototoxic citrus materials (e.g. bergamot oil, furocoumarins); ifrafragrance.org."],
+  },
+  {
+    id: "rose", name: "Rose", nameHi: "गुलाब", kind: "material",
+    oneLine: "The classic floral heart, from velvety to fresh.",
+    oneLineHi: "क्लासिक फूलों वाली खुशबू, मखमली से ताज़ा तक।",
+    image: `${IMG}rose-petals.jpg`, imageAlt: "Dried crimson rose petals in a gold-rimmed dish",
+    scent: ["floral", "velvety", "slightly fruity"], intensity: 3, intensityNote: "Full and noticeable; a heart note.",
+    sections: [
+      { h: "What is rose in perfume?", hHi: "परफ्यूम में गुलाब क्या है?", body: "Rose materials are obtained by professionals from rose petals (for example rose oil and rose absolute) or recreated as accords. Kannauj in India has a long tradition of rose attars." },
+      { h: "In a composition", hHi: "मिश्रण में", body: "Rose sits in the heart of a blend and pairs with musk, woods and, classically, oud." },
+    ],
+    related: ["rose", "musk", "oud"], recipes: ["rose-velour", "midnight-agar"],
+    safety: "Dried rose petals in the kit are for smelling only. The Rose accord is a demo input.",
+    sources: ["Kannauj attar tradition (Geographical Indication registration for Kannauj perfume, India); rose oil/absolute production overviews."],
+  },
+  {
+    id: "sandalwood", name: "Sandalwood and woods", nameHi: "चंदन और लकड़ी", kind: "family",
+    oneLine: "Smooth, creamy and calm woody notes.",
+    oneLineHi: "मुलायम, क्रीमी और शांत लकड़ी जैसी खुशबू।",
+    image: `${IMG}cedarwood.jpg`, imageAlt: "Reddish cedarwood chips in a gold-rimmed dish",
+    scent: ["woody", "creamy", "dry"], intensity: 3, intensityNote: "Long-lasting base notes.",
+    sections: [
+      { h: "What are woody notes?", hHi: "लकड़ी वाले नोट्स क्या हैं?", body: "Woody notes include cedarwood (dry, pencil-like), sandalwood (creamy, soft) and vetiver (earthy). Indian sandalwood has long been valued; supply is regulated, so many perfumes use alternatives." },
+    ],
+    related: ["woody", "musk"], recipes: ["orange-woods"],
+    safety: "The Woody accord is a demo input.",
+    sources: ["Sandalwood (Santalum album) trade regulation in India; general perfumery descriptions."],
+  },
+  {
+    id: "vanilla", name: "Vanilla", nameHi: "वनीला", kind: "material",
+    oneLine: "Creamy sweetness at the heart of gourmand fragrances.",
+    oneLineHi: "मीठी, क्रीमी खुशबू।",
+    image: `${IMG}family-gourmand.jpg`, imageAlt: "Vanilla pods and soft cream tones",
+    scent: ["creamy", "sweet", "warm"], intensity: 3, intensityNote: "Soft but long-lasting base note.",
+    sections: [
+      { h: "What is vanilla in perfume?", hHi: "परफ्यूम में वनीला क्या है?", body: "Vanilla comes from the cured pods of the vanilla orchid; perfumes use vanilla extracts and related materials such as vanillin. It anchors the sweet 'gourmand' family." },
+    ],
+    related: ["vanilla", "amber", "musk"], recipes: ["vanilla-cashmere", "golden-hour"],
+    safety: "The Vanilla accord is a demo input.",
+    sources: ["Vanilla planifolia curing and vanillin overviews."],
+  },
+  {
+    id: "cinnamon", name: "Spices", nameHi: "मसाले", kind: "family",
+    oneLine: "Warmth and energy from cinnamon, clove and pepper.",
+    oneLineHi: "दालचीनी, लौंग और मिर्च से गर्माहट।",
+    image: `${IMG}cinnamon.jpg`, imageAlt: "Cinnamon quills on a gold-rimmed plate",
+    scent: ["warm", "piquant", "vivid"], intensity: 4, intensityNote: "Lively; used in small amounts.",
+    sections: [
+      { h: "What are spicy notes?", hHi: "मसालेदार नोट्स क्या हैं?", body: "Spicy notes recall cinnamon, clove, cardamom and pepper. A little adds warmth or sparkle; too much can overpower." },
+    ],
+    related: ["spicy", "amber", "woody"], recipes: ["golden-hour", "sable-storm"],
+    safety: "Some spice materials are restricted in skin products; professional formulas follow IFRA. The Spicy accord is a demo input.",
+    sources: ["IFRA Standards on cinnamal and eugenol type materials."],
+  },
+];
+export const learnById = (id: string) => LEARN.find((l) => l.id === id);
+
+/** Beginner glossary, Hindi-first */
+export const TERMS: { term: string; hi: string; en: string }[] = [
+  { term: "Top note", hi: "पहली खुशबू जो तुरंत आती है और जल्दी उड़ जाती है।", en: "The first impression; noticed immediately, fades first." },
+  { term: "Heart note", hi: "बीच की खुशबू, कुछ मिनट बाद आती है।", en: "The middle of the fragrance, after a few minutes." },
+  { term: "Base note", hi: "सबसे देर तक टिकने वाली गहरी खुशबू।", en: "The deep, longest-lasting part." },
+  { term: "Accord", hi: "कई चीज़ों का मिश्रण जो एक खुशबू जैसा लगे।", en: "A blend that smells like one idea." },
+  { term: "Concentrate", hi: "खुशबू का गाढ़ा हिस्सा जो बेस में मिलाया जाता है।", en: "The concentrated fragrance part added to the base." },
+  { term: "Perfume base", hi: "परफ्यूमरी अल्कोहल जो बोतल का ज़्यादातर हिस्सा भरता है।", en: "Perfumery alcohol that fills most of the bottle." },
+  { term: "Sillage", hi: "आपके आस-पास खुशबू कितनी दूर तक फैलती है।", en: "How far the scent trails around you." },
+  { term: "Longevity", hi: "खुशबू कितनी देर तक टिकती है।", en: "How long the scent lasts." },
+  { term: "Oud", hi: "अगरवुड की गहरी, रालदार लकड़ी जैसी खुशबू।", en: "Deep resinous agarwood note." },
+];

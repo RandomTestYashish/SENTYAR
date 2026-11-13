@@ -82,7 +82,7 @@ export default function IngredientJourney() {
             <div><dt>What am I looking at?</dt><dd>{isB ? `A raw ${(ing as Botanical).materialType.toLowerCase()}.` : `A composed ${(ing as Accord).family.toLowerCase()} impression.`}</dd></div>
             <div><dt>Kind</dt><dd>{isB ? "Real botanical (not an extract, not an accord)" : "Fragrance accord (demo data)"}</dd></div>
             <div><dt>Goes into the demo formula?</dt><dd>{isB ? <><X size={14} aria-hidden /> No, exploration only</> : <><Check size={14} aria-hidden /> Yes, as an illustrative input</>}</dd></div>
-            <div><dt>Related</dt><dd>{isB ? <Link className="link" to={`/ingredients/${(ing as Botanical).relatedAccord}`}>{accordById((ing as Botanical).relatedAccord).name} accord</Link> : <Link className="link" to={`/ingredients/${(ing as Accord).relatedBotanical}`}>{botanicalById((ing as Accord).relatedBotanical).name}</Link>}</dd></div>
+            <div><dt>Related</dt><dd>{isB ? <Link className="link" to={`/ingredients/${(ing as Botanical).relatedAccord}`}>{accordById((ing as Botanical).relatedAccord).name} accord</Link> : (ing as Accord).relatedBotanical ? <Link className="link" to={`/ingredients/${(ing as Accord).relatedBotanical}`}>{botanicalById((ing as Accord).relatedBotanical!).name}</Link> : (ing as Accord).learnId ? <Link className="link" to={`/learn/${(ing as Accord).learnId}`}>Learning library</Link> : "None in the kit"}</dd></div>
             <div><dt>Can I undo?</dt><dd>Yes. Anything you add can be removed from the tray or lab at any time.</dd></div>
           </dl>
         </aside>
@@ -183,7 +183,7 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
   const { draft, addToBlend, removeFromBlend } = useApp();
   const other = accordById(a.compareWith);
   const inBlend = draft.blend.find((e) => e.accordId === a.id);
-  const b = botanicalById(a.relatedBotanical);
+  const b = a.relatedBotanical ? botanicalById(a.relatedBotanical) : undefined;
   switch (step) {
     case 0: return (<>
       <div className="vial-stage"><Vial color={a.swatch} label={a.name} /></div>
@@ -203,7 +203,7 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
     </dl>);
     case 3: return (<>
       <FamilyWheel active={a.id} />
-      <p className="body-2">Visual metaphor: <strong className="serif-italic" style={{ fontSize: "1.25rem" }}>{a.metaphor}</strong>. Family: {a.family}. Related material reference: {b.name}.</p>
+      <p className="body-2">Visual metaphor: <strong className="serif-italic" style={{ fontSize: "1.25rem" }}>{a.metaphor}</strong>. Family: {a.family}.{b && <> Related material reference: {b.name}.</>}</p>
     </>);
     case 4: return (<>
       <p className="body-2">In the lab, each accord has a <strong>share</strong> of the blend. Shares always total 100%, and the bottle always stays 10 ml.</p>
@@ -236,7 +236,7 @@ function AccordStep({ step, a }: { step: number; a: Accord }) {
       <ul role="list" className="ticks">
         <li>{a.name} is a <strong>fragrance accord</strong>: a demo composition input.</li>
         <li>Its share changes its volume within the fixed 2 ml blend; the 10 ml bottle never grows.</li>
-        <li>It relates to the {b.name.toLowerCase()} botanical as an <em>educational</em> reference only.</li>
+        {b ? <li>It relates to the {b.name.toLowerCase()} botanical as an <em>educational</em> reference only.</li> : <li>The kit has no raw botanical for this accord; learn about the material in the Scent Learning Library.</li>}
       </ul>
       <p className="body-2"><strong>Next safe step:</strong> adjust it in the lab and preview your concept.</p>
       <Link className="btn btn--sm" to="/lab">Go to the Lab</Link>

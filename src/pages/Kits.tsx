@@ -1,45 +1,27 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { Img } from "../components/ui";
-import { KIT, formatInr } from "../data/catalogue";
+import { KITS } from "../data/kits";
+import { KitCard, KitCompare } from "../components/DiscoverCards";
 
 export default function Kits() {
   return (
-    <div className="container section">
-      <nav aria-label="Breadcrumb" className="crumbs"><Link to="/">Home</Link><span aria-hidden>/</span><span aria-current="page">Explore Kits</span></nav>
-      <header className="page-head">
-        <p className="eyebrow">Explore Kits</p>
-        <h1 className="h1">Kits</h1>
-        <p className="lead">Each kit is a curated starting point: real materials to explore, demo accords to compose with, and the tools to keep notes.</p>
+    <div className="container section--tight">
+      <nav aria-label="Breadcrumb" className="crumbs"><Link to="/">Home</Link><span aria-hidden>/</span><Link to="/discover">Discover</Link><span aria-hidden>/</span><span aria-current="page">Kits</span></nav>
+      <header className="disc-headrow">
+        <p className="eyebrow">Discover kits</p>
+        <h1 className="disc-title">Four kits. <em>One</em> way of making.</h1>
+        <p className="lead">Every kit includes the perfumery base, a printed recipe card and Guided Making. Bigger kits add more accords, tools and bottle sizes.</p>
       </header>
-      <div className="kit-list">
-        <article className="kit-card card">
-          <Img src="./assets/img/kit-open.jpg" alt="The SENTYAR Creator Kit opened to show vials, beaker, pipette and booklet" ratio="3 / 2" />
-          <div className="kit-card__body">
-            <div className="row row--between">
-              <h2 className="h3">{KIT.name}</h2>
-              <span className="badge badge--demo">Prototype</span>
-            </div>
-            <p className="body-2">{KIT.description}</p>
-            <ul role="list" className="kit-card__facts small">
-              <li><strong>6</strong> demo fragrance accords</li>
-              <li><strong>4</strong> botanical exploration samples</li>
-              <li><strong>9</strong> tools &amp; learning items</li>
-            </ul>
-            <p className="price"><span className="num">{formatInr(KIT.priceInr)}</span> <span className="small muted">prototype / demo pricing, not a live offer</span></p>
-            <div className="row">
-              <Link to="/kits/creator-kit-v1" className="btn">View kit <ArrowRight size={16} aria-hidden /></Link>
-              <Link to="/kits/creator-kit-v1/unbox" className="btn btn--secondary">Open interactively</Link>
-            </div>
-          </div>
-        </article>
-        <aside className="kit-list__note card card--pad">
-          <p className="eyebrow">More kits</p>
-          <p className="h4" style={{ marginTop: 8 }}>Only one kit exists in this prototype.</p>
-          <p className="small body-2" style={{ marginTop: 8 }}>Future themed kits (for example a citrus or woods study) would appear here once their contents are validated with suppliers and a perfumer.</p>
-          <Link to="/marketplace" className="link link--arrow small" style={{ marginTop: 16 }}>Browse individual demo ingredients <ArrowRight size={14} aria-hidden /></Link>
-        </aside>
-      </div>
+      <ul role="list" className="kgrid">{KITS.map((k) => <li key={k.id}><KitCard k={k} /></li>)}</ul>
+      <section className="section--tight" aria-labelledby="cmp-h">
+        <h2 id="cmp-h" className="h3" style={{ marginBottom: 16 }}>What each kit adds</h2>
+        <KitCompare />
+        <p className="small muted" style={{ marginTop: 12 }}>Indicative presentation prices. Contents and prices are configurable and not yet final.</p>
+      </section>
+      <section className="section--tight" aria-labelledby="addon-h">
+        <h2 id="addon-h" className="h3">Optional add-ons</h2>
+        <p className="body-2" style={{ maxWidth: "60ch", marginTop: 6 }}>Gift boxes, trays and display pieces are sold separately in the Marketplace. They are decorative and never part of a perfume formula.</p>
+        <Link to="/marketplace?cat=accessories" className="link link--arrow small" style={{ marginTop: 10 }}>Browse add-ons</Link>
+      </section>
     </div>
   );
 }

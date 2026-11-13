@@ -58,7 +58,7 @@ export default function Ingredients() {
                   <p className="h4">{a.name}</p>
                   <p className="small muted">{a.family} · {ROLE_LABEL[a.role]} (illustrative)</p>
                   <p className="small body-2">{a.profile}</p>
-                  <p className="small"><span className="muted">Formula:</span> Yes, demo input · Related botanical: {botanicalById(a.relatedBotanical).name}</p>
+                  <p className="small"><span className="muted">Formula:</span> Yes, demo input{a.relatedBotanical && <> · Related botanical: {botanicalById(a.relatedBotanical).name}</>}</p>
                   <span className="link link--arrow small">Start learning <ArrowRight size={14} aria-hidden /></span>
                 </div>
               </Link>

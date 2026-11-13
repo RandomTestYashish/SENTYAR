@@ -4,12 +4,12 @@ import { FlaskConical, Menu, ShoppingBag, X } from "lucide-react";
 import { useApp } from "../app/store";
 import { Emblem, Wordmark } from "./Logo";
 
+/** Four primary destinations; each owns the sub-routes listed in `match`. */
 const NAV = [
-  { to: "/kits", label: "Explore Kits" },
-  { to: "/lab", label: "The Lab" },
-  { to: "/ingredients", label: "Ingredients" },
-  { to: "/creations", label: "My Creations" },
-  { to: "/how-it-works", label: "How It Works" },
+  { to: "/discover", label: "Discover", match: ["/discover", "/fragrances", "/families", "/kits", "/prefer"] },
+  { to: "/studio", label: "Studio", match: ["/studio", "/lab", "/creations", "/learn", "/ingredients", "/how-it-works", "/nature-lab"] },
+  { to: "/marketplace", label: "Marketplace", match: ["/marketplace"] },
+  { to: "/about", label: "About", match: ["/about", "/brand"] },
 ];
 
 export function Header() {
@@ -46,7 +46,7 @@ export function Header() {
         <nav aria-label="Primary" className="site-nav">
           <ul role="list">
             {NAV.map((n) => (
-              <li key={n.to}><NavLink to={n.to} className={({ isActive }) => `nav-link ${isActive ? "is-active" : ""}`}>{n.label}</NavLink></li>
+              <li key={n.to}><Link to={n.to} className={`nav-link ${n.match.some((m) => loc.pathname.startsWith(m)) ? "is-active" : ""}`} aria-current={n.match.some((m) => loc.pathname.startsWith(m)) ? "page" : undefined}>{n.label}</Link></li>
             ))}
           </ul>
         </nav>
@@ -70,11 +70,10 @@ export function Header() {
         <nav aria-label="Mobile" className="container">
           <ul role="list">
             {NAV.map((n) => (
-              <li key={n.to}><NavLink to={n.to} className={({ isActive }) => `mobile-link ${isActive ? "is-active" : ""}`}>{n.label}</NavLink></li>
+              <li key={n.to}><Link to={n.to} className={`mobile-link ${n.match.some((m) => loc.pathname.startsWith(m)) ? "is-active" : ""}`}>{n.label}</Link></li>
             ))}
-            <li><NavLink to="/marketplace" className="mobile-link">Ingredient Marketplace</NavLink></li>
-            <li><NavLink to="/nature-lab" className="mobile-link">Nature Lab</NavLink></li>
-            <li><NavLink to="/prefer" className="mobile-link">Prefer taste quiz</NavLink></li>
+            <li><NavLink to="/creations" className="mobile-link mobile-link--sub">My Creations</NavLink></li>
+            <li><NavLink to="/kits" className="mobile-link mobile-link--sub">Compare kits</NavLink></li>
           </ul>
           <Link to="/lab" className="btn btn--block" style={{ marginTop: 24 }}>Start Creating</Link>
         </nav>

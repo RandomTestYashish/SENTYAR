@@ -206,7 +206,7 @@ export function AlcoholBottle({ label }: { label?: string }) {
 export function OilBottle({ name, color, ml = 5, label, className = "kit-svg" }: { name: string; color: string; ml?: number; label?: string; className?: string }) {
   return (
     <Svg label={label} vb="25 9 50 82" className={`${className} kit-photo`}>
-      <image href="./assets/img/oil-bottle.jpg" x="0" y="0" width="100" height="100" />
+      <image href="./assets/img/oil-bottle.webp" x="0" y="0" width="100" height="100" />
       <rect x="42" y="55.3" width="16.2" height="0.9" fill={color} />
       <g transform="translate(48.6 57.4)" style={{ color: "#a8844f" }}><Emblem size={2.8} stroke={5} /></g>
       <text x="50" y="65.4" textAnchor="middle" fontSize="3.4" fontFamily="var(--font-serif)" fontWeight="600" fill="#14110d">{name}</text>
