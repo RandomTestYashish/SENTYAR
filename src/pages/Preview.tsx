@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { Suspense, lazy, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Check, CopyPlus, Leaf, Save } from "lucide-react";
+import { ArrowLeft, Check, CopyPlus, Leaf, Pause, Play, RotateCcw, Save } from "lucide-react";
 import { useApp } from "../app/store";
 import { BottlePhoto, PHOTO_BOTTLES, photoBottle } from "../components/BottlePhoto";
 import { Dialog, Notice } from "../components/ui";
@@ -9,7 +9,21 @@ import { FORMULA_DISCLAIMER } from "../data/learning";
 import { computeVolumes, formatMl, validateBlend } from "../lib/formula";
 import { prefersReducedMotion } from "../lib/fly";
 
+const Bottle3D = lazy(() => import("../features/lab/Bottle3D"));
 const SUGGESTIONS = ["My Sunday", "After Hours", "Orange Woods", "Rose Affair"];
+
+function canWebGL() {
+  try { const c = document.createElement("canvas"); return !!(c.getContext("webgl2") || c.getContext("webgl")); } catch { return false; }
+}
+/** amber liquid, nudged towards the blend's own colours */
+function liquidTint(swatches: { c: string; w: number }[]) {
+  const amber = [204, 136, 38];
+  if (!swatches.length) return "#cc8826";
+  let r = 0, g = 0, b = 0, t = 0;
+  swatches.forEach(({ c, w }) => { const n = parseInt(c.slice(1), 16); r += ((n >> 16) & 255) * w; g += ((n >> 8) & 255) * w; b += (n & 255) * w; t += w; });
+  const mix = (a: number, x: number) => Math.round(a * 0.8 + (x / t) * 0.2);
+  return `rgb(${mix(amber[0], r)}, ${mix(amber[1], g)}, ${mix(amber[2], b)})`;
+}
 
 export default function Preview() {
   const { draft, setDraftName, setBottle, saveCreation, creations, loadIntoLab, toast } = useApp();
@@ -22,25 +36,12 @@ export default function Preview() {
   const [nameErr, setNameErr] = useState<string | null>(null);
   const [wearOpen, setWearOpen] = useState(false);
   const [justSaved, setJustSaved] = useState<string | null>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-
-  // pointer tilt: the bottle turns towards the cursor, light sweeps across the glass
-  useEffect(() => {
-    const el = stageRef.current; if (!el || prefersReducedMotion()) return;
-    let raf = 0;
-    const move = (e: PointerEvent) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const r = el.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-        el.style.setProperty("--ry", `${(x * 22).toFixed(2)}deg`); el.style.setProperty("--rx", `${(-y * 10).toFixed(2)}deg`);
-        el.style.setProperty("--sx", `${((x + 0.5) * 100).toFixed(1)}%`); el.classList.add("is-live");
-      });
-    };
-    const leave = () => { el.style.setProperty("--ry", "0deg"); el.style.setProperty("--rx", "0deg"); el.classList.remove("is-live"); };
-    el.addEventListener("pointermove", move); el.addEventListener("pointerleave", leave);
-    return () => { el.removeEventListener("pointermove", move); el.removeEventListener("pointerleave", leave); cancelAnimationFrame(raf); };
-  }, [valid]);
+  const [glError, setGlError] = useState<string | null>(() => (canWebGL() ? null : "WebGL isn’t available in this browser."));
+  const [glReady, setGlReady] = useState(false);
+  const [auto, setAuto] = useState(!prefersReducedMotion());
+  const [resetKey, setResetKey] = useState(0);
+  const use3D = !glError;
+  const tint = useMemo(() => liquidTint(draft.blend.map((e) => ({ c: accordById(e.accordId).swatch, w: e.share }))), [draft.blend]);
 
   if (!valid) {
     return (
@@ -70,15 +71,25 @@ export default function Preview() {
       <div className="preview__grid">
         <section className="preview__stage" aria-labelledby="stage-h">
           <h2 id="stage-h" className="sr-only">Bottle preview</h2>
-          <div className="pv-stage" ref={stageRef}>
-            <div className="pv-stage__glow" aria-hidden />
-            <div className="pv-stage__turn" key={draft.bottle}>
-              <BottlePhoto concept={draft.bottle} name={draft.name || "Your creation"} className="pv-bottle" />
-              <span className="pv-sheen" aria-hidden />
-            </div>
-            <div className="pv-stage__shadow" aria-hidden />
-            <p className="pv-stage__cap small"><span>{photoBottle(draft.bottle).name}</span> · {photoBottle(draft.bottle).style} · 10 ml</p>
+          <div className="pv-stage">
+            {use3D ? (
+              <Suspense fallback={<div className="stage__loading"><span className="small muted">Preparing glass and light…</span></div>}>
+                <Bottle3D concept={draft.bottle} name={draft.name || "Your creation"} tint={tint} autoRotate={auto} resetKey={resetKey}
+                  onReady={() => setGlReady(true)} onError={(m) => setGlError(m)} />
+                {!glReady && <div className="stage__loading"><span className="small muted">Preparing glass and light…</span></div>}
+              </Suspense>
+            ) : (
+              <div className="pv-stage__photo"><BottlePhoto concept={draft.bottle} name={draft.name || "Your creation"} className="pv-bottle" /></div>
+            )}
+            {use3D && (
+              <div className="pv-tools">
+                <button className="icon-btn icon-btn--sm" onClick={() => setAuto((x) => !x)} aria-label={auto ? "Pause rotation" : "Resume rotation"} aria-pressed={auto}>{auto ? <Pause size={15} /> : <Play size={15} />}</button>
+                <button className="icon-btn icon-btn--sm" onClick={() => setResetKey((k) => k + 1)} aria-label="Reset view"><RotateCcw size={15} /></button>
+              </div>
+            )}
+            <p className="pv-stage__cap small"><span>{photoBottle(draft.bottle).name}</span> · {photoBottle(draft.bottle).style} · 10 ml{use3D && glReady ? " · drag to turn" : ""}</p>
           </div>
+          {glError && <Notice>Showing the studio photograph. {glError}</Notice>}
           <div className="pv-picker" role="radiogroup" aria-label="Bottle concept">
             {PHOTO_BOTTLES.map((b) => (
               <button key={b.id} role="radio" aria-checked={draft.bottle === b.id} className="pv-pick" onClick={() => setBottle(b.id)} aria-label={b.name}>
