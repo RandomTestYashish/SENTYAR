@@ -350,3 +350,28 @@
 .lab-fams .chip { min-height: 32px; padding: 0 12px; font-size: 0.8125rem; }
 .share__pct { font-weight: 600; min-width: 44px; text-align: right; }
 .home-fgrid { margin-top: var(--s-4); }
+
+/* ---------- compact footer, mirrors the header IA ---------- */
+.site-footer { padding-block: var(--s-8) var(--s-3) !important; }
+.ft { display: grid; gap: var(--s-5); }
+@media (min-width: 900px) { .ft { grid-template-columns: minmax(220px, 1fr) 3fr; gap: var(--s-8); align-items: start; } }
+.ft__brand { display: grid; gap: 12px; justify-items: start; }
+.ft__logo { display: inline-flex; align-items: center; gap: 14px; text-decoration: none !important; color: var(--text) !important; min-height: 0 !important; }
+.ft__logo .wordmark { align-items: flex-start; }
+.ft__logo .wordmark__desc { font-size: 0.5625rem; margin-top: 0.7em; }
+.ft__tag { margin: 0; color: var(--accent-text); letter-spacing: 0.04em; }
+.ft__cols { display: grid; gap: var(--s-4) var(--s-3); grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (min-width: 700px) { .ft__cols { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.ft__h { margin: 0 0 10px; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-text); }
+.ft__col ul { display: grid; gap: 0 !important; }
+.ft__col a, .ft__col .footer-btn { min-height: 34px !important; font-size: var(--fs-small) !important; color: var(--text-2) !important; }
+.ft__col a:hover, .ft__col .footer-btn:hover { color: var(--text) !important; }
+.ft__bar { display: flex; justify-content: space-between; align-items: start; gap: 8px 24px; flex-wrap: wrap; margin-top: var(--s-6); padding-top: var(--s-2); border-top: 1px solid var(--border); }
+.ft__bar > p { margin: 0; color: var(--text-3); }
+.ft__legal { max-width: 70ch; }
+.ft__legal summary { cursor: pointer; color: var(--text-3); list-style: none; text-align: right; }
+.ft__legal summary::-webkit-details-marker { display: none; }
+.ft__legal summary::after { content: " +"; color: var(--c-champagne); }
+.ft__legal[open] summary::after { content: " −"; }
+.ft__legal p { margin: 8px 0 0; color: var(--text-3); line-height: 1.6; }
+@media (max-width: 699px) { .ft__legal summary { text-align: left; } }
