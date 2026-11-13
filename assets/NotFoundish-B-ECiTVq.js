@@ -1,0 +1,1 @@
+import{j as e,L as a}from"./index-j9pJO4Oy.js";function c({what:n,back:s}){return e.jsxs("div",{className:"container section empty",children:[e.jsxs("h1",{className:"h2",children:["We couldn’t find that ",n]}),e.jsx("p",{children:"It may have been renamed. Go back and pick another."}),e.jsx(a,{to:s,className:"btn",children:"Go back"})]})}export{c as N};
