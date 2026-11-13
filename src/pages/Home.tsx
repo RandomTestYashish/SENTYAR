@@ -8,37 +8,15 @@ import { INSPIRED } from "../data/fragrances";
 import { KITS } from "../data/kits";
 import { Img, SectionHead } from "../components/ui";
 import { BOTANICALS, accordById } from "../data/ingredients";
-import { TOUR } from "../features/tour/Tour";
-import { useNavigate } from "react-router-dom";
 
 export default function Home() {
-  const { creations, setTourStep } = useApp();
-  const nav = useNavigate();
+  const { creations } = useApp();
   const latest = creations[0];
-  const startTour = () => { setTourStep(0); nav(TOUR[0].path); };
 
   return (
     <>
       {/* HERO */}
       <HeroCarousel />
-      <section className="hero hero--facts" aria-label="At a glance">
-        <div className="container">
-          <div className="hero-facts">
-            <div><strong className="num">10 ml</strong><span>Fixed bottle</span></div>
-            <div><strong className="num">4</strong><span>Kits from ₹399</span></div>
-            <div><strong className="num">10</strong><span>Fragrance accords</span></div>
-            <div><strong className="num">9</strong><span>Scent families</span></div>
-          </div>
-          <div className="hero-after">
-            <p className="small muted">Concept bottles. Silhouettes and labelling are design direction, not finished products.</p>
-            <div className="hero-after__links">
-              <button className="link small" onClick={startTour}>New here? Take a guided tour</button>
-              <Link to="/prefer" className="link small">Find your taste in 10 picks</Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <div className="ribbon" aria-hidden>
         <div className="ribbon__track">
           {[0, 1].map((k) => (

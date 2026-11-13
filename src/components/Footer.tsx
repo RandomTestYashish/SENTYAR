@@ -48,7 +48,7 @@ export function Footer() {
             simulation are illustrative demo data. Nothing here is a skin-use recipe, a validated formulation or a live offer, and no
             orders or payments are taken. Commercial formulations require validation by a qualified perfumer and relevant specialists.
           </p>
-          <p>SENTYAR is a working brand name; trademark and name clearance has not been completed.</p>
+          <p>Concept bottles: silhouettes and labelling are design direction, not finished products. SENTYAR is a working brand name; trademark and name clearance has not been completed.</p>
         </div>
       </div>
     </footer>
